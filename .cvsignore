@@ -1,0 +1,6 @@
+*.foo *.mine *.diff *.prev
+tmp_tests
+python_tests
+core_unit_tests
+NOTES
+build

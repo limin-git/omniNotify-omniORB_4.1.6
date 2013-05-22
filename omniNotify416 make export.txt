@@ -1,0 +1,1745 @@
+C:\_perforce\COTS\omniORB\omniORB_4.1.6\src\services\omniNotify>make export
+making export in src/services/omniNotify/mkattlib...
+make[1]: Entering directory `/cygdrive/c/_perforce/COTS/omniORB/omniORB_4.1.6/src/services/omniNotify/mkattlib'
+../../../../bin/x86_win32/omkdepend -D__cplusplus -D_MSC_VER -p static/ -p shared/ -p debug/ -p shareddebug/ -D__OMNIORB4__ -I../../../../stub -D_ATTN_LIBRARY -I. -I. -I../../../../include -D__WIN32__
+ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../include/COS AttNotificationSK.cc AttNotificationDynSK.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -D_ATTN_LIBRARY -I. -I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D_
+_x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../include/COS -Fostatic/AttNotificationSK.o -Fdstatic\\.pdb AttNotificationSK.cc
+cl -c -O2 -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -D_ATTN_LIBRARY -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SEC
+URE_NO_DEPRECATE=1 -I..\..\..\..\include\COS -Fostatic\AttNotificationSK.o -Fdstatic\.pdb -TpAttNotificationSK.cc
+AttNotificationSK.cc
++ rm -f static/AttNotification4.lib
++ ../../../../bin/x86_win32/libwrapper -gnuwin32 static/AttNotification4.lib static/AttNotificationSK.o
+lib /OUT:static\AttNotification4.lib static\AttNotificationSK.o
+Microsoft (R) Library Manager Version 9.00.21022.58
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -D_ATTN_LIBRARY -I. -I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D_
+_x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../include/COS -Fostatic/AttNotificationDynSK.o -Fdstatic\\.pdb AttNotificationDynSK.cc
+cl -c -O2 -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -D_ATTN_LIBRARY -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SEC
+URE_NO_DEPRECATE=1 -I..\..\..\..\include\COS -Fostatic\AttNotificationDynSK.o -Fdstatic\.pdb -TpAttNotificationDynSK.cc
+AttNotificationDynSK.cc
++ rm -f static/AttNotificationDynamic4.lib
++ ../../../../bin/x86_win32/libwrapper -gnuwin32 static/AttNotificationDynamic4.lib static/AttNotificationDynSK.o
+lib /OUT:static\AttNotificationDynamic4.lib static\AttNotificationDynSK.o
+Microsoft (R) Library Manager Version 9.00.21022.58
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DUSE_dyn_stub_in_nt_dll -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -D_ATTN_LIBRARY -I. -I. -I../../../../include -D__WIN32__
+-D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../include/COS -Foshared/AttNotificationSK.o -Fdshared\\ AttNotificationSK.cc
+cl -c -O2 -DUSE_dyn_stub_in_nt_dll -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -D_ATTN_LIBRARY -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D_
+_OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\include\COS -Foshared\AttNotificationSK.o -Fdshared\ -TpAttNotificationSK.cc
+AttNotificationSK.cc
++ echo LIBRARY shared/AttNotification416_vc9_rt
++ echo VERSION 1.6
++ echo EXPORTS
++ DUMPBIN.EXE /SYMBOLS static/AttNotification4.lib
++ egrep ^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +\(\) +External +\| +\?[^ ]*|^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +External +\| +\?[^?][^ ]*
++ egrep -v deleting destructor[^(]+\(unsigned int\)
++ egrep -v anonymous namespace
++ egrep -v @std@
++ cut -d| -f2
++ cut -d  -f2
++ /bin/sort -u
++ set +x
++ echo #include "windows.h"
++ echo VS_VERSION_INFO VERSIONINFO
++ echo  FILEVERSION 4,1,6,0xF1
++ echo  PRODUCTVERSION 4,1,6,0xF1
++ echo  FILEFLAGSMASK 0x3fL
++ [ -n  ]
++ echo  FILEFLAGS 0x0L
++ echo  FILEOS VOS_UNKNOWN
++ echo  FILETYPE VFT_UNKNOWN
++ echo  FILESUBTYPE 0x0L
++ echo {
++ echo     BLOCK "StringFileInfo"
++ echo     {
++ echo         BLOCK "00000000"
++ echo         {
++ echo             VALUE "CompanyName", "omniORB open source project\0"
++ echo             VALUE "FileDescription", "omniORB\0"
++ echo             VALUE "FileVersion", "4.1.6.F1\0"
++ echo             VALUE "InternalName", "AttNotification416_vc9_rt.dll\0"
++ echo             VALUE "OriginalFilename", "AttNotification416_vc9_rt.dll\0"
++ echo             VALUE "ProductName", "omniORB"
++ echo             VALUE "ProductVersion", "4.1.6.F1\0"
++ echo             VALUE "LegalCopyright", "Apasphere Ltd., AT&T Laboratories Cambridge, and others. Freely available under the terms of the GNU LGPL.\0"
++ echo         }
++ echo     }
++ echo     BLOCK "VarFileInfo"
++ echo     {
++ echo         VALUE "Translation", 0x0, 0
++ echo     }
++ echo }
++ echo LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
++ rc.exe shared/AttNotification416_vc9_rt.rc
+Microsoft (R) Windows (R) Resource Compiler Version 6.0.5724.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
++ set -x
++ rm -f shared/AttNotification416_rt.lib
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:shared/AttNotification416_vc9_rt.dll -DLL -nologo -DEBUG -def:shared/AttNotification4.def -IMPLIB:shared/AttNotification416_rt.lib -libpath:../..
+/../../lib/x86_win32 shared/AttNotificationSK.o omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib COS416_rt.lib COSDynamic416_rt.lib shared/AttNotificatio
+n416_vc9_rt.res
+link -out:shared\AttNotification416_vc9_rt.dll -DLL -nologo -DEBUG -def:shared\AttNotification4.def -IMPLIB:shared/AttNotification416_rt.lib -libpath:..\..\..\..\lib\x86_win32 shared\AttNotificationSK
+.o omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib COS416_rt.lib COSDynamic416_rt.lib shared\AttNotification416_vc9_rt.res
+shared\AttNotification4.def(1) : warning LNK4093: Drive/Directory component ignored in 'LIBRARY' statement
+   Creating library shared/AttNotification416_rt.lib and object shared/AttNotification416_rt.exp
++ mt.exe /outputresource:shared/AttNotification416_vc9_rt.dll;#2 /manifest shared/AttNotification416_vc9_rt.dll.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
++ cp shared/AttNotification416_rt.lib AttNotification4_rt.lib
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DUSE_core_stub_in_nt_dll -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -D_ATTN_LIBRARY -I. -I. -I../../../../include -D__WIN32__
+ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../include/COS -Foshared/AttNotificationDynSK.o -Fdshared\\ AttNotificationDynSK.cc
+cl -c -O2 -DUSE_core_stub_in_nt_dll -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -D_ATTN_LIBRARY -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D
+__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\include\COS -Foshared\AttNotificationDynSK.o -Fdshared\ -TpAttNotificationDynSK.cc
+AttNotificationDynSK.cc
++ echo LIBRARY shared/AttNotificationDynamic416_vc9_rt
++ echo VERSION 1.6
++ echo EXPORTS
++ DUMPBIN.EXE /SYMBOLS static/AttNotificationDynamic4.lib
++ egrep ^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +\(\) +External +\| +\?[^ ]*|^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +External +\| +\?[^?][^ ]*
++ egrep -v deleting destructor[^(]+\(unsigned int\)
++ egrep -v anonymous namespace
++ egrep -v @std@
++ cut -d| -f2
++ cut -d  -f2
++ /bin/sort -u
++ set +x
++ echo #include "windows.h"
++ echo VS_VERSION_INFO VERSIONINFO
++ echo  FILEVERSION 4,1,6,0xF1
++ echo  PRODUCTVERSION 4,1,6,0xF1
++ echo  FILEFLAGSMASK 0x3fL
++ [ -n  ]
++ echo  FILEFLAGS 0x0L
++ echo  FILEOS VOS_UNKNOWN
++ echo  FILETYPE VFT_UNKNOWN
++ echo  FILESUBTYPE 0x0L
++ echo {
++ echo     BLOCK "StringFileInfo"
++ echo     {
++ echo         BLOCK "00000000"
++ echo         {
++ echo             VALUE "CompanyName", "omniORB open source project\0"
++ echo             VALUE "FileDescription", "omniORB\0"
++ echo             VALUE "FileVersion", "4.1.6.F1\0"
++ echo             VALUE "InternalName", "AttNotificationDynamic416_vc9_rt.dll\0"
++ echo             VALUE "OriginalFilename", "AttNotificationDynamic416_vc9_rt.dll\0"
++ echo             VALUE "ProductName", "omniORB"
++ echo             VALUE "ProductVersion", "4.1.6.F1\0"
++ echo             VALUE "LegalCopyright", "Apasphere Ltd., AT&T Laboratories Cambridge, and others. Freely available under the terms of the GNU LGPL.\0"
++ echo         }
++ echo     }
++ echo     BLOCK "VarFileInfo"
++ echo     {
++ echo         VALUE "Translation", 0x0, 0
++ echo     }
++ echo }
++ echo LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
++ rc.exe shared/AttNotificationDynamic416_vc9_rt.rc
+Microsoft (R) Windows (R) Resource Compiler Version 6.0.5724.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
++ set -x
++ rm -f shared/AttNotificationDynamic416_rt.lib
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:shared/AttNotificationDynamic416_vc9_rt.dll -DLL -nologo -DEBUG -def:shared/AttNotificationDynamic4.def -IMPLIB:shared/AttNotificationDynamic416_
+rt.lib -libpath:../../../../lib/x86_win32 shared/AttNotificationDynSK.o shared/AttNotification416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+ COS416_rt.lib COSDynamic416_rt.lib shared/AttNotificationDynamic416_vc9_rt.res
+link -out:shared\AttNotificationDynamic416_vc9_rt.dll -DLL -nologo -DEBUG -def:shared\AttNotificationDynamic4.def -IMPLIB:shared/AttNotificationDynamic416_rt.lib -libpath:..\..\..\..\lib\x86_win32 sha
+red\AttNotificationDynSK.o shared\AttNotification416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib COS416_rt.lib COSDynamic416_rt.lib shared\At
+tNotificationDynamic416_vc9_rt.res
+shared\AttNotificationDynamic4.def(1) : warning LNK4093: Drive/Directory component ignored in 'LIBRARY' statement
+   Creating library shared/AttNotificationDynamic416_rt.lib and object shared/AttNotificationDynamic416_rt.exp
++ mt.exe /outputresource:shared/AttNotificationDynamic416_vc9_rt.dll;#2 /manifest shared/AttNotificationDynamic416_vc9_rt.dll.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
++ cp shared/AttNotificationDynamic416_rt.lib AttNotificationDynamic4_rt.lib
+File AttNotification.hh hasn't changed.
+File ATTN_sysdep.h hasn't changed.
++ install -c static/AttNotification4.lib ../../../../lib/x86_win32
++ install -c static/AttNotificationDynamic4.lib ../../../../lib/x86_win32
++ install -c shared/AttNotification416_rt.lib ../../../../lib/x86_win32
++ install -c AttNotification4_rt.lib ../../../../lib/x86_win32
++ install -c shared/AttNotification416_vc9_rt.dll ../../../../bin/x86_win32
++ install -c shared/AttNotification416_vc9_rt.pdb ../../../../bin/x86_win32
++ install -c shared/AttNotificationDynamic416_rt.lib ../../../../lib/x86_win32
++ install -c AttNotificationDynamic4_rt.lib ../../../../lib/x86_win32
++ install -c shared/AttNotificationDynamic416_vc9_rt.dll ../../../../bin/x86_win32
++ install -c shared/AttNotificationDynamic416_vc9_rt.pdb ../../../../bin/x86_win32
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -D_ATTN_LIBRARY -I. -I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501
+ -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../include/COS -Fodebug/AttNotificationSK.o -Fddebug\\d.pdb AttNotificationSK.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -D_ATTN_LIBRARY -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_
+SECURE_NO_DEPRECATE=1 -I..\..\..\..\include\COS -Fodebug\AttNotificationSK.o -Fddebug\d.pdb -TpAttNotificationSK.cc
+AttNotificationSK.cc
++ rm -f debug/AttNotification4d.lib
++ ../../../../bin/x86_win32/libwrapper -gnuwin32 debug/AttNotification4d.lib debug/AttNotificationSK.o
+lib /OUT:debug\AttNotification4d.lib debug\AttNotificationSK.o
+Microsoft (R) Library Manager Version 9.00.21022.58
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -D_ATTN_LIBRARY -I. -I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501
+ -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../include/COS -Fodebug/AttNotificationDynSK.o -Fddebug\\d.pdb AttNotificationDynSK.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -D_ATTN_LIBRARY -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_
+SECURE_NO_DEPRECATE=1 -I..\..\..\..\include\COS -Fodebug\AttNotificationDynSK.o -Fddebug\d.pdb -TpAttNotificationDynSK.cc
+AttNotificationDynSK.cc
++ rm -f debug/AttNotificationDynamic4d.lib
++ ../../../../bin/x86_win32/libwrapper -gnuwin32 debug/AttNotificationDynamic4d.lib debug/AttNotificationDynSK.o
+lib /OUT:debug\AttNotificationDynamic4d.lib debug\AttNotificationDynSK.o
+Microsoft (R) Library Manager Version 9.00.21022.58
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -DUSE_dyn_stub_in_nt_dll -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -D_ATTN_LIBRARY -I. -I. -I../../../../include -D__WIN3
+2__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../include/COS -Foshareddebug/AttNotificationSK.o -Fdshareddebug\\ AttNotificationSK.cc
+cl -c -DUSE_dyn_stub_in_nt_dll -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -D_ATTN_LIBRARY -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__
+-D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\include\COS -Foshareddebug\AttNotificationSK.o -Fdshareddebug\ -TpAttNotificationSK.cc
+AttNotificationSK.cc
+(namespec="AttNotification 4 1 6" debug=1 extralibs="omniORB416_rtd.lib omniDynamic416_rtd.lib omnithread34_rtd.lib ws2_32.lib mswsock.lib advapi32.lib COS416_rtd.lib COSDynamic416_rtd.lib"; \
+         set $namespec ; if [ $2 = "_" ] ; then set $1 "" $3 $4 ; fi; extrasuffix=${debug:+d}; targetdir=shareddebug; libname=$1$2$3$4_rt${extrasuffix:-}; slibname=$1$2_rt${extrasuffix:-}.lib; dllbase
+=$targetdir/$1$2$3$4_vc9_rt${extrasuffix:-}; dllname=$dllbase.dll; rcname=$dllbase.rc; resname=$targetdir/$1$2$3$4_vc9_rt${extrasuffix:-}.res; defname=$targetdir/$1$2${extrasuffix:-}.def; version=$3.$
+4; nanovers=`echo 0x040106F1 | cut -c 9-`; if [ -n "$debug" ]; then extralinkoption="-nologo -DEBUG"; else extralinkoption="-nologo -DEBUG"; fi; if [ -z "$nodeffile" ]; then symrefdir=${debug:+debug};
+ symreflib=${symrefdir:-static}/$1$2${extrasuffix:-}.lib; if [ ! -f $symreflib ]; then echo "Cannot find reference static library $symreflib"; return 1; fi; set -x; echo "LIBRARY $dllbase" > $defname;
+ echo "VERSION $version" >> $defname; echo "EXPORTS" >> $defname; DUMPBIN.EXE /SYMBOLS $symreflib | egrep '^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +\(\) +External +\| +\?[^ ]*|^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+
++External +\| +\?[^?][^ ]*'| egrep -v 'deleting destructor[^(]+\(unsigned int\)' | egrep -v 'anonymous namespace' | egrep -v '@std@' | cut -d'|' -f2 | cut -d' ' -f2 | /bin/sort -u >> $defname; set +x;
+ defflag="-def:$defname"; fi; if [ -n "$2" ]; then commaver=$2,$3,$4,0x$nanovers; dotver=$2.$3.$4.$nanovers; else commaver=$3,$4,0x$nanovers,0; dotver=$3.$4.$nanovers; fi; set -x; echo "#include \"win
+dows.h\"" > $rcname; echo "VS_VERSION_INFO VERSIONINFO" >> $rcname; echo " FILEVERSION $commaver" >> $rcname; echo " PRODUCTVERSION 4,1,6,0x$nanovers" >> $rcname; echo " FILEFLAGSMASK 0x3fL" >> $rcnam
+e; if [ -n "$debug" ]; then echo " FILEFLAGS VS_FF_DEBUG" >> $rcname; else echo " FILEFLAGS 0x0L" >> $rcname; fi; echo " FILEOS VOS_UNKNOWN" >> $rcname; echo " FILETYPE VFT_UNKNOWN" >> $rcname; echo "
+ FILESUBTYPE 0x0L" >> $rcname; echo "{    " >> $rcname; echo "    BLOCK \"StringFileInfo\"" >> $rcname; echo "    {" >> $rcname; echo "        BLOCK \"00000000\"" >> $rcname; echo "        {" >> $rcna
+me; echo "            VALUE \"CompanyName\", \"omniORB open source project\0\"" >> $rcname; echo "            VALUE \"FileDescription\", \"omniORB\0\"" >> $rcname; echo "            VALUE \"FileVersio
+n\", \"$dotver\0\"" >> $rcname; echo "            VALUE \"InternalName\", \"$1$2$3$4_vc9_rt${extrasuffix:-}.dll\0\"" >> $rcname; echo "            VALUE \"OriginalFilename\", \"$1$2$3$4_vc9_rt${extras
+uffix:-}.dll\0\"" >> $rcname; echo "            VALUE \"ProductName\", \"omniORB\"" >> $rcname; echo "            VALUE \"ProductVersion\", \"4.1.6.$nanovers\0\"" >> $rcname; echo "            VALUE \
+"LegalCopyright\", \"Apasphere Ltd., AT&T Laboratories Cambridge, and others. Freely available under the terms of the GNU LGPL.\0\"" >> $rcname; echo "        }" >> $rcname; echo "    }" >> $rcname; e
+cho "    BLOCK \"VarFileInfo\"" >> $rcname; echo "    {" >> $rcname; echo "        VALUE \"Translation\", 0x0, 0" >> $rcname; echo "    }" >> $rcname; echo "}" >> $rcname; echo "LANGUAGE LANG_NEUTRAL,
+ SUBLANG_NEUTRAL" >> $rcname; rc.exe $rcname; set -x; rm -f shareddebug/AttNotification416_rtd.lib; ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:$dllname -DLL $extralinkoption $defflag -IMPLIB
+:shareddebug/AttNotification416_rtd.lib -libpath:../../../../lib/x86_win32 shareddebug/AttNotificationSK.o $extralibs $resname; mt.exe /outputresource:"$dllname;#2" /manifest $dllname.manifest; cp sha
+reddebug/AttNotification416_rtd.lib $slibname;)
++ echo LIBRARY shareddebug/AttNotification416_vc9_rtd
++ echo VERSION 1.6
++ echo EXPORTS
++ DUMPBIN.EXE /SYMBOLS debug/AttNotification4d.lib
++ egrep ^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +\(\) +External +\| +\?[^ ]*|^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +External +\| +\?[^?][^ ]*
++ egrep -v deleting destructor[^(]+\(unsigned int\)
++ egrep -v anonymous namespace
++ egrep -v @std@
++ cut -d| -f2
++ cut -d  -f2
++ /bin/sort -u
++ set +x
++ echo #include "windows.h"
++ echo VS_VERSION_INFO VERSIONINFO
++ echo  FILEVERSION 4,1,6,0xF1
++ echo  PRODUCTVERSION 4,1,6,0xF1
++ echo  FILEFLAGSMASK 0x3fL
++ [ -n 1 ]
++ echo  FILEFLAGS VS_FF_DEBUG
++ echo  FILEOS VOS_UNKNOWN
++ echo  FILETYPE VFT_UNKNOWN
++ echo  FILESUBTYPE 0x0L
++ echo {
++ echo     BLOCK "StringFileInfo"
++ echo     {
++ echo         BLOCK "00000000"
++ echo         {
++ echo             VALUE "CompanyName", "omniORB open source project\0"
++ echo             VALUE "FileDescription", "omniORB\0"
++ echo             VALUE "FileVersion", "4.1.6.F1\0"
++ echo             VALUE "InternalName", "AttNotification416_vc9_rtd.dll\0"
++ echo             VALUE "OriginalFilename", "AttNotification416_vc9_rtd.dll\0"
++ echo             VALUE "ProductName", "omniORB"
++ echo             VALUE "ProductVersion", "4.1.6.F1\0"
++ echo             VALUE "LegalCopyright", "Apasphere Ltd., AT&T Laboratories Cambridge, and others. Freely available under the terms of the GNU LGPL.\0"
++ echo         }
++ echo     }
++ echo     BLOCK "VarFileInfo"
++ echo     {
++ echo         VALUE "Translation", 0x0, 0
++ echo     }
++ echo }
++ echo LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
++ rc.exe shareddebug/AttNotification416_vc9_rtd.rc
+Microsoft (R) Windows (R) Resource Compiler Version 6.0.5724.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
++ set -x
++ rm -f shareddebug/AttNotification416_rtd.lib
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:shareddebug/AttNotification416_vc9_rtd.dll -DLL -nologo -DEBUG -def:shareddebug/AttNotification4d.def -IMPLIB:shareddebug/AttNotification416_rtd.
+lib -libpath:../../../../lib/x86_win32 shareddebug/AttNotificationSK.o omniORB416_rtd.lib omniDynamic416_rtd.lib omnithread34_rtd.lib ws2_32.lib mswsock.lib advapi32.lib COS416_rtd.lib COSDynamic416_r
+td.lib shareddebug/AttNotification416_vc9_rtd.res
+link -out:shareddebug\AttNotification416_vc9_rtd.dll -DLL -nologo -DEBUG -def:shareddebug\AttNotification4d.def -IMPLIB:shareddebug/AttNotification416_rtd.lib -libpath:..\..\..\..\lib\x86_win32 shared
+debug\AttNotificationSK.o omniORB416_rtd.lib omniDynamic416_rtd.lib omnithread34_rtd.lib ws2_32.lib mswsock.lib advapi32.lib COS416_rtd.lib COSDynamic416_rtd.lib shareddebug\AttNotification416_vc9_rtd
+.res
+shareddebug\AttNotification4d.def(1) : warning LNK4093: Drive/Directory component ignored in 'LIBRARY' statement
+   Creating library shareddebug/AttNotification416_rtd.lib and object shareddebug/AttNotification416_rtd.exp
++ mt.exe /outputresource:shareddebug/AttNotification416_vc9_rtd.dll;#2 /manifest shareddebug/AttNotification416_vc9_rtd.dll.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
++ cp shareddebug/AttNotification416_rtd.lib AttNotification4_rtd.lib
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -DUSE_core_stub_in_nt_dll -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -D_ATTN_LIBRARY -I. -I. -I../../../../include -D__WIN
+32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../include/COS -Foshareddebug/AttNotificationDynSK.o -Fdshareddebug\\ AttNotificationDynSK.cc
+cl -c -DUSE_core_stub_in_nt_dll -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -D_ATTN_LIBRARY -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__
+ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\include\COS -Foshareddebug\AttNotificationDynSK.o -Fdshareddebug\ -TpAttNotificationDynSK.cc
+AttNotificationDynSK.cc
++ echo LIBRARY shareddebug/AttNotificationDynamic416_vc9_rtd
++ echo VERSION 1.6
++ echo EXPORTS
++ DUMPBIN.EXE /SYMBOLS debug/AttNotificationDynamic4d.lib
++ egrep ^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +\(\) +External +\| +\?[^ ]*|^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +External +\| +\?[^?][^ ]*
++ egrep -v deleting destructor[^(]+\(unsigned int\)
++ egrep -v anonymous namespace
++ egrep -v @std@
++ cut -d| -f2
++ cut -d  -f2
++ /bin/sort -u
++ set +x
++ echo #include "windows.h"
++ echo VS_VERSION_INFO VERSIONINFO
++ echo  FILEVERSION 4,1,6,0xF1
++ echo  PRODUCTVERSION 4,1,6,0xF1
++ echo  FILEFLAGSMASK 0x3fL
++ [ -n 1 ]
++ echo  FILEFLAGS VS_FF_DEBUG
++ echo  FILEOS VOS_UNKNOWN
++ echo  FILETYPE VFT_UNKNOWN
++ echo  FILESUBTYPE 0x0L
++ echo {
++ echo     BLOCK "StringFileInfo"
++ echo     {
++ echo         BLOCK "00000000"
++ echo         {
++ echo             VALUE "CompanyName", "omniORB open source project\0"
++ echo             VALUE "FileDescription", "omniORB\0"
++ echo             VALUE "FileVersion", "4.1.6.F1\0"
++ echo             VALUE "InternalName", "AttNotificationDynamic416_vc9_rtd.dll\0"
++ echo             VALUE "OriginalFilename", "AttNotificationDynamic416_vc9_rtd.dll\0"
++ echo             VALUE "ProductName", "omniORB"
++ echo             VALUE "ProductVersion", "4.1.6.F1\0"
++ echo             VALUE "LegalCopyright", "Apasphere Ltd., AT&T Laboratories Cambridge, and others. Freely available under the terms of the GNU LGPL.\0"
++ echo         }
++ echo     }
++ echo     BLOCK "VarFileInfo"
++ echo     {
++ echo         VALUE "Translation", 0x0, 0
++ echo     }
++ echo }
++ echo LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
++ rc.exe shareddebug/AttNotificationDynamic416_vc9_rtd.rc
+Microsoft (R) Windows (R) Resource Compiler Version 6.0.5724.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
++ set -x
++ rm -f shareddebug/AttNotificationDynamic416_rtd.lib
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:shareddebug/AttNotificationDynamic416_vc9_rtd.dll -DLL -nologo -DEBUG -def:shareddebug/AttNotificationDynamic4d.def -IMPLIB:shareddebug/AttNotifi
+cationDynamic416_rtd.lib -libpath:../../../../lib/x86_win32 shareddebug/AttNotificationDynSK.o shareddebug/AttNotification416_rtd.lib omniORB416_rtd.lib omniDynamic416_rtd.lib omnithread34_rtd.lib ws2
+_32.lib mswsock.lib advapi32.lib COS416_rtd.lib COSDynamic416_rtd.lib shareddebug/AttNotificationDynamic416_vc9_rtd.res
+link -out:shareddebug\AttNotificationDynamic416_vc9_rtd.dll -DLL -nologo -DEBUG -def:shareddebug\AttNotificationDynamic4d.def -IMPLIB:shareddebug/AttNotificationDynamic416_rtd.lib -libpath:..\..\..\..
+\lib\x86_win32 shareddebug\AttNotificationDynSK.o shareddebug\AttNotification416_rtd.lib omniORB416_rtd.lib omniDynamic416_rtd.lib omnithread34_rtd.lib ws2_32.lib mswsock.lib advapi32.lib COS416_rtd.l
+ib COSDynamic416_rtd.lib shareddebug\AttNotificationDynamic416_vc9_rtd.res
+shareddebug\AttNotificationDynamic4d.def(1) : warning LNK4093: Drive/Directory component ignored in 'LIBRARY' statement
+   Creating library shareddebug/AttNotificationDynamic416_rtd.lib and object shareddebug/AttNotificationDynamic416_rtd.exp
++ mt.exe /outputresource:shareddebug/AttNotificationDynamic416_vc9_rtd.dll;#2 /manifest shareddebug/AttNotificationDynamic416_vc9_rtd.dll.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
++ cp shareddebug/AttNotificationDynamic416_rtd.lib AttNotificationDynamic4_rtd.lib
++ install -c debug/AttNotification4d.lib ../../../../lib/x86_win32
++ install -c debug/AttNotificationDynamic4d.lib ../../../../lib/x86_win32
++ install -c shareddebug/AttNotification416_rtd.lib ../../../../lib/x86_win32
++ install -c AttNotification4_rtd.lib ../../../../lib/x86_win32
++ install -c shareddebug/AttNotification416_vc9_rtd.dll ../../../../bin/x86_win32
++ install -c shareddebug/AttNotification416_vc9_rtd.pdb ../../../../bin/x86_win32
++ install -c shareddebug/AttNotificationDynamic416_rtd.lib ../../../../lib/x86_win32
++ install -c AttNotificationDynamic4_rtd.lib ../../../../lib/x86_win32
++ install -c shareddebug/AttNotificationDynamic416_vc9_rtd.dll ../../../../bin/x86_win32
++ install -c shareddebug/AttNotificationDynamic416_vc9_rtd.pdb ../../../../bin/x86_win32
+make[1]: Leaving directory `/cygdrive/c/_perforce/COTS/omniORB/omniORB_4.1.6/src/services/omniNotify/mkattlib'
+making export in src/services/omniNotify/lib...
+make[1]: Entering directory `/cygdrive/c/_perforce/COTS/omniORB/omniORB_4.1.6/src/services/omniNotify/lib'
+../../../../bin/x86_win32/omkdepend -D__cplusplus -D_MSC_VER -p static/ -p shared/ -D__OMNIORB4__ -I../../../../stub -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I../.
+./../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include RDITypeMap.cc RDITimeWrappers.cc RDISt
+aticEval.cc RDIRVMPool.cc RDIRVM.cc RDIParser_y.cc RDIParser_l.cc RDIOpSeq.cc RDIOplocks.cc RDINotifServer.cc RDINotifQueue.cc RDIEventQueue.cc RDIEval.cc RDIDynamicEval.cc RDIConstraint.cc RDIConfig.
+cc RDIChannelUtil.cc RDIstrstream.cc RDI.cc ProxySupplier.cc ProxyConsumer.cc omniNotify.cc Filter_i.cc FilterAdmin_i.cc EventChannel_i.cc CosNotification.cc CosNfyUtils.cc CosEventProxy.cc corba_wrap
+pers_impl.cc ChannelAdmin_i.cc RDIInteractive.cc
+File omniNotify.h hasn't changed.
+File CosNotifyShorthands.h hasn't changed.
+File RDIStringDefs.h hasn't changed.
+File RDIstrstream.h hasn't changed.
+File RDIOSWrappers.h hasn't changed.
+File thread_wrappers.h hasn't changed.
+File omnithread_thread_wrappers.h hasn't changed.
+File RDIInteractiveMode.h hasn't changed.
+File corba_wrappers.h hasn't changed.
+File corba_wrappers_impl.h hasn't changed.
+File omniorb_common_wrappers.h hasn't changed.
+File omniorb_boa_wrappers.h hasn't changed.
+File omniorb_poa_wrappers.h hasn't changed.
+File omniorb_boa_wrappers_impl.h hasn't changed.
+File omniorb_poa_wrappers_impl.h hasn't changed.
+File RDIsysdep.h hasn't changed.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIInteractive.o -
+Fdstatic\\.pdb RDIInteractive.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIInteractive.o -Fdstatic\.pdb -TpRDIInteractive.cc
+RDIInteractive.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/ChannelAdmin_i.o -
+Fdstatic\\.pdb ChannelAdmin_i.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\ChannelAdmin_i.o -Fdstatic\.pdb -TpChannelAdmin_i.cc
+ChannelAdmin_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/corba_wrappers_imp
+l.o -Fdstatic\\.pdb corba_wrappers_impl.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\corba_wrappers_impl.o -Fdstatic\.pdb -Tpcorba_wrappers_impl.cc
+corba_wrappers_impl.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/CosEventProxy.o -F
+dstatic\\.pdb CosEventProxy.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\CosEventProxy.o -Fdstatic\.pdb -TpCosEventProxy.cc
+CosEventProxy.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/CosNfyUtils.o -Fds
+tatic\\.pdb CosNfyUtils.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\CosNfyUtils.o -Fdstatic\.pdb -TpCosNfyUtils.cc
+CosNfyUtils.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/CosNotification.o
+-Fdstatic\\.pdb CosNotification.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\CosNotification.o -Fdstatic\.pdb -TpCosNotification.cc
+CosNotification.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/EventChannel_i.o -
+Fdstatic\\.pdb EventChannel_i.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\EventChannel_i.o -Fdstatic\.pdb -TpEventChannel_i.cc
+EventChannel_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/FilterAdmin_i.o -F
+dstatic\\.pdb FilterAdmin_i.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\FilterAdmin_i.o -Fdstatic\.pdb -TpFilterAdmin_i.cc
+FilterAdmin_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/Filter_i.o -Fdstat
+ic\\.pdb Filter_i.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\Filter_i.o -Fdstatic\.pdb -TpFilter_i.cc
+Filter_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/omniNotify.o -Fdst
+atic\\.pdb omniNotify.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\omniNotify.o -Fdstatic\.pdb -TpomniNotify.cc
+omniNotify.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/ProxyConsumer.o -F
+dstatic\\.pdb ProxyConsumer.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\ProxyConsumer.o -Fdstatic\.pdb -TpProxyConsumer.cc
+ProxyConsumer.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/ProxySupplier.o -F
+dstatic\\.pdb ProxySupplier.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\ProxySupplier.o -Fdstatic\.pdb -TpProxySupplier.cc
+ProxySupplier.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDI.o -Fdstatic\\.
+pdb RDI.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDI.o -Fdstatic\.pdb -TpRDI.cc
+RDI.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIstrstream.o -Fd
+static\\.pdb RDIstrstream.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIstrstream.o -Fdstatic\.pdb -TpRDIstrstream.cc
+RDIstrstream.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIChannelUtil.o -
+Fdstatic\\.pdb RDIChannelUtil.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIChannelUtil.o -Fdstatic\.pdb -TpRDIChannelUtil.cc
+RDIChannelUtil.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIConfig.o -Fdsta
+tic\\.pdb RDIConfig.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIConfig.o -Fdstatic\.pdb -TpRDIConfig.cc
+RDIConfig.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIConstraint.o -F
+dstatic\\.pdb RDIConstraint.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIConstraint.o -Fdstatic\.pdb -TpRDIConstraint.cc
+RDIConstraint.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIDynamicEval.o -
+Fdstatic\\.pdb RDIDynamicEval.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIDynamicEval.o -Fdstatic\.pdb -TpRDIDynamicEval.cc
+RDIDynamicEval.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIEval.o -Fdstati
+c\\.pdb RDIEval.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIEval.o -Fdstatic\.pdb -TpRDIEval.cc
+RDIEval.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIEventQueue.o -F
+dstatic\\.pdb RDIEventQueue.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIEventQueue.o -Fdstatic\.pdb -TpRDIEventQueue.cc
+RDIEventQueue.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDINotifQueue.o -F
+dstatic\\.pdb RDINotifQueue.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDINotifQueue.o -Fdstatic\.pdb -TpRDINotifQueue.cc
+RDINotifQueue.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDINotifServer.o -
+Fdstatic\\.pdb RDINotifServer.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDINotifServer.o -Fdstatic\.pdb -TpRDINotifServer.cc
+RDINotifServer.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIOplocks.o -Fdst
+atic\\.pdb RDIOplocks.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIOplocks.o -Fdstatic\.pdb -TpRDIOplocks.cc
+RDIOplocks.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIOpSeq.o -Fdstat
+ic\\.pdb RDIOpSeq.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIOpSeq.o -Fdstatic\.pdb -TpRDIOpSeq.cc
+RDIOpSeq.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIParser_l.o -Fds
+tatic\\.pdb RDIParser_l.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIParser_l.o -Fdstatic\.pdb -TpRDIParser_l.cc
+RDIParser_l.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIParser_y.o -Fds
+tatic\\.pdb RDIParser_y.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIParser_y.o -Fdstatic\.pdb -TpRDIParser_y.cc
+RDIParser_y.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIRVM.o -Fdstatic
+\\.pdb RDIRVM.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIRVM.o -Fdstatic\.pdb -TpRDIRVM.cc
+RDIRVM.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIRVMPool.o -Fdst
+atic\\.pdb RDIRVMPool.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIRVMPool.o -Fdstatic\.pdb -TpRDIRVMPool.cc
+RDIRVMPool.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDIStaticEval.o -F
+dstatic\\.pdb RDIStaticEval.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDIStaticEval.o -Fdstatic\.pdb -TpRDIStaticEval.cc
+RDIStaticEval.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDITimeWrappers.o
+-Fdstatic\\.pdb RDITimeWrappers.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDITimeWrappers.o -Fdstatic\.pdb -TpRDITimeWrappers.cc
+RDITimeWrappers.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fostatic/RDITypeMap.o -Fdst
+atic\\.pdb RDITypeMap.cc
+cl -c -O2 -DNDEBUG -MT -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fostatic\RDITypeMap.o -Fdstatic\.pdb -TpRDITypeMap.cc
+RDITypeMap.cc
++ rm -f static/COSNotify4.lib
++ ../../../../bin/x86_win32/libwrapper -gnuwin32 static/COSNotify4.lib static/RDIInteractive.o static/ChannelAdmin_i.o static/corba_wrappers_impl.o static/CosEventProxy.o static/CosNfyUtils.o static/C
+osNotification.o static/EventChannel_i.o static/FilterAdmin_i.o static/Filter_i.o static/omniNotify.o static/ProxyConsumer.o static/ProxySupplier.o static/RDI.o static/RDIstrstream.o static/RDIChannel
+Util.o static/RDIConfig.o static/RDIConstraint.o static/RDIDynamicEval.o static/RDIEval.o static/RDIEventQueue.o static/RDINotifQueue.o static/RDINotifServer.o static/RDIOplocks.o static/RDIOpSeq.o st
+atic/RDIParser_l.o static/RDIParser_y.o static/RDIRVM.o static/RDIRVMPool.o static/RDIStaticEval.o static/RDITimeWrappers.o static/RDITypeMap.o
+lib /OUT:static\COSNotify4.lib static\RDIInteractive.o static\ChannelAdmin_i.o static\corba_wrappers_impl.o static\CosEventProxy.o static\CosNfyUtils.o static\CosNotification.o static\EventChannel_i.o
+ static\FilterAdmin_i.o static\Filter_i.o static\omniNotify.o static\ProxyConsumer.o static\ProxySupplier.o static\RDI.o static\RDIstrstream.o static\RDIChannelUtil.o static\RDIConfig.o static\RDICons
+traint.o static\RDIDynamicEval.o static\RDIEval.o static\RDIEventQueue.o static\RDINotifQueue.o static\RDINotifServer.o static\RDIOplocks.o static\RDIOpSeq.o static\RDIParser_l.o static\RDIParser_y.o
+static\RDIRVM.o static\RDIRVMPool.o static\RDIStaticEval.o static\RDITimeWrappers.o static\RDITypeMap.o
+Microsoft (R) Library Manager Version 9.00.21022.58
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIInteractive.o -
+Fdshared\\ RDIInteractive.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIInteractive.o -Fdshared\ -TpRDIInteractive.cc
+RDIInteractive.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/ChannelAdmin_i.o -
+Fdshared\\ ChannelAdmin_i.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\ChannelAdmin_i.o -Fdshared\ -TpChannelAdmin_i.cc
+ChannelAdmin_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/corba_wrappers_imp
+l.o -Fdshared\\ corba_wrappers_impl.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\corba_wrappers_impl.o -Fdshared\ -Tpcorba_wrappers_impl.cc
+corba_wrappers_impl.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/CosEventProxy.o -F
+dshared\\ CosEventProxy.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\CosEventProxy.o -Fdshared\ -TpCosEventProxy.cc
+CosEventProxy.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/CosNfyUtils.o -Fds
+hared\\ CosNfyUtils.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\CosNfyUtils.o -Fdshared\ -TpCosNfyUtils.cc
+CosNfyUtils.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/CosNotification.o
+-Fdshared\\ CosNotification.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\CosNotification.o -Fdshared\ -TpCosNotification.cc
+CosNotification.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/EventChannel_i.o -
+Fdshared\\ EventChannel_i.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\EventChannel_i.o -Fdshared\ -TpEventChannel_i.cc
+EventChannel_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/FilterAdmin_i.o -F
+dshared\\ FilterAdmin_i.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\FilterAdmin_i.o -Fdshared\ -TpFilterAdmin_i.cc
+FilterAdmin_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/Filter_i.o -Fdshar
+ed\\ Filter_i.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\Filter_i.o -Fdshared\ -TpFilter_i.cc
+Filter_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/omniNotify.o -Fdsh
+ared\\ omniNotify.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\omniNotify.o -Fdshared\ -TpomniNotify.cc
+omniNotify.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/ProxyConsumer.o -F
+dshared\\ ProxyConsumer.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\ProxyConsumer.o -Fdshared\ -TpProxyConsumer.cc
+ProxyConsumer.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/ProxySupplier.o -F
+dshared\\ ProxySupplier.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\ProxySupplier.o -Fdshared\ -TpProxySupplier.cc
+ProxySupplier.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDI.o -Fdshared\\
+RDI.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDI.o -Fdshared\ -TpRDI.cc
+RDI.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIstrstream.o -Fd
+shared\\ RDIstrstream.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIstrstream.o -Fdshared\ -TpRDIstrstream.cc
+RDIstrstream.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIChannelUtil.o -
+Fdshared\\ RDIChannelUtil.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIChannelUtil.o -Fdshared\ -TpRDIChannelUtil.cc
+RDIChannelUtil.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIConfig.o -Fdsha
+red\\ RDIConfig.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIConfig.o -Fdshared\ -TpRDIConfig.cc
+RDIConfig.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIConstraint.o -F
+dshared\\ RDIConstraint.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIConstraint.o -Fdshared\ -TpRDIConstraint.cc
+RDIConstraint.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIDynamicEval.o -
+Fdshared\\ RDIDynamicEval.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIDynamicEval.o -Fdshared\ -TpRDIDynamicEval.cc
+RDIDynamicEval.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIEval.o -Fdshare
+d\\ RDIEval.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIEval.o -Fdshared\ -TpRDIEval.cc
+RDIEval.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIEventQueue.o -F
+dshared\\ RDIEventQueue.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIEventQueue.o -Fdshared\ -TpRDIEventQueue.cc
+RDIEventQueue.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDINotifQueue.o -F
+dshared\\ RDINotifQueue.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDINotifQueue.o -Fdshared\ -TpRDINotifQueue.cc
+RDINotifQueue.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDINotifServer.o -
+Fdshared\\ RDINotifServer.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDINotifServer.o -Fdshared\ -TpRDINotifServer.cc
+RDINotifServer.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIOplocks.o -Fdsh
+ared\\ RDIOplocks.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIOplocks.o -Fdshared\ -TpRDIOplocks.cc
+RDIOplocks.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIOpSeq.o -Fdshar
+ed\\ RDIOpSeq.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIOpSeq.o -Fdshared\ -TpRDIOpSeq.cc
+RDIOpSeq.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIParser_l.o -Fds
+hared\\ RDIParser_l.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIParser_l.o -Fdshared\ -TpRDIParser_l.cc
+RDIParser_l.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIParser_y.o -Fds
+hared\\ RDIParser_y.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIParser_y.o -Fdshared\ -TpRDIParser_y.cc
+RDIParser_y.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIRVM.o -Fdshared
+\\ RDIRVM.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIRVM.o -Fdshared\ -TpRDIRVM.cc
+RDIRVM.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIRVMPool.o -Fdsh
+ared\\ RDIRVMPool.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIRVMPool.o -Fdshared\ -TpRDIRVMPool.cc
+RDIRVMPool.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDIStaticEval.o -F
+dshared\\ RDIStaticEval.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDIStaticEval.o -Fdshared\ -TpRDIStaticEval.cc
+RDIStaticEval.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDITimeWrappers.o
+-Fdshared\\ RDITimeWrappers.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDITimeWrappers.o -Fdshared\ -TpRDITimeWrappers.cc
+RDITimeWrappers.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I.
+-I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshared/RDITypeMap.o -Fdsh
+ared\\ RDITypeMap.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN3
+2_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshared\RDITypeMap.o -Fdshared\ -TpRDITypeMap.cc
+RDITypeMap.cc
++ echo LIBRARY shared/COSNotify416_vc9_rt
++ echo VERSION 1.6
++ echo EXPORTS
++ DUMPBIN.EXE /SYMBOLS static/COSNotify4.lib
++ egrep ^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +\(\) +External +\| +\?[^ ]*|^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +External +\| +\?[^?][^ ]*
++ egrep -v deleting destructor[^(]+\(unsigned int\)
++ egrep -v anonymous namespace
++ egrep -v @std@
++ cut -d| -f2
++ cut -d  -f2
++ /bin/sort -u
++ set +x
++ echo #include "windows.h"
++ echo VS_VERSION_INFO VERSIONINFO
++ echo  FILEVERSION 4,1,6,0xF1
++ echo  PRODUCTVERSION 4,1,6,0xF1
++ echo  FILEFLAGSMASK 0x3fL
++ [ -n  ]
++ echo  FILEFLAGS 0x0L
++ echo  FILEOS VOS_UNKNOWN
++ echo  FILETYPE VFT_UNKNOWN
++ echo  FILESUBTYPE 0x0L
++ echo {
++ echo     BLOCK "StringFileInfo"
++ echo     {
++ echo         BLOCK "00000000"
++ echo         {
++ echo             VALUE "CompanyName", "omniORB open source project\0"
++ echo             VALUE "FileDescription", "omniORB\0"
++ echo             VALUE "FileVersion", "4.1.6.F1\0"
++ echo             VALUE "InternalName", "COSNotify416_vc9_rt.dll\0"
++ echo             VALUE "OriginalFilename", "COSNotify416_vc9_rt.dll\0"
++ echo             VALUE "ProductName", "omniORB"
++ echo             VALUE "ProductVersion", "4.1.6.F1\0"
++ echo             VALUE "LegalCopyright", "Apasphere Ltd., AT&T Laboratories Cambridge, and others. Freely available under the terms of the GNU LGPL.\0"
++ echo         }
++ echo     }
++ echo     BLOCK "VarFileInfo"
++ echo     {
++ echo         VALUE "Translation", 0x0, 0
++ echo     }
++ echo }
++ echo LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
++ rc.exe shared/COSNotify416_vc9_rt.rc
+Microsoft (R) Windows (R) Resource Compiler Version 6.0.5724.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
++ set -x
++ rm -f shared/COSNotify416_rt.lib
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:shared/COSNotify416_vc9_rt.dll -DLL -nologo -DEBUG -def:shared/COSNotify4.def -IMPLIB:shared/COSNotify416_rt.lib -libpath:../../../../lib/x86_win
+32 shared/RDIInteractive.o shared/ChannelAdmin_i.o shared/corba_wrappers_impl.o shared/CosEventProxy.o shared/CosNfyUtils.o shared/CosNotification.o shared/EventChannel_i.o shared/FilterAdmin_i.o shar
+ed/Filter_i.o shared/omniNotify.o shared/ProxyConsumer.o shared/ProxySupplier.o shared/RDI.o shared/RDIstrstream.o shared/RDIChannelUtil.o shared/RDIConfig.o shared/RDIConstraint.o shared/RDIDynamicEv
+al.o shared/RDIEval.o shared/RDIEventQueue.o shared/RDINotifQueue.o shared/RDINotifServer.o shared/RDIOplocks.o shared/RDIOpSeq.o shared/RDIParser_l.o shared/RDIParser_y.o shared/RDIRVM.o shared/RDIRV
+MPool.o shared/RDIStaticEval.o shared/RDITimeWrappers.o shared/RDITypeMap.o omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib COS416_rt.lib COSDynamic416_
+rt.lib AttNotification416_rt.lib shared/COSNotify416_vc9_rt.res
+link -out:shared\COSNotify416_vc9_rt.dll -DLL -nologo -DEBUG -def:shared\COSNotify4.def -IMPLIB:shared/COSNotify416_rt.lib -libpath:..\..\..\..\lib\x86_win32 shared\RDIInteractive.o shared\ChannelAdmi
+n_i.o shared\corba_wrappers_impl.o shared\CosEventProxy.o shared\CosNfyUtils.o shared\CosNotification.o shared\EventChannel_i.o shared\FilterAdmin_i.o shared\Filter_i.o shared\omniNotify.o shared\Prox
+yConsumer.o shared\ProxySupplier.o shared\RDI.o shared\RDIstrstream.o shared\RDIChannelUtil.o shared\RDIConfig.o shared\RDIConstraint.o shared\RDIDynamicEval.o shared\RDIEval.o shared\RDIEventQueue.o
+shared\RDINotifQueue.o shared\RDINotifServer.o shared\RDIOplocks.o shared\RDIOpSeq.o shared\RDIParser_l.o shared\RDIParser_y.o shared\RDIRVM.o shared\RDIRVMPool.o shared\RDIStaticEval.o shared\RDITime
+Wrappers.o shared\RDITypeMap.o omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib COS416_rt.lib COSDynamic416_rt.lib AttNotification416_rt.lib shared\COSNo
+tify416_vc9_rt.res
+shared\COSNotify4.def(1) : warning LNK4093: Drive/Directory component ignored in 'LIBRARY' statement
+   Creating library shared/COSNotify416_rt.lib and object shared/COSNotify416_rt.exp
++ mt.exe /outputresource:shared/COSNotify416_vc9_rt.dll;#2 /manifest shared/COSNotify416_vc9_rt.dll.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
++ cp shared/COSNotify416_rt.lib COSNotify4_rt.lib
++ install -c static/COSNotify4.lib ../../../../lib/x86_win32
++ install -c shared/COSNotify416_rt.lib ../../../../lib/x86_win32
++ install -c COSNotify4_rt.lib ../../../../lib/x86_win32
++ install -c shared/COSNotify416_vc9_rt.dll ../../../../bin/x86_win32
++ install -c shared/COSNotify416_vc9_rt.pdb ../../../../bin/x86_win32
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIInteractive.o -Fddebug
+\\d.pdb RDIInteractive.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIInteractive.o -Fddebug\d.pdb -TpRDIInteractive.cc
+RDIInteractive.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/ChannelAdmin_i.o -Fddebug
+\\d.pdb ChannelAdmin_i.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\ChannelAdmin_i.o -Fddebug\d.pdb -TpChannelAdmin_i.cc
+ChannelAdmin_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/corba_wrappers_impl.o -Fd
+debug\\d.pdb corba_wrappers_impl.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\corba_wrappers_impl.o -Fddebug\d.pdb -Tpcorba_wrappers_impl.cc
+corba_wrappers_impl.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/CosEventProxy.o -Fddebug\
+\d.pdb CosEventProxy.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\CosEventProxy.o -Fddebug\d.pdb -TpCosEventProxy.cc
+CosEventProxy.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/CosNfyUtils.o -Fddebug\\d
+.pdb CosNfyUtils.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\CosNfyUtils.o -Fddebug\d.pdb -TpCosNfyUtils.cc
+CosNfyUtils.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/CosNotification.o -Fddebu
+g\\d.pdb CosNotification.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\CosNotification.o -Fddebug\d.pdb -TpCosNotification.cc
+CosNotification.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/EventChannel_i.o -Fddebug
+\\d.pdb EventChannel_i.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\EventChannel_i.o -Fddebug\d.pdb -TpEventChannel_i.cc
+EventChannel_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/FilterAdmin_i.o -Fddebug\
+\d.pdb FilterAdmin_i.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\FilterAdmin_i.o -Fddebug\d.pdb -TpFilterAdmin_i.cc
+FilterAdmin_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/Filter_i.o -Fddebug\\d.pd
+b Filter_i.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\Filter_i.o -Fddebug\d.pdb -TpFilter_i.cc
+Filter_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/omniNotify.o -Fddebug\\d.
+pdb omniNotify.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\omniNotify.o -Fddebug\d.pdb -TpomniNotify.cc
+omniNotify.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/ProxyConsumer.o -Fddebug\
+\d.pdb ProxyConsumer.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\ProxyConsumer.o -Fddebug\d.pdb -TpProxyConsumer.cc
+ProxyConsumer.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/ProxySupplier.o -Fddebug\
+\d.pdb ProxySupplier.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\ProxySupplier.o -Fddebug\d.pdb -TpProxySupplier.cc
+ProxySupplier.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDI.o -Fddebug\\d.pdb RDI
+.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDI.o -Fddebug\d.pdb -TpRDI.cc
+RDI.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIstrstream.o -Fddebug\\
+d.pdb RDIstrstream.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIstrstream.o -Fddebug\d.pdb -TpRDIstrstream.cc
+RDIstrstream.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIChannelUtil.o -Fddebug
+\\d.pdb RDIChannelUtil.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIChannelUtil.o -Fddebug\d.pdb -TpRDIChannelUtil.cc
+RDIChannelUtil.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIConfig.o -Fddebug\\d.p
+db RDIConfig.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIConfig.o -Fddebug\d.pdb -TpRDIConfig.cc
+RDIConfig.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIConstraint.o -Fddebug\
+\d.pdb RDIConstraint.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIConstraint.o -Fddebug\d.pdb -TpRDIConstraint.cc
+RDIConstraint.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIDynamicEval.o -Fddebug
+\\d.pdb RDIDynamicEval.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIDynamicEval.o -Fddebug\d.pdb -TpRDIDynamicEval.cc
+RDIDynamicEval.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIEval.o -Fddebug\\d.pdb
+ RDIEval.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIEval.o -Fddebug\d.pdb -TpRDIEval.cc
+RDIEval.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIEventQueue.o -Fddebug\
+\d.pdb RDIEventQueue.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIEventQueue.o -Fddebug\d.pdb -TpRDIEventQueue.cc
+RDIEventQueue.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDINotifQueue.o -Fddebug\
+\d.pdb RDINotifQueue.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDINotifQueue.o -Fddebug\d.pdb -TpRDINotifQueue.cc
+RDINotifQueue.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDINotifServer.o -Fddebug
+\\d.pdb RDINotifServer.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDINotifServer.o -Fddebug\d.pdb -TpRDINotifServer.cc
+RDINotifServer.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIOplocks.o -Fddebug\\d.
+pdb RDIOplocks.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIOplocks.o -Fddebug\d.pdb -TpRDIOplocks.cc
+RDIOplocks.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIOpSeq.o -Fddebug\\d.pd
+b RDIOpSeq.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIOpSeq.o -Fddebug\d.pdb -TpRDIOpSeq.cc
+RDIOpSeq.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIParser_l.o -Fddebug\\d
+.pdb RDIParser_l.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIParser_l.o -Fddebug\d.pdb -TpRDIParser_l.cc
+RDIParser_l.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIParser_y.o -Fddebug\\d
+.pdb RDIParser_y.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIParser_y.o -Fddebug\d.pdb -TpRDIParser_y.cc
+RDIParser_y.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIRVM.o -Fddebug\\d.pdb
+RDIRVM.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIRVM.o -Fddebug\d.pdb -TpRDIRVM.cc
+RDIRVM.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIRVMPool.o -Fddebug\\d.
+pdb RDIRVMPool.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIRVMPool.o -Fddebug\d.pdb -TpRDIRVMPool.cc
+RDIRVMPool.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDIStaticEval.o -Fddebug\
+\d.pdb RDIStaticEval.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDIStaticEval.o -Fddebug\d.pdb -TpRDIStaticEval.cc
+RDIStaticEval.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDITimeWrappers.o -Fddebu
+g\\d.pdb RDITimeWrappers.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDITimeWrappers.o -Fddebug\d.pdb -TpRDITimeWrappers.cc
+RDITimeWrappers.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Fodebug/RDITypeMap.o -Fddebug\\d.
+pdb RDITypeMap.cc
+cl -c -MTd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Fodebug\RDITypeMap.o -Fddebug\d.pdb -TpRDITypeMap.cc
+RDITypeMap.cc
++ rm -f debug/COSNotify4d.lib
++ ../../../../bin/x86_win32/libwrapper -gnuwin32 debug/COSNotify4d.lib debug/RDIInteractive.o debug/ChannelAdmin_i.o debug/corba_wrappers_impl.o debug/CosEventProxy.o debug/CosNfyUtils.o debug/CosNoti
+fication.o debug/EventChannel_i.o debug/FilterAdmin_i.o debug/Filter_i.o debug/omniNotify.o debug/ProxyConsumer.o debug/ProxySupplier.o debug/RDI.o debug/RDIstrstream.o debug/RDIChannelUtil.o debug/RD
+IConfig.o debug/RDIConstraint.o debug/RDIDynamicEval.o debug/RDIEval.o debug/RDIEventQueue.o debug/RDINotifQueue.o debug/RDINotifServer.o debug/RDIOplocks.o debug/RDIOpSeq.o debug/RDIParser_l.o debug/
+RDIParser_y.o debug/RDIRVM.o debug/RDIRVMPool.o debug/RDIStaticEval.o debug/RDITimeWrappers.o debug/RDITypeMap.o
+lib /OUT:debug\COSNotify4d.lib debug\RDIInteractive.o debug\ChannelAdmin_i.o debug\corba_wrappers_impl.o debug\CosEventProxy.o debug\CosNfyUtils.o debug\CosNotification.o debug\EventChannel_i.o debug\
+FilterAdmin_i.o debug\Filter_i.o debug\omniNotify.o debug\ProxyConsumer.o debug\ProxySupplier.o debug\RDI.o debug\RDIstrstream.o debug\RDIChannelUtil.o debug\RDIConfig.o debug\RDIConstraint.o debug\RD
+IDynamicEval.o debug\RDIEval.o debug\RDIEventQueue.o debug\RDINotifQueue.o debug\RDINotifServer.o debug\RDIOplocks.o debug\RDIOpSeq.o debug\RDIParser_l.o debug\RDIParser_y.o debug\RDIRVM.o debug\RDIRV
+MPool.o debug\RDIStaticEval.o debug\RDITimeWrappers.o debug\RDITypeMap.o
+Microsoft (R) Library Manager Version 9.00.21022.58
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIInteractive.o -F
+dshareddebug\\ RDIInteractive.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIInteractive.o -Fdshareddebug\ -TpRDIInteractive.cc
+RDIInteractive.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/ChannelAdmin_i.o -F
+dshareddebug\\ ChannelAdmin_i.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\ChannelAdmin_i.o -Fdshareddebug\ -TpChannelAdmin_i.cc
+ChannelAdmin_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/corba_wrappers_impl
+.o -Fdshareddebug\\ corba_wrappers_impl.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\corba_wrappers_impl.o -Fdshareddebug\ -Tpcorba_wrappers_impl.cc
+corba_wrappers_impl.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/CosEventProxy.o -Fd
+shareddebug\\ CosEventProxy.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\CosEventProxy.o -Fdshareddebug\ -TpCosEventProxy.cc
+CosEventProxy.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/CosNfyUtils.o -Fdsh
+areddebug\\ CosNfyUtils.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\CosNfyUtils.o -Fdshareddebug\ -TpCosNfyUtils.cc
+CosNfyUtils.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/CosNotification.o -
+Fdshareddebug\\ CosNotification.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\CosNotification.o -Fdshareddebug\ -TpCosNotification.cc
+CosNotification.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/EventChannel_i.o -F
+dshareddebug\\ EventChannel_i.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\EventChannel_i.o -Fdshareddebug\ -TpEventChannel_i.cc
+EventChannel_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/FilterAdmin_i.o -Fd
+shareddebug\\ FilterAdmin_i.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\FilterAdmin_i.o -Fdshareddebug\ -TpFilterAdmin_i.cc
+FilterAdmin_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/Filter_i.o -Fdshare
+ddebug\\ Filter_i.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\Filter_i.o -Fdshareddebug\ -TpFilter_i.cc
+Filter_i.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/omniNotify.o -Fdsha
+reddebug\\ omniNotify.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\omniNotify.o -Fdshareddebug\ -TpomniNotify.cc
+omniNotify.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/ProxyConsumer.o -Fd
+shareddebug\\ ProxyConsumer.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\ProxyConsumer.o -Fdshareddebug\ -TpProxyConsumer.cc
+ProxyConsumer.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/ProxySupplier.o -Fd
+shareddebug\\ ProxySupplier.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\ProxySupplier.o -Fdshareddebug\ -TpProxySupplier.cc
+ProxySupplier.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDI.o -Fdshareddebu
+g\\ RDI.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDI.o -Fdshareddebug\ -TpRDI.cc
+RDI.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIstrstream.o -Fds
+hareddebug\\ RDIstrstream.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIstrstream.o -Fdshareddebug\ -TpRDIstrstream.cc
+RDIstrstream.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIChannelUtil.o -F
+dshareddebug\\ RDIChannelUtil.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIChannelUtil.o -Fdshareddebug\ -TpRDIChannelUtil.cc
+RDIChannelUtil.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIConfig.o -Fdshar
+eddebug\\ RDIConfig.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIConfig.o -Fdshareddebug\ -TpRDIConfig.cc
+RDIConfig.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIConstraint.o -Fd
+shareddebug\\ RDIConstraint.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIConstraint.o -Fdshareddebug\ -TpRDIConstraint.cc
+RDIConstraint.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIDynamicEval.o -F
+dshareddebug\\ RDIDynamicEval.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIDynamicEval.o -Fdshareddebug\ -TpRDIDynamicEval.cc
+RDIDynamicEval.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIEval.o -Fdshared
+debug\\ RDIEval.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIEval.o -Fdshareddebug\ -TpRDIEval.cc
+RDIEval.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIEventQueue.o -Fd
+shareddebug\\ RDIEventQueue.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIEventQueue.o -Fdshareddebug\ -TpRDIEventQueue.cc
+RDIEventQueue.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDINotifQueue.o -Fd
+shareddebug\\ RDINotifQueue.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDINotifQueue.o -Fdshareddebug\ -TpRDINotifQueue.cc
+RDINotifQueue.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDINotifServer.o -F
+dshareddebug\\ RDINotifServer.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDINotifServer.o -Fdshareddebug\ -TpRDINotifServer.cc
+RDINotifServer.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIOplocks.o -Fdsha
+reddebug\\ RDIOplocks.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIOplocks.o -Fdshareddebug\ -TpRDIOplocks.cc
+RDIOplocks.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIOpSeq.o -Fdshare
+ddebug\\ RDIOpSeq.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIOpSeq.o -Fdshareddebug\ -TpRDIOpSeq.cc
+RDIOpSeq.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIParser_l.o -Fdsh
+areddebug\\ RDIParser_l.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIParser_l.o -Fdshareddebug\ -TpRDIParser_l.cc
+RDIParser_l.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIParser_y.o -Fdsh
+areddebug\\ RDIParser_y.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIParser_y.o -Fdshareddebug\ -TpRDIParser_y.cc
+RDIParser_y.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIRVM.o -Fdsharedd
+ebug\\ RDIRVM.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIRVM.o -Fdshareddebug\ -TpRDIRVM.cc
+RDIRVM.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIRVMPool.o -Fdsha
+reddebug\\ RDIRVMPool.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIRVMPool.o -Fdshareddebug\ -TpRDIRVMPool.cc
+RDIRVMPool.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDIStaticEval.o -Fd
+shareddebug\\ RDIStaticEval.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDIStaticEval.o -Fdshareddebug\ -TpRDIStaticEval.cc
+RDIStaticEval.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDITimeWrappers.o -
+Fdshareddebug\\ RDITimeWrappers.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDITimeWrappers.o -Fdshareddebug\ -TpRDITimeWrappers.cc
+RDITimeWrappers.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c  -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I
+../../../../include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/omniNotify/include -Foshareddebug/RDITypeMap.o -Fdsha
+reddebug\\ RDITypeMap.cc
+cl -c -MDd -EHs -RTC1 -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -D_OMNINOTIFY_LIBRARY -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINN
+T=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\omniNotify\include -Foshareddebug\RDITypeMap.o -Fdshareddebug\ -TpRDITypeMap.cc
+RDITypeMap.cc
+(namespec="COSNotify 4 1 6" debug=1 \
+         extralibs="omniORB416_rtd.lib omniDynamic416_rtd.lib omnithread34_rtd.lib ws2_32.lib mswsock.lib advapi32.lib COS416_rtd.lib COSDynamic416_rtd.lib AttNotification416_rtd.lib"; \
+         set $namespec ; if [ $2 = "_" ] ; then set $1 "" $3 $4 ; fi; extrasuffix=${debug:+d}; targetdir=shareddebug; libname=$1$2$3$4_rt${extrasuffix:-}; slibname=$1$2_rt${extrasuffix:-}.lib; dllbase
+=$targetdir/$1$2$3$4_vc9_rt${extrasuffix:-}; dllname=$dllbase.dll; rcname=$dllbase.rc; resname=$targetdir/$1$2$3$4_vc9_rt${extrasuffix:-}.res; defname=$targetdir/$1$2${extrasuffix:-}.def; version=$3.$
+4; nanovers=`echo 0x040106F1 | cut -c 9-`; if [ -n "$debug" ]; then extralinkoption="-nologo -DEBUG"; else extralinkoption="-nologo -DEBUG"; fi; if [ -z "$nodeffile" ]; then symrefdir=${debug:+debug};
+ symreflib=${symrefdir:-static}/$1$2${extrasuffix:-}.lib; if [ ! -f $symreflib ]; then echo "Cannot find reference static library $symreflib"; return 1; fi; set -x; echo "LIBRARY $dllbase" > $defname;
+ echo "VERSION $version" >> $defname; echo "EXPORTS" >> $defname; DUMPBIN.EXE /SYMBOLS $symreflib | egrep '^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +\(\) +External +\| +\?[^ ]*|^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+
++External +\| +\?[^?][^ ]*'| egrep -v 'deleting destructor[^(]+\(unsigned int\)' | egrep -v 'anonymous namespace' | egrep -v '@std@' | cut -d'|' -f2 | cut -d' ' -f2 | /bin/sort -u >> $defname; set +x;
+ defflag="-def:$defname"; fi; if [ -n "$2" ]; then commaver=$2,$3,$4,0x$nanovers; dotver=$2.$3.$4.$nanovers; else commaver=$3,$4,0x$nanovers,0; dotver=$3.$4.$nanovers; fi; set -x; echo "#include \"win
+dows.h\"" > $rcname; echo "VS_VERSION_INFO VERSIONINFO" >> $rcname; echo " FILEVERSION $commaver" >> $rcname; echo " PRODUCTVERSION 4,1,6,0x$nanovers" >> $rcname; echo " FILEFLAGSMASK 0x3fL" >> $rcnam
+e; if [ -n "$debug" ]; then echo " FILEFLAGS VS_FF_DEBUG" >> $rcname; else echo " FILEFLAGS 0x0L" >> $rcname; fi; echo " FILEOS VOS_UNKNOWN" >> $rcname; echo " FILETYPE VFT_UNKNOWN" >> $rcname; echo "
+ FILESUBTYPE 0x0L" >> $rcname; echo "{    " >> $rcname; echo "    BLOCK \"StringFileInfo\"" >> $rcname; echo "    {" >> $rcname; echo "        BLOCK \"00000000\"" >> $rcname; echo "        {" >> $rcna
+me; echo "            VALUE \"CompanyName\", \"omniORB open source project\0\"" >> $rcname; echo "            VALUE \"FileDescription\", \"omniORB\0\"" >> $rcname; echo "            VALUE \"FileVersio
+n\", \"$dotver\0\"" >> $rcname; echo "            VALUE \"InternalName\", \"$1$2$3$4_vc9_rt${extrasuffix:-}.dll\0\"" >> $rcname; echo "            VALUE \"OriginalFilename\", \"$1$2$3$4_vc9_rt${extras
+uffix:-}.dll\0\"" >> $rcname; echo "            VALUE \"ProductName\", \"omniORB\"" >> $rcname; echo "            VALUE \"ProductVersion\", \"4.1.6.$nanovers\0\"" >> $rcname; echo "            VALUE \
+"LegalCopyright\", \"Apasphere Ltd., AT&T Laboratories Cambridge, and others. Freely available under the terms of the GNU LGPL.\0\"" >> $rcname; echo "        }" >> $rcname; echo "    }" >> $rcname; e
+cho "    BLOCK \"VarFileInfo\"" >> $rcname; echo "    {" >> $rcname; echo "        VALUE \"Translation\", 0x0, 0" >> $rcname; echo "    }" >> $rcname; echo "}" >> $rcname; echo "LANGUAGE LANG_NEUTRAL,
+ SUBLANG_NEUTRAL" >> $rcname; rc.exe $rcname; set -x; rm -f shareddebug/COSNotify416_rtd.lib; ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:$dllname -DLL $extralinkoption $defflag -IMPLIB:share
+ddebug/COSNotify416_rtd.lib -libpath:../../../../lib/x86_win32 shareddebug/RDIInteractive.o shareddebug/ChannelAdmin_i.o shareddebug/corba_wrappers_impl.o shareddebug/CosEventProxy.o shareddebug/CosNf
+yUtils.o shareddebug/CosNotification.o shareddebug/EventChannel_i.o shareddebug/FilterAdmin_i.o shareddebug/Filter_i.o shareddebug/omniNotify.o shareddebug/ProxyConsumer.o shareddebug/ProxySupplier.o
+shareddebug/RDI.o shareddebug/RDIstrstream.o shareddebug/RDIChannelUtil.o shareddebug/RDIConfig.o shareddebug/RDIConstraint.o shareddebug/RDIDynamicEval.o shareddebug/RDIEval.o shareddebug/RDIEventQue
+ue.o shareddebug/RDINotifQueue.o shareddebug/RDINotifServer.o shareddebug/RDIOplocks.o shareddebug/RDIOpSeq.o shareddebug/RDIParser_l.o shareddebug/RDIParser_y.o shareddebug/RDIRVM.o shareddebug/RDIRV
+MPool.o shareddebug/RDIStaticEval.o shareddebug/RDITimeWrappers.o shareddebug/RDITypeMap.o $extralibs $resname; mt.exe /outputresource:"$dllname;#2" /manifest $dllname.manifest; cp shareddebug/COSNoti
+fy416_rtd.lib $slibname;)
++ echo LIBRARY shareddebug/COSNotify416_vc9_rtd
++ echo VERSION 1.6
++ echo EXPORTS
++ DUMPBIN.EXE /SYMBOLS debug/COSNotify4d.lib
++ egrep ^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +\(\) +External +\| +\?[^ ]*|^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +External +\| +\?[^?][^ ]*
++ egrep -v deleting destructor[^(]+\(unsigned int\)
++ egrep -v anonymous namespace
++ egrep -v @std@
++ cut -d| -f2
++ cut -d  -f2
++ /bin/sort -u
++ set +x
++ echo #include "windows.h"
++ echo VS_VERSION_INFO VERSIONINFO
++ echo  FILEVERSION 4,1,6,0xF1
++ echo  PRODUCTVERSION 4,1,6,0xF1
++ echo  FILEFLAGSMASK 0x3fL
++ [ -n 1 ]
++ echo  FILEFLAGS VS_FF_DEBUG
++ echo  FILEOS VOS_UNKNOWN
++ echo  FILETYPE VFT_UNKNOWN
++ echo  FILESUBTYPE 0x0L
++ echo {
++ echo     BLOCK "StringFileInfo"
++ echo     {
++ echo         BLOCK "00000000"
++ echo         {
++ echo             VALUE "CompanyName", "omniORB open source project\0"
++ echo             VALUE "FileDescription", "omniORB\0"
++ echo             VALUE "FileVersion", "4.1.6.F1\0"
++ echo             VALUE "InternalName", "COSNotify416_vc9_rtd.dll\0"
++ echo             VALUE "OriginalFilename", "COSNotify416_vc9_rtd.dll\0"
++ echo             VALUE "ProductName", "omniORB"
++ echo             VALUE "ProductVersion", "4.1.6.F1\0"
++ echo             VALUE "LegalCopyright", "Apasphere Ltd., AT&T Laboratories Cambridge, and others. Freely available under the terms of the GNU LGPL.\0"
++ echo         }
++ echo     }
++ echo     BLOCK "VarFileInfo"
++ echo     {
++ echo         VALUE "Translation", 0x0, 0
++ echo     }
++ echo }
++ echo LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
++ rc.exe shareddebug/COSNotify416_vc9_rtd.rc
+Microsoft (R) Windows (R) Resource Compiler Version 6.0.5724.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
++ set -x
++ rm -f shareddebug/COSNotify416_rtd.lib
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:shareddebug/COSNotify416_vc9_rtd.dll -DLL -nologo -DEBUG -def:shareddebug/COSNotify4d.def -IMPLIB:shareddebug/COSNotify416_rtd.lib -libpath:../..
+/../../lib/x86_win32 shareddebug/RDIInteractive.o shareddebug/ChannelAdmin_i.o shareddebug/corba_wrappers_impl.o shareddebug/CosEventProxy.o shareddebug/CosNfyUtils.o shareddebug/CosNotification.o sha
+reddebug/EventChannel_i.o shareddebug/FilterAdmin_i.o shareddebug/Filter_i.o shareddebug/omniNotify.o shareddebug/ProxyConsumer.o shareddebug/ProxySupplier.o shareddebug/RDI.o shareddebug/RDIstrstream
+.o shareddebug/RDIChannelUtil.o shareddebug/RDIConfig.o shareddebug/RDIConstraint.o shareddebug/RDIDynamicEval.o shareddebug/RDIEval.o shareddebug/RDIEventQueue.o shareddebug/RDINotifQueue.o shareddeb
+ug/RDINotifServer.o shareddebug/RDIOplocks.o shareddebug/RDIOpSeq.o shareddebug/RDIParser_l.o shareddebug/RDIParser_y.o shareddebug/RDIRVM.o shareddebug/RDIRVMPool.o shareddebug/RDIStaticEval.o shared
+debug/RDITimeWrappers.o shareddebug/RDITypeMap.o omniORB416_rtd.lib omniDynamic416_rtd.lib omnithread34_rtd.lib ws2_32.lib mswsock.lib advapi32.lib COS416_rtd.lib COSDynamic416_rtd.lib AttNotification
+416_rtd.lib shareddebug/COSNotify416_vc9_rtd.res
+link -out:shareddebug\COSNotify416_vc9_rtd.dll -DLL -nologo -DEBUG -def:shareddebug\COSNotify4d.def -IMPLIB:shareddebug/COSNotify416_rtd.lib -libpath:..\..\..\..\lib\x86_win32 shareddebug\RDIInteracti
+ve.o shareddebug\ChannelAdmin_i.o shareddebug\corba_wrappers_impl.o shareddebug\CosEventProxy.o shareddebug\CosNfyUtils.o shareddebug\CosNotification.o shareddebug\EventChannel_i.o shareddebug\FilterA
+dmin_i.o shareddebug\Filter_i.o shareddebug\omniNotify.o shareddebug\ProxyConsumer.o shareddebug\ProxySupplier.o shareddebug\RDI.o shareddebug\RDIstrstream.o shareddebug\RDIChannelUtil.o shareddebug\R
+DIConfig.o shareddebug\RDIConstraint.o shareddebug\RDIDynamicEval.o shareddebug\RDIEval.o shareddebug\RDIEventQueue.o shareddebug\RDINotifQueue.o shareddebug\RDINotifServer.o shareddebug\RDIOplocks.o
+shareddebug\RDIOpSeq.o shareddebug\RDIParser_l.o shareddebug\RDIParser_y.o shareddebug\RDIRVM.o shareddebug\RDIRVMPool.o shareddebug\RDIStaticEval.o shareddebug\RDITimeWrappers.o shareddebug\RDITypeMa
+p.o omniORB416_rtd.lib omniDynamic416_rtd.lib omnithread34_rtd.lib ws2_32.lib mswsock.lib advapi32.lib COS416_rtd.lib COSDynamic416_rtd.lib AttNotification416_rtd.lib shareddebug\COSNotify416_vc9_rtd.
+res
+shareddebug\COSNotify4d.def(1) : warning LNK4093: Drive/Directory component ignored in 'LIBRARY' statement
+   Creating library shareddebug/COSNotify416_rtd.lib and object shareddebug/COSNotify416_rtd.exp
++ mt.exe /outputresource:shareddebug/COSNotify416_vc9_rtd.dll;#2 /manifest shareddebug/COSNotify416_vc9_rtd.dll.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
++ cp shareddebug/COSNotify416_rtd.lib COSNotify4_rtd.lib
++ install -c debug/COSNotify4d.lib ../../../../lib/x86_win32
++ install -c shareddebug/COSNotify416_rtd.lib ../../../../lib/x86_win32
++ install -c COSNotify4_rtd.lib ../../../../lib/x86_win32
++ install -c shareddebug/COSNotify416_vc9_rtd.dll ../../../../bin/x86_win32
++ install -c shareddebug/COSNotify416_vc9_rtd.pdb ../../../../bin/x86_win32
+make[1]: Leaving directory `/cygdrive/c/_perforce/COTS/omniORB/omniORB_4.1.6/src/services/omniNotify/lib'
+making export in src/services/omniNotify/daemon...
+make[1]: Entering directory `/cygdrive/c/_perforce/COTS/omniORB/omniORB_4.1.6/src/services/omniNotify/daemon'
+../../../../bin/x86_win32/omkdepend -D__cplusplus -D_MSC_VER -D__OMNIORB4__ -I../../../../stub -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0
+x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify ReadyChannel_d.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -FoReadyChannel_d.o ReadyChannel_d.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -FoReadyChannel_d.o -TpReadyChannel_d.cc
+ReadyChannel_d.cc
++ rm -f notifd.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:notifd.exe -nologo -DEBUG -PDB:notifd.exe.pdb -libpath:../../../../lib/x86_win32 ReadyChannel_d.o COSNotify416_rt.lib AttNotification416_rt.lib C
+OS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:notifd.exe -nologo -DEBUG -PDB:notifd.exe.pdb -libpath:..\..\..\..\lib\x86_win32 ReadyChannel_d.o COSNotify416_rt.lib AttNotification416_rt.lib COS416_rt.lib COSDynamic416_rt.lib omniORB416_
+rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:notifd.exe;#1 /manifest notifd.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
++ install -c notifd.exe ../../../../bin/x86_win32
+make[1]: Leaving directory `/cygdrive/c/_perforce/COTS/omniORB/omniORB_4.1.6/src/services/omniNotify/daemon'
+making export in src/services/omniNotify/examples...
+make[1]: Entering directory `/cygdrive/c/_perforce/COTS/omniORB/omniORB_4.1.6/src/services/omniNotify/examples'
+../../../../bin/x86_win32/omkdepend -D__cplusplus -D_MSC_VER -D__OMNIORB4__ -I../../../../stub -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../include -D__WIN32__ -D_WIN32_WINNT=0
+x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify all_cosnotify_clients.cc some_notify_clients.cc ten_any_pull_consumers.cc s512_pus
+h_supplier.cc s512_push_consumer.cc struct_push_supplier.cc struct_push_consumer.cc struct_pull_supplier.cc struct_pull_consumer.cc legacy_push_supplier.cc legacy_push_consumer.cc legacy_pull_supplier
+.cc legacy_pull_consumer.cc batch_push_supplier.cc batch_push_consumer.cc batch_pull_supplier.cc batch_pull_consumer.cc any_push_supplier.cc any_push_consumer.cc any_pull_supplier.cc any_pull_consumer
+.cc demo_subscription_change.cc demo_offer_change.cc demo_add_filter.cc legacy_clients.cc sample_clients.cc sample_functions.cc ndadmin.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fondadmin.o ndadmin.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fondadmin.o -Tpndadmin.cc
+ndadmin.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fosample_functions.o sample_functions.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fosample_functions.o -Tpsample_functions.cc
+sample_functions.cc
++ rm -f ndadmin.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:ndadmin.exe -nologo -DEBUG -PDB:ndadmin.exe.pdb -libpath:../../../../lib/x86_win32 ndadmin.o sample_functions.o AttNotification416_rt.lib COS416_
+rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:ndadmin.exe -nologo -DEBUG -PDB:ndadmin.exe.pdb -libpath:..\..\..\..\lib\x86_win32 ndadmin.o sample_functions.o AttNotification416_rt.lib COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib
+ omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:ndadmin.exe;#1 /manifest ndadmin.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Foten_any_pull_consumers.o ten_any_pull_consumers
+.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Foten_any_pull_consumers.o -Tpten_any_pull_consumers.cc
+ten_any_pull_consumers.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fosample_clients.o sample_clients.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fosample_clients.o -Tpsample_clients.cc
+sample_clients.cc
++ rm -f ten_any_pull_consumers.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:ten_any_pull_consumers.exe -nologo -DEBUG -PDB:ten_any_pull_consumers.exe.pdb -libpath:../../../../lib/x86_win32 ten_any_pull_consumers.o sample_
+clients.o sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:ten_any_pull_consumers.exe -nologo -DEBUG -PDB:ten_any_pull_consumers.exe.pdb -libpath:..\..\..\..\lib\x86_win32 ten_any_pull_consumers.o sample_clients.o sample_functions.o COS416_rt.lib CO
+SDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:ten_any_pull_consumers.exe;#1 /manifest ten_any_pull_consumers.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fosome_notify_clients.o some_notify_clients.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fosome_notify_clients.o -Tpsome_notify_clients.cc
+some_notify_clients.cc
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Folegacy_clients.o legacy_clients.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Folegacy_clients.o -Tplegacy_clients.cc
+legacy_clients.cc
++ rm -f some_notify_clients.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:some_notify_clients.exe -nologo -DEBUG -PDB:some_notify_clients.exe.pdb -libpath:../../../../lib/x86_win32 some_notify_clients.o sample_clients.o
+ legacy_clients.o sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:some_notify_clients.exe -nologo -DEBUG -PDB:some_notify_clients.exe.pdb -libpath:..\..\..\..\lib\x86_win32 some_notify_clients.o sample_clients.o legacy_clients.o sample_functions.o COS416_r
+t.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:some_notify_clients.exe;#1 /manifest some_notify_clients.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Foall_cosnotify_clients.o all_cosnotify_clients.c
+c
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Foall_cosnotify_clients.o -Tpall_cosnotify_clients.cc
+all_cosnotify_clients.cc
++ rm -f all_cosnotify_clients.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:all_cosnotify_clients.exe -nologo -DEBUG -PDB:all_cosnotify_clients.exe.pdb -libpath:../../../../lib/x86_win32 all_cosnotify_clients.o sample_cli
+ents.o sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:all_cosnotify_clients.exe -nologo -DEBUG -PDB:all_cosnotify_clients.exe.pdb -libpath:..\..\..\..\lib\x86_win32 all_cosnotify_clients.o sample_clients.o sample_functions.o COS416_rt.lib COSDy
+namic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:all_cosnotify_clients.exe;#1 /manifest all_cosnotify_clients.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fodemo_add_filter.o demo_add_filter.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fodemo_add_filter.o -Tpdemo_add_filter.cc
+demo_add_filter.cc
++ rm -f demo_add_filter.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:demo_add_filter.exe -nologo -DEBUG -PDB:demo_add_filter.exe.pdb -libpath:../../../../lib/x86_win32 demo_add_filter.o sample_clients.o sample_func
+tions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:demo_add_filter.exe -nologo -DEBUG -PDB:demo_add_filter.exe.pdb -libpath:..\..\..\..\lib\x86_win32 demo_add_filter.o sample_clients.o sample_functions.o COS416_rt.lib COSDynamic416_rt.lib om
+niORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:demo_add_filter.exe;#1 /manifest demo_add_filter.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fodemo_offer_change.o demo_offer_change.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fodemo_offer_change.o -Tpdemo_offer_change.cc
+demo_offer_change.cc
++ rm -f demo_offer_change.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:demo_offer_change.exe -nologo -DEBUG -PDB:demo_offer_change.exe.pdb -libpath:../../../../lib/x86_win32 demo_offer_change.o sample_clients.o sampl
+e_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:demo_offer_change.exe -nologo -DEBUG -PDB:demo_offer_change.exe.pdb -libpath:..\..\..\..\lib\x86_win32 demo_offer_change.o sample_clients.o sample_functions.o COS416_rt.lib COSDynamic416_rt.
+lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:demo_offer_change.exe;#1 /manifest demo_offer_change.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fodemo_subscription_change.o demo_subscription_ch
+ange.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fodemo_subscription_change.o -Tpdemo_subscription_change.cc
+demo_subscription_change.cc
++ rm -f demo_subscription_change.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:demo_subscription_change.exe -nologo -DEBUG -PDB:demo_subscription_change.exe.pdb -libpath:../../../../lib/x86_win32 demo_subscription_change.o s
+ample_clients.o sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:demo_subscription_change.exe -nologo -DEBUG -PDB:demo_subscription_change.exe.pdb -libpath:..\..\..\..\lib\x86_win32 demo_subscription_change.o sample_clients.o sample_functions.o COS416_rt.
+lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:demo_subscription_change.exe;#1 /manifest demo_subscription_change.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Foany_pull_consumer.o any_pull_consumer.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Foany_pull_consumer.o -Tpany_pull_consumer.cc
+any_pull_consumer.cc
++ rm -f any_pull_consumer.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:any_pull_consumer.exe -nologo -DEBUG -PDB:any_pull_consumer.exe.pdb -libpath:../../../../lib/x86_win32 any_pull_consumer.o sample_clients.o sampl
+e_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:any_pull_consumer.exe -nologo -DEBUG -PDB:any_pull_consumer.exe.pdb -libpath:..\..\..\..\lib\x86_win32 any_pull_consumer.o sample_clients.o sample_functions.o COS416_rt.lib COSDynamic416_rt.
+lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:any_pull_consumer.exe;#1 /manifest any_pull_consumer.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Foany_pull_supplier.o any_pull_supplier.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Foany_pull_supplier.o -Tpany_pull_supplier.cc
+any_pull_supplier.cc
++ rm -f any_pull_supplier.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:any_pull_supplier.exe -nologo -DEBUG -PDB:any_pull_supplier.exe.pdb -libpath:../../../../lib/x86_win32 any_pull_supplier.o sample_clients.o sampl
+e_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:any_pull_supplier.exe -nologo -DEBUG -PDB:any_pull_supplier.exe.pdb -libpath:..\..\..\..\lib\x86_win32 any_pull_supplier.o sample_clients.o sample_functions.o COS416_rt.lib COSDynamic416_rt.
+lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:any_pull_supplier.exe;#1 /manifest any_pull_supplier.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Foany_push_consumer.o any_push_consumer.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Foany_push_consumer.o -Tpany_push_consumer.cc
+any_push_consumer.cc
++ rm -f any_push_consumer.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:any_push_consumer.exe -nologo -DEBUG -PDB:any_push_consumer.exe.pdb -libpath:../../../../lib/x86_win32 any_push_consumer.o sample_clients.o sampl
+e_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:any_push_consumer.exe -nologo -DEBUG -PDB:any_push_consumer.exe.pdb -libpath:..\..\..\..\lib\x86_win32 any_push_consumer.o sample_clients.o sample_functions.o COS416_rt.lib COSDynamic416_rt.
+lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:any_push_consumer.exe;#1 /manifest any_push_consumer.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Foany_push_supplier.o any_push_supplier.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Foany_push_supplier.o -Tpany_push_supplier.cc
+any_push_supplier.cc
++ rm -f any_push_supplier.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:any_push_supplier.exe -nologo -DEBUG -PDB:any_push_supplier.exe.pdb -libpath:../../../../lib/x86_win32 any_push_supplier.o sample_clients.o sampl
+e_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:any_push_supplier.exe -nologo -DEBUG -PDB:any_push_supplier.exe.pdb -libpath:..\..\..\..\lib\x86_win32 any_push_supplier.o sample_clients.o sample_functions.o COS416_rt.lib COSDynamic416_rt.
+lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:any_push_supplier.exe;#1 /manifest any_push_supplier.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fobatch_pull_consumer.o batch_pull_consumer.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fobatch_pull_consumer.o -Tpbatch_pull_consumer.cc
+batch_pull_consumer.cc
++ rm -f batch_pull_consumer.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:batch_pull_consumer.exe -nologo -DEBUG -PDB:batch_pull_consumer.exe.pdb -libpath:../../../../lib/x86_win32 batch_pull_consumer.o sample_clients.o
+ sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:batch_pull_consumer.exe -nologo -DEBUG -PDB:batch_pull_consumer.exe.pdb -libpath:..\..\..\..\lib\x86_win32 batch_pull_consumer.o sample_clients.o sample_functions.o COS416_rt.lib COSDynamic4
+16_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:batch_pull_consumer.exe;#1 /manifest batch_pull_consumer.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fobatch_pull_supplier.o batch_pull_supplier.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fobatch_pull_supplier.o -Tpbatch_pull_supplier.cc
+batch_pull_supplier.cc
++ rm -f batch_pull_supplier.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:batch_pull_supplier.exe -nologo -DEBUG -PDB:batch_pull_supplier.exe.pdb -libpath:../../../../lib/x86_win32 batch_pull_supplier.o sample_clients.o
+ sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:batch_pull_supplier.exe -nologo -DEBUG -PDB:batch_pull_supplier.exe.pdb -libpath:..\..\..\..\lib\x86_win32 batch_pull_supplier.o sample_clients.o sample_functions.o COS416_rt.lib COSDynamic4
+16_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:batch_pull_supplier.exe;#1 /manifest batch_pull_supplier.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fobatch_push_consumer.o batch_push_consumer.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fobatch_push_consumer.o -Tpbatch_push_consumer.cc
+batch_push_consumer.cc
++ rm -f batch_push_consumer.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:batch_push_consumer.exe -nologo -DEBUG -PDB:batch_push_consumer.exe.pdb -libpath:../../../../lib/x86_win32 batch_push_consumer.o sample_clients.o
+ sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:batch_push_consumer.exe -nologo -DEBUG -PDB:batch_push_consumer.exe.pdb -libpath:..\..\..\..\lib\x86_win32 batch_push_consumer.o sample_clients.o sample_functions.o COS416_rt.lib COSDynamic4
+16_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:batch_push_consumer.exe;#1 /manifest batch_push_consumer.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fobatch_push_supplier.o batch_push_supplier.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fobatch_push_supplier.o -Tpbatch_push_supplier.cc
+batch_push_supplier.cc
++ rm -f batch_push_supplier.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:batch_push_supplier.exe -nologo -DEBUG -PDB:batch_push_supplier.exe.pdb -libpath:../../../../lib/x86_win32 batch_push_supplier.o sample_clients.o
+ sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:batch_push_supplier.exe -nologo -DEBUG -PDB:batch_push_supplier.exe.pdb -libpath:..\..\..\..\lib\x86_win32 batch_push_supplier.o sample_clients.o sample_functions.o COS416_rt.lib COSDynamic4
+16_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:batch_push_supplier.exe;#1 /manifest batch_push_supplier.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Folegacy_pull_consumer.o legacy_pull_consumer.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Folegacy_pull_consumer.o -Tplegacy_pull_consumer.cc
+legacy_pull_consumer.cc
++ rm -f legacy_pull_consumer.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:legacy_pull_consumer.exe -nologo -DEBUG -PDB:legacy_pull_consumer.exe.pdb -libpath:../../../../lib/x86_win32 legacy_pull_consumer.o legacy_client
+s.o sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:legacy_pull_consumer.exe -nologo -DEBUG -PDB:legacy_pull_consumer.exe.pdb -libpath:..\..\..\..\lib\x86_win32 legacy_pull_consumer.o legacy_clients.o sample_functions.o COS416_rt.lib COSDynam
+ic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:legacy_pull_consumer.exe;#1 /manifest legacy_pull_consumer.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Folegacy_pull_supplier.o legacy_pull_supplier.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Folegacy_pull_supplier.o -Tplegacy_pull_supplier.cc
+legacy_pull_supplier.cc
++ rm -f legacy_pull_supplier.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:legacy_pull_supplier.exe -nologo -DEBUG -PDB:legacy_pull_supplier.exe.pdb -libpath:../../../../lib/x86_win32 legacy_pull_supplier.o legacy_client
+s.o sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:legacy_pull_supplier.exe -nologo -DEBUG -PDB:legacy_pull_supplier.exe.pdb -libpath:..\..\..\..\lib\x86_win32 legacy_pull_supplier.o legacy_clients.o sample_functions.o COS416_rt.lib COSDynam
+ic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:legacy_pull_supplier.exe;#1 /manifest legacy_pull_supplier.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Folegacy_push_consumer.o legacy_push_consumer.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Folegacy_push_consumer.o -Tplegacy_push_consumer.cc
+legacy_push_consumer.cc
++ rm -f legacy_push_consumer.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:legacy_push_consumer.exe -nologo -DEBUG -PDB:legacy_push_consumer.exe.pdb -libpath:../../../../lib/x86_win32 legacy_push_consumer.o legacy_client
+s.o sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:legacy_push_consumer.exe -nologo -DEBUG -PDB:legacy_push_consumer.exe.pdb -libpath:..\..\..\..\lib\x86_win32 legacy_push_consumer.o legacy_clients.o sample_functions.o COS416_rt.lib COSDynam
+ic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:legacy_push_consumer.exe;#1 /manifest legacy_push_consumer.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Folegacy_push_supplier.o legacy_push_supplier.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Folegacy_push_supplier.o -Tplegacy_push_supplier.cc
+legacy_push_supplier.cc
++ rm -f legacy_push_supplier.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:legacy_push_supplier.exe -nologo -DEBUG -PDB:legacy_push_supplier.exe.pdb -libpath:../../../../lib/x86_win32 legacy_push_supplier.o legacy_client
+s.o sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:legacy_push_supplier.exe -nologo -DEBUG -PDB:legacy_push_supplier.exe.pdb -libpath:..\..\..\..\lib\x86_win32 legacy_push_supplier.o legacy_clients.o sample_functions.o COS416_rt.lib COSDynam
+ic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:legacy_push_supplier.exe;#1 /manifest legacy_push_supplier.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fostruct_pull_consumer.o struct_pull_consumer.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fostruct_pull_consumer.o -Tpstruct_pull_consumer.cc
+struct_pull_consumer.cc
++ rm -f struct_pull_consumer.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:struct_pull_consumer.exe -nologo -DEBUG -PDB:struct_pull_consumer.exe.pdb -libpath:../../../../lib/x86_win32 struct_pull_consumer.o sample_client
+s.o sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:struct_pull_consumer.exe -nologo -DEBUG -PDB:struct_pull_consumer.exe.pdb -libpath:..\..\..\..\lib\x86_win32 struct_pull_consumer.o sample_clients.o sample_functions.o COS416_rt.lib COSDynam
+ic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:struct_pull_consumer.exe;#1 /manifest struct_pull_consumer.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fostruct_pull_supplier.o struct_pull_supplier.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fostruct_pull_supplier.o -Tpstruct_pull_supplier.cc
+struct_pull_supplier.cc
++ rm -f struct_pull_supplier.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:struct_pull_supplier.exe -nologo -DEBUG -PDB:struct_pull_supplier.exe.pdb -libpath:../../../../lib/x86_win32 struct_pull_supplier.o sample_client
+s.o sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:struct_pull_supplier.exe -nologo -DEBUG -PDB:struct_pull_supplier.exe.pdb -libpath:..\..\..\..\lib\x86_win32 struct_pull_supplier.o sample_clients.o sample_functions.o COS416_rt.lib COSDynam
+ic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:struct_pull_supplier.exe;#1 /manifest struct_pull_supplier.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fostruct_push_consumer.o struct_push_consumer.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fostruct_push_consumer.o -Tpstruct_push_consumer.cc
+struct_push_consumer.cc
++ rm -f struct_push_consumer.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:struct_push_consumer.exe -nologo -DEBUG -PDB:struct_push_consumer.exe.pdb -libpath:../../../../lib/x86_win32 struct_push_consumer.o sample_client
+s.o sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:struct_push_consumer.exe -nologo -DEBUG -PDB:struct_push_consumer.exe.pdb -libpath:..\..\..\..\lib\x86_win32 struct_push_consumer.o sample_clients.o sample_functions.o COS416_rt.lib COSDynam
+ic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:struct_push_consumer.exe;#1 /manifest struct_push_consumer.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fostruct_push_supplier.o struct_push_supplier.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fostruct_push_supplier.o -Tpstruct_push_supplier.cc
+struct_push_supplier.cc
++ rm -f struct_push_supplier.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:struct_push_supplier.exe -nologo -DEBUG -PDB:struct_push_supplier.exe.pdb -libpath:../../../../lib/x86_win32 struct_push_supplier.o sample_client
+s.o sample_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:struct_push_supplier.exe -nologo -DEBUG -PDB:struct_push_supplier.exe.pdb -libpath:..\..\..\..\lib\x86_win32 struct_push_supplier.o sample_clients.o sample_functions.o COS416_rt.lib COSDynam
+ic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:struct_push_supplier.exe;#1 /manifest struct_push_supplier.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fos512_push_consumer.o s512_push_consumer.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fos512_push_consumer.o -Tps512_push_consumer.cc
+s512_push_consumer.cc
++ rm -f s512_push_consumer.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:s512_push_consumer.exe -nologo -DEBUG -PDB:s512_push_consumer.exe.pdb -libpath:../../../../lib/x86_win32 s512_push_consumer.o sample_clients.o sa
+mple_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:s512_push_consumer.exe -nologo -DEBUG -PDB:s512_push_consumer.exe.pdb -libpath:..\..\..\..\lib\x86_win32 s512_push_consumer.o sample_clients.o sample_functions.o COS416_rt.lib COSDynamic416_
+rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:s512_push_consumer.exe;#1 /manifest s512_push_consumer.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
+../../../../bin/x86_win32/clwrapper -gnuwin32 -c -O2 -DNDEBUG  -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I../../../../stub  -I../../../../include/COS -DUSE_stub_in_nt_dll -I. -I. -I../../../../incl
+ude -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I../../../../src/services/include/omniNotify -Fos512_push_supplier.o s512_push_supplier.cc
+cl -c -O2 -DNDEBUG -MD -EHs -GS -GR -Zi -nologo -D__OMNIORB4__ -I..\..\..\..\stub -I..\..\..\..\include\COS -DUSE_stub_in_nt_dll -I. -I. -I..\..\..\..\include -D__WIN32__ -D_WIN32_WINNT=0x0501 -D__x86
+__ -D__NT__ -D__OSVERSION__=4 -D_CRT_SECURE_NO_DEPRECATE=1 -I..\..\..\..\src\services\include\omniNotify -Fos512_push_supplier.o -Tps512_push_supplier.cc
+s512_push_supplier.cc
++ rm -f s512_push_supplier.exe
++ ../../../../bin/x86_win32/linkwrapper -gnuwin32 -out:s512_push_supplier.exe -nologo -DEBUG -PDB:s512_push_supplier.exe.pdb -libpath:../../../../lib/x86_win32 s512_push_supplier.o sample_clients.o sa
+mple_functions.o COS416_rt.lib COSDynamic416_rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
+link -out:s512_push_supplier.exe -nologo -DEBUG -PDB:s512_push_supplier.exe.pdb -libpath:..\..\..\..\lib\x86_win32 s512_push_supplier.o sample_clients.o sample_functions.o COS416_rt.lib COSDynamic416_
+rt.lib omniORB416_rt.lib omniDynamic416_rt.lib omnithread34_rt.lib ws2_32.lib mswsock.lib advapi32.lib
++ mt.exe /outputresource:s512_push_supplier.exe;#1 /manifest s512_push_supplier.exe.manifest
+Microsoft (R) Manifest Tool version 5.2.3790.2075
+Copyright (c) Microsoft Corporation 2005.
+All rights reserved.
++ install -c ndadmin.exe ../../../../bin/x86_win32
++ install -c ten_any_pull_consumers.exe ../../../../bin/x86_win32
++ install -c some_notify_clients.exe ../../../../bin/x86_win32
++ install -c all_cosnotify_clients.exe ../../../../bin/x86_win32
++ install -c demo_add_filter.exe ../../../../bin/x86_win32
++ install -c demo_offer_change.exe ../../../../bin/x86_win32
++ install -c demo_subscription_change.exe ../../../../bin/x86_win32
++ install -c any_pull_consumer.exe ../../../../bin/x86_win32
++ install -c any_pull_supplier.exe ../../../../bin/x86_win32
++ install -c any_push_consumer.exe ../../../../bin/x86_win32
++ install -c any_push_supplier.exe ../../../../bin/x86_win32
++ install -c batch_pull_consumer.exe ../../../../bin/x86_win32
++ install -c batch_pull_supplier.exe ../../../../bin/x86_win32
++ install -c batch_push_consumer.exe ../../../../bin/x86_win32
++ install -c batch_push_supplier.exe ../../../../bin/x86_win32
++ install -c legacy_pull_consumer.exe ../../../../bin/x86_win32
++ install -c legacy_pull_supplier.exe ../../../../bin/x86_win32
++ install -c legacy_push_consumer.exe ../../../../bin/x86_win32
++ install -c legacy_push_supplier.exe ../../../../bin/x86_win32
++ install -c struct_pull_consumer.exe ../../../../bin/x86_win32
++ install -c struct_pull_supplier.exe ../../../../bin/x86_win32
++ install -c struct_push_consumer.exe ../../../../bin/x86_win32
++ install -c struct_push_supplier.exe ../../../../bin/x86_win32
++ install -c s512_push_consumer.exe ../../../../bin/x86_win32
++ install -c s512_push_supplier.exe ../../../../bin/x86_win32
+make[1]: Leaving directory `/cygdrive/c/_perforce/COTS/omniORB/omniORB_4.1.6/src/services/omniNotify/examples'
+
+C:\_perforce\COTS\omniORB\omniORB_4.1.6\src\services\omniNotify>
