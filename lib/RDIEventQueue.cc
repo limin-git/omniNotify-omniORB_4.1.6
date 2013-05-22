@@ -35,7 +35,7 @@
 #include "RDIEventQueue.h"
 
 
-// #define GC_WHOLE_EVENT_QUEUE
+#define GC_WHOLE_EVENT_QUEUE
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
 // Notes
@@ -393,12 +393,17 @@ RDI_EventQueue::garbage_collect()
 #ifdef GC_WHOLE_EVENT_QUEUE
     RDIDbgEvQLog("\tGC thread " << tid << ", go through whole event queue begin \n");
     RDI_StructuredEvent* cur = _evhead;
+    RDI_StructuredEvent* pre = _evhead;
     while ( --cursize && cur )
     {
         if ( (cur->ref_counter() == 1) && (cur->get_state() != RDI_StructuredEvent::NEWBORN) )
         {
             tmpevnt = cur;
+            pre->_next = cur->_next;
+
+            pre = cur;
             cur = cur->_next;
+
             delete tmpevnt;
             if ( ++evncntr % 100 == 0 ) 
             {
@@ -407,6 +412,7 @@ RDI_EventQueue::garbage_collect()
         }
         else
         {
+            pre = cur;
             cur = cur->_next;
         }
     }
