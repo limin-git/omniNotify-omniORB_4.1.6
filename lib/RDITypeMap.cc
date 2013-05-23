@@ -31,13 +31,7 @@
  
 #include "RDITypeMap.h"
 
-// #define NO_LOG_OUTPUT_TYPE_MAP //limin++
-#define PERFORMANCE_MONITOR
-
-#ifdef PERFORMANCE_MONITOR
-    #include "CountPerformanceMonitor.h"
-    #include "TimePerformanceMonitor.h"
-#endif
+#include "Switchecs.h"
 
 
 
@@ -507,6 +501,7 @@ RDI_TypeMap::pxy_obtain_subscription_types(RDIProxyConsumer* pxy, CosNA::ObtainI
 RDIstrstream&
 RDI_TypeMap::log_output(RDIstrstream& str)
 {
+#ifndef NO_TYPEMAP_LOG_OUTPUT
   VNode_t  value;
   ANode_t* anode;
   PNode_t* pnode;
@@ -516,7 +511,6 @@ RDI_TypeMap::log_output(RDIstrstream& str)
 
   TW_SCOPE_LOCK_RW(typemap_lock, _lock, 1, "typemap", WHATFN); // 1 means read lock
 
-#ifndef NO_LOG_OUTPUT_TYPE_MAP
   if (_tmap.length() == 0) {
     str << "\t(no entries)\n";
   } else {
@@ -539,6 +533,8 @@ RDI_TypeMap::log_output(RDIstrstream& str)
       str << '\n';
     }
   }
+#else
+    _tmap.length(); // just for compile
 #endif
 
   return str;

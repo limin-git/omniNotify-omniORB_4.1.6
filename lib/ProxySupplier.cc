@@ -41,16 +41,7 @@
 #include "CosNotifyChannelAdmin_i.h"
 #include "RDITypeMap.h"
 
-#define PERFORMANCE_TEST_LOG
-#define NO_PROXY_SUPPLIER_PUSH_EVENT
-
-
-#ifdef PERFORMANCE_TEST_LOG
-#include "stubs.h"
-#include "ThreadTimeStamp.h"
-#endif
-
-
+#include "Switchecs.h"
 
 
 extern const char* RDI_PRX_TYPE(const CosNA::ProxyType& type);
@@ -2920,7 +2911,7 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 
 	actsize = (qsize < bsize) ? qsize : bsize;
 
-#ifndef NO_PROXY_SUPPLIER_PUSH_EVENT
+#ifndef NO_SEQUENCE_PROXY_PUSH_SUPPLIER_PUSH_EVENT
     CosN::EventBatch notif(actsize);
     notif.length(actsize);
 #endif
@@ -2955,7 +2946,7 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 		// XXX_TODO would rather not copy here, but not sure how to avoid it.
 		// XXX_TODO if going to copy, need a copy that shares the internal CORBA::Any buffers.
 
-#ifndef NO_PROXY_SUPPLIER_PUSH_EVENT
+#ifndef NO_SEQUENCE_PROXY_PUSH_SUPPLIER_PUSH_EVENT
         notif[i] = event[i]->get_cos_event();
 #endif
 
@@ -2995,7 +2986,7 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 		        retryCount++;
 
 
-#ifndef NO_PROXY_SUPPLIER_PUSH_EVENT
+#ifndef NO_SEQUENCE_PROXY_PUSH_SUPPLIER_PUSH_EVENT
 		        _consumer->push_structured_events(notif);
 #endif
 
@@ -3356,15 +3347,6 @@ SequenceProxyPushSupplier_i::add_event(RDI_StructuredEvent* entry)
 {
   RDI_OPLOCK_SCOPE_LOCK(proxy_lock, WHATFN, RDI_THROW_INV_OBJREF);
 
-#ifdef PERFORMANCE_TEST_LOG
-  //RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", proxy_id=" << this->MyID()
-  //    << ", SequenceProxyPushSupplier_i::add_event - begin"
-  //    << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_events->length()
-  //    << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_proxy_events.length()
-  //    << ", notify_queue=" << _ntfqueue.length()
-  //    << "\n");
-#endif
-
   if (_add_event(entry)) {
     if ( _worker ) { 
       RDI_OPLOCK_SIGNAL;
@@ -3374,15 +3356,6 @@ SequenceProxyPushSupplier_i::add_event(RDI_StructuredEvent* entry)
       cpc->signal_push_threads();
     }
   }
-
-#ifdef PERFORMANCE_TEST_LOG
-  //RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", proxy_id=" << this->MyID()
-  //    << ", SequenceProxyPushSupplier_i::add_event - end"
-  //    << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_events->length()
-  //    << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_proxy_events.length()
-  //    << ", notify_queue=" << _ntfqueue.length()
-  //    << "\n");
-#endif
 }
 
 #undef WHATFN

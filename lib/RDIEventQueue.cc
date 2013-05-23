@@ -34,9 +34,7 @@
 #include "RDI.h"
 #include "RDIEventQueue.h"
 
-
-#define GC_WHOLE_EVENT_QUEUE
-#define NO_GC_ON_INSERT
+#include "Switchecs.h"
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
 // Notes
@@ -229,7 +227,8 @@ RDI_EventQueue::insert(RDI_StructuredEvent* event)
   if ( _numblk != 0 )	// Signal threads waiting for new event
     _qempty.broadcast();
 
-#ifndef NO_GC_ON_INSERT
+
+#ifndef NO_GC_ON_EVENT_QUEUE_INSERT
   if ( run_garbage_collect() && _gcdone ) // Garbage collection
     _qclean.signal();
 #else
@@ -399,17 +398,11 @@ RDI_EventQueue::garbage_collect()
     }
 
 #else
-
-    if ( _evhead && _length )
-    {
-        RDIDbgEvQLog("\tGC thread " << tid << ", go through whole event queue - begin, evncntr=" << evncntr << ", cursize=" << cursize << ", _length=" << _length << " \n");
-    }
-
     RDI_StructuredEvent* pre = _evhead;
     RDI_StructuredEvent* cur = _evhead;
     while ( --cursize && cur && (cur->get_state() != RDI_StructuredEvent::NEWBORN) )
     {
-        if ( (cur->ref_counter() == 1) )
+        if ( cur->ref_counter() == 1 )
         {
             tmpevnt = cur;
 
@@ -436,11 +429,6 @@ RDI_EventQueue::garbage_collect()
             pre = cur;
             cur = cur->_next;
         }
-    }
-
-    if ( _evhead && _length )
-    {
-        RDIDbgEvQLog("\tGC thread " << tid << ", go through whole event queue - end,   evncntr=" << evncntr << ", cursize=" << cursize << ", _length=" << _length << " \n");
     }
 #endif
 

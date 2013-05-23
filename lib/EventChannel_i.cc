@@ -40,31 +40,9 @@
 #include "CosNotifyChannelAdmin_i.h"
 #include "CosNfyUtils.h"
 #include "RDIInteractive.h"
-#include <vector>
 
-#define PERFORMANCE_MONITOR
-//#define BATCH_PROXY_DISPATCH
-//#define PROXY_DISPATCH_THREAD_POOL
-//#define PERFORMANCE_TEST_LOG
-
-
-#ifdef PERFORMANCE_MONITOR
-    #include "CountPerformanceMonitor.h"
-#endif
-
-
-#ifdef PERFORMANCE_TEST_LOG
-    #include "stubs.h"
-    #include "ThreadTimeStamp.h"
-#endif
-
-#ifdef PROXY_DISPATCH_THREAD_POOL
-    #include "ProxyDispatcheEentProcessorPool.h"
-#endif
-
-#ifdef BATCH_PROXY_DISPATCH
-    #define PROXY_DISPATCH_BATCH_SIZE 1
-#endif
+#include "Switchecs.h"
+#define PROXY_DISPATCH_BATCH_SIZE 100
 
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
@@ -1130,10 +1108,6 @@ EventChannel_i::admin_dispatch()
 
   unsigned long tid = TW_ID();
 
-  size_t batch_size = 0;
-  std::vector<RDI_StructuredEvent*> batch_sevnt;
-  std::vector<ProxyDispatch_t> batch_pxdis;
-
   adone = _admin_group->allocate_range(mylo, myhi);
   RDI_Assert(adone, "Failed to allocated group range to work on\n");
   RDIDbgChanLog("Thread " << tid << " L: " << mylo << " H: " << myhi << '\n');
@@ -1342,8 +1316,10 @@ EventChannel_i::proxy_dispatch()
 	unsigned int    numev = 0;
 	unsigned long   tid   = TW_ID();
 
+#ifdef BATCH_PROXY_DISPATCH
     size_t batch_size = 0;
     std::vector<ProxyDispatch_t> batch_pxdis;
+#endif
 
 	while ( 1 ) 
 	{
@@ -1375,12 +1351,6 @@ EventChannel_i::proxy_dispatch()
                 << ", time_wait=" << ThreadTimeStamp::instance().get_elapse_and_set_cur_in_millisecond()
                 << "\n");
 #endif
-            if ( 0 == batch_size )
-            {
-                RDIDbgCosCPxyLog("LIMINTEST - batch_size = 0 \n");
-                continue;
-            }
-
             for ( size_t i = 0; i < batch_size; ++i )
             {
                 batch_pxdis.push_back( _proxy_events.get_head() );
@@ -1410,6 +1380,7 @@ EventChannel_i::proxy_dispatch()
 #ifdef PERFORMANCE_MONITOR
                         CountPerformanceMonitor::instance().add_count( "EventChannel_i::proxy_dispatch", 1 );
 #endif
+
 #else
 
 #ifdef PROXY_DISPATCH_THREAD_POOL

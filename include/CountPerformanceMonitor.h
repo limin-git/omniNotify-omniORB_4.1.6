@@ -34,14 +34,14 @@ public:
 
             for ( std::map<std::string, unsigned long>::iterator it = m_count_map.begin(); it != m_count_map.end(); ++it )
             {
-                strm << it->first << ":" << it->second / (double)m_interval_in_seconds << std::endl;
+                strm << "\t" << it->first << ":\t" << it->second / (double)m_interval_in_seconds << std::endl;
                 it->second = 0;
             }
         }
 
         if ( false == m_count_map.empty() )
         {
-            RDIDbgForceLog( "CountPerformanceMonitor - per second " << " \n" << strm.str().c_str() );
+            RDIDbgForceLog( "\n----------- Performance Report - Count Per Second (Report Interval=" << m_interval_in_seconds << "s) ----------" << " \n" << strm.str().c_str() );
         }
     }
 
@@ -59,8 +59,8 @@ public:
 
 private:
 
-    CountPerformanceMonitor()
-        : m_interval_in_seconds(5)
+    CountPerformanceMonitor( int interval_in_seconds = 10 )
+        : m_interval_in_seconds(interval_in_seconds)
     {
         start();
     }

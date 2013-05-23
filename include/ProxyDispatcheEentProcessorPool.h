@@ -1,21 +1,15 @@
 #ifndef PROXY_DISPATCHE_EENT_PROCESSOR_POOL_H_INCLUDED
 #define PROXY_DISPATCHE_EENT_PROCESSOR_POOL_H_INCLUDED
 
+#include "RDITypeMap.h"
 #include "QueueProcessorPool.h"
 #include "ThreadGuard.h"
 #include <sstream>
 
 
-#define PERFORMANCE_TEST_LOG
+#include "Switchecs.h"
 #define PROXY_DISPATCH_THREAD_NUMBER 301
 
-#define DEBUG_THREAD_POOL_QUEUE_SIZE
-
-
-#ifdef PERFORMANCE_TEST_LOG
-#include "stubs.h"
-#include "ThreadTimeStamp.h"
-#endif
 
 
 struct DispatchData
@@ -114,7 +108,6 @@ public:
         barrier->post();
 
 #ifdef PERFORMANCE_TEST_LOG
-#undef PERFORMANCE_TEST_LOG
         RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", queueProcessorPoolCallback - debug"
             << ", initial count=" << barrier->m_initial
             << ", count =" << barrier->m_count
@@ -145,9 +138,14 @@ public:
     {
         if ( admin != NULL )
         {
-            THREAD_GUARD( m_lock );
+            size_t count = admin->NumProxies() * batch_size;
 
-            m_adimin_barrier_map[admin] = new AbstractSingleThreadBarrier( admin->NumProxies() * max(1, batch_size) );
+            if ( count )
+            {
+                THREAD_GUARD( m_lock );
+
+                m_adimin_barrier_map[admin] = new AbstractSingleThreadBarrier( admin->NumProxies() * batch_size );
+            }
         }
     }
 

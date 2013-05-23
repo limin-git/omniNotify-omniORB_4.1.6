@@ -40,7 +40,7 @@ public:
 
         if ( false == m_count_map.empty() )
         {
-            RDIDbgForceLog( "TimePerformanceMonitor - time(in millisecond) used per second " << " \n" << strm.str().c_str() );
+            RDIDbgForceLog( "\n ----- TimePerformanceMonitor - time(in millisecond) used per second -----" << " \n" << strm.str().c_str() );
         }
     }
 
@@ -58,8 +58,8 @@ public:
 
 private:
 
-    TimePerformanceMonitor()
-        : m_interval_in_seconds(5)
+    TimePerformanceMonitor( int interval_in_seconds = 10 )
+        : m_interval_in_seconds(interval_in_seconds)
     {
         start();
     }

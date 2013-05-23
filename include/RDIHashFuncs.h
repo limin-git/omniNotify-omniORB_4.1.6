@@ -34,13 +34,6 @@
 
 #include "RDIStringDefs.h"
 
-#define PERFORMANCE_MONITOR
-
-#ifdef PERFORMANCE_MONITOR
-#include "CountPerformanceMonitor.h"
-#include "TimePerformanceMonitor.h"
-#endif
-
 
 // HASH AND RANK FUNCTIONS
 //   * Hash and Rank function definitions, together with several

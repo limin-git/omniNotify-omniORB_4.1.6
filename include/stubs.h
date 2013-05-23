@@ -17,6 +17,10 @@
 #include "RDILocksHeld.h"
 #include "RDISeqDecls.h"
 
+class RDI_TypeMap;
+class EventChannelFactory_i;
+
+
 #include "static_check.h"
 
 
@@ -313,7 +317,7 @@ public:
 #ifndef NO_OBJ_GC
     void  gcollect();
 #endif
-    void  periodic_report() { LOKI_STATIC_CHECK( sizeof(EventChannel_i_stub) == sizeof(EventChannel_i), EventChannel_i_stub_Size ) };
+    void  periodic_report();
     void _children(AttN::IactSeq& ren, CORBA::Boolean only_cleanup_candidates);
 
     virtual ~EventChannel_i_stub();
