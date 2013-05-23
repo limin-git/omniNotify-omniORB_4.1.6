@@ -42,9 +42,15 @@
 #include "RDIInteractive.h"
 #include <vector>
 
+#define PERFORMANCE_MONITOR
 //#define BATCH_PROXY_DISPATCH
-//#define PERFORMANCE_TEST_LOG
 //#define PROXY_DISPATCH_THREAD_POOL
+//#define PERFORMANCE_TEST_LOG
+
+
+#ifdef PERFORMANCE_MONITOR
+    #include "CountPerformanceMonitor.h"
+#endif
 
 
 #ifdef PERFORMANCE_TEST_LOG
@@ -57,7 +63,7 @@
 #endif
 
 #ifdef BATCH_PROXY_DISPATCH
-    #define PROXY_DISPATCH_BATCH_SIZE 10000000
+    #define PROXY_DISPATCH_BATCH_SIZE 1
 #endif
 
 
@@ -1170,7 +1176,7 @@ EventChannel_i::admin_dispatch()
 					RDIDbgChanLog("   - ADispatch thread " << tid << " for channel " << _serial << " exits\n");
 					goto admin_dispatch_exit;
 				}
-				// TW_YIELD(); // limin--
+				TW_YIELD();
 
 
                 {
@@ -1300,6 +1306,10 @@ use_proxy_threads:
 					_proxy_events.insert_tail(pxdis);
 					_proxy_empty.broadcast();
 
+#ifdef PERFORMANCE_MONITOR
+                    CountPerformanceMonitor::instance().add_count( "EventChannel_i::admin_dispatch", 1 );
+#endif
+
 #ifdef PERFORMANCE_TEST_LOG
                     RDIDbgCosCPxyLog("Thrd=" << tid << ", Channel=" << MyID() << ", EventChannel_i::admin_dispatch - end"
                         << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>(this)->_events->length()
@@ -1309,9 +1319,6 @@ use_proxy_threads:
 #endif
 				} // end proxy_lock lock scope
 				// (on to next admin)
-
-                break; // limin++, only one group and one admin
-
 			} // end admin loop
 		} // end admin group loop 
 	} // end outer loop
@@ -1400,6 +1407,9 @@ EventChannel_i::proxy_dispatch()
 						TW_EARLY_RELEASE(chan_proxy_lock);
 #ifndef BATCH_PROXY_DISPATCH
 						pxdis._admin->dispatch_event(pxdis._event, pxdis._state, _type_map);
+#ifdef PERFORMANCE_MONITOR
+                        CountPerformanceMonitor::instance().add_count( "EventChannel_i::proxy_dispatch", 1 );
+#endif
 #else
 
 #ifdef PROXY_DISPATCH_THREAD_POOL
@@ -1424,6 +1434,9 @@ EventChannel_i::proxy_dispatch()
                             << "\n");
 #endif
 
+#ifdef PERFORMANCE_MONITOR
+                        CountPerformanceMonitor::instance().add_count( "EventChannel_i::proxy_dispatch", batch_size );
+#endif
 #endif
 					}
 				} // end admin lock scope

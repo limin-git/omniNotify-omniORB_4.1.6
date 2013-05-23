@@ -36,6 +36,7 @@
 
 
 #define GC_WHOLE_EVENT_QUEUE
+#define NO_GC_ON_INSERT
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
 // Notes
@@ -227,8 +228,13 @@ RDI_EventQueue::insert(RDI_StructuredEvent* event)
 
   if ( _numblk != 0 )	// Signal threads waiting for new event
     _qempty.broadcast();
+
+#ifndef NO_GC_ON_INSERT
   if ( run_garbage_collect() && _gcdone ) // Garbage collection
     _qclean.signal();
+#else
+  run_garbage_collect();//only for compile
+#endif
 
   return 0;
 }
@@ -381,6 +387,8 @@ RDI_EventQueue::garbage_collect()
     } // end oplock scope
 
     evncntr = 0;
+
+#ifndef GC_WHOLE_EVENT_QUEUE
     while ( --cursize && _evhead && (_evhead->ref_counter() == 1) &&
 	    (_evhead->get_state() != RDI_StructuredEvent::NEWBORN) ) {
       tmpevnt = _evhead;
@@ -390,19 +398,32 @@ RDI_EventQueue::garbage_collect()
 	TW_YIELD();
     }
 
-#ifdef GC_WHOLE_EVENT_QUEUE
-    RDIDbgEvQLog("\tGC thread " << tid << ", go through whole event queue begin \n");
-    RDI_StructuredEvent* cur = _evhead;
-    RDI_StructuredEvent* pre = _evhead;
-    while ( --cursize && cur )
+#else
+
+    if ( _evhead && _length )
     {
-        if ( (cur->ref_counter() == 1) && (cur->get_state() != RDI_StructuredEvent::NEWBORN) )
+        RDIDbgEvQLog("\tGC thread " << tid << ", go through whole event queue - begin, evncntr=" << evncntr << ", cursize=" << cursize << ", _length=" << _length << " \n");
+    }
+
+    RDI_StructuredEvent* pre = _evhead;
+    RDI_StructuredEvent* cur = _evhead;
+    while ( --cursize && cur && (cur->get_state() != RDI_StructuredEvent::NEWBORN) )
+    {
+        if ( (cur->ref_counter() == 1) )
         {
             tmpevnt = cur;
-            pre->_next = cur->_next;
 
-            pre = cur;
-            cur = cur->_next;
+            if ( cur == _evhead )
+            {
+                _evhead = _evhead->_next;
+                pre = _evhead;
+                cur = _evhead;
+            }
+            else
+            {
+                pre->_next = cur->_next;
+                cur = cur->_next;
+            }
 
             delete tmpevnt;
             if ( ++evncntr % 100 == 0 ) 
@@ -416,7 +437,11 @@ RDI_EventQueue::garbage_collect()
             cur = cur->_next;
         }
     }
-    RDIDbgEvQLog("\tGC thread " << tid << ", go through whole event queue end \n");
+
+    if ( _evhead && _length )
+    {
+        RDIDbgEvQLog("\tGC thread " << tid << ", go through whole event queue - end,   evncntr=" << evncntr << ", cursize=" << cursize << ", _length=" << _length << " \n");
+    }
 #endif
 
     { // introduce oplock scope

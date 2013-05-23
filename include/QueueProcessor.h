@@ -19,31 +19,10 @@
 #define QUEUEPROCESSOR_H
 
 #include "Thread.h"
+#include "ThreadGuard.h"
 #include "QueueItem.h"
 #include <deque>
 #include <boost/shared_ptr.hpp>
-#include "omnithread_thread_wrappers.h"
-
-
-class ThreadGuard
-{
-public:
-
-	ThreadGuard( TW_Mutex& lockable )
-        : m_lockable( lockable )
-    {
-        m_lockable.acquire();
-    }
-
-    virtual ~ThreadGuard()
-    {
-        m_lockable.release();
-    }
-
-	omni_mutex& m_lockable;
-};
-
-#define TA_THREADGUARD( threadlockable ) ThreadGuard threadlockable_guard( threadlockable )
 
 
 template<class ITEM> class QueueProcessor : public Thread
@@ -69,7 +48,7 @@ public:
 
 	void insert( boost::shared_ptr<ITEM>& newItem )
 	{
-		TA_THREADGUARD( m_queueLock );
+		THREAD_GUARD( m_queueLock );
 
 		unsigned long queueSize = m_queue.size();
 		if (queueSize == m_maxQueueSize)
@@ -87,7 +66,7 @@ public:
 	{
 		bool itemExists = false;
 
-		TA_THREADGUARD( m_queueLock );
+		THREAD_GUARD( m_queueLock );
 
 		if ( ! m_queue.empty() )
 		{
@@ -105,7 +84,7 @@ public:
 
 	void insertReplace( boost::shared_ptr<ITEM>& newItem )
 	{
-		TA_THREADGUARD( m_queueLock );
+		THREAD_GUARD( m_queueLock );
 
 		if ( ! m_queue.empty() )
 		{
@@ -166,7 +145,7 @@ public:
 
 		boost::shared_ptr<ITEM> nextItem ((ITEM*) NULL);
 
-		TA_THREADGUARD( m_queueLock );
+		THREAD_GUARD( m_queueLock );
 
 		if ( m_queue.empty() )
 		{
@@ -224,7 +203,7 @@ public:
     void post()
     {
         {
-            TA_THREADGUARD( m_countLock );
+            THREAD_GUARD( m_countLock );
 
             if ( 0 < m_count )
             {

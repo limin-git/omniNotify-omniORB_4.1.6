@@ -7,8 +7,6 @@
 #include <map>
 
 
-// inline unsigned long TW_ID() { return (unsigned long)(omni_thread::self()->id()); }
-
 struct ThreadTimeStamp
 {
     struct TimeStamp

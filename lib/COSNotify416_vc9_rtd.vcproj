@@ -605,6 +605,10 @@
 			Name="my"
 			>
 			<File
+				RelativePath="..\include\CountPerformanceMonitor.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\ProxyDispatcheEentProcessorPool.h"
 				>
 			</File>
@@ -633,7 +637,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\ThreadGuard.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\ThreadTimeStamp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\TimePerformanceMonitor.h"
 				>
 			</File>
 		</Filter>

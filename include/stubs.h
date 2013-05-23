@@ -25,19 +25,11 @@ class EventChannel_i_stub : WRAPPED_SKELETON_SUPER(AttNotification, EventChannel
 {
     friend class EventChannelFactory_i;
 public:
-    EventChannel_i_stub(EventChannelFactory_i*        cfactory,
-        FilterFactory_i*              ffactory,
-        const CosN::QoSProperties&    init_qos,
-        const CosN::AdminProperties&  init_adm,
-        RDI_ServerQoS*                s_qos,
-        const CosNA::ChannelID&       myserial);
-
-    // Methods from AttNotification::Interactive Interface
-    char* do_command(const char* cmd, CORBA::Boolean& success, CORBA::Boolean& target_changed,
-        AttN_Interactive_outarg next_target  WRAPPED_DECLARG);
+    EventChannel_i_stub(EventChannelFactory_i*, FilterFactory_i*, const CosN::QoSProperties&, const CosN::AdminProperties&, RDI_ServerQoS*, const CosNA::ChannelID&);
+    char* do_command(const char*, CORBA::Boolean&, CORBA::Boolean&, AttN_Interactive_outarg WRAPPED_DECLARG);
     AttN::NameSeq* child_names( WRAPPED_DECLARG_VOID );
     AttN::NameSeq* my_name( WRAPPED_DECLARG_VOID );
-    AttN::IactSeq* children(CORBA::Boolean only_cleanup_candidates  WRAPPED_DECLARG );
+    AttN::IactSeq* children(CORBA::Boolean WRAPPED_DECLARG );
     CORBA::Boolean safe_cleanup( WRAPPED_DECLARG_VOID );
 
     // Methods from CosEvCA::EventChannel Interface
@@ -50,28 +42,21 @@ public:
     CosNA::ConsumerAdmin_ptr default_consumer_admin( WRAPPED_DECLARG_VOID );
     CosNA::SupplierAdmin_ptr default_supplier_admin( WRAPPED_DECLARG_VOID );
     CosNF::FilterFactory_ptr default_filter_factory( WRAPPED_DECLARG_VOID );
-    CosNA::ConsumerAdmin_ptr new_for_consumers(
-        CosNA::InterFilterGroupOperator op,
-        CosNA::AdminID& id WRAPPED_DECLARG );
-    CosNA::SupplierAdmin_ptr new_for_suppliers(
-        CosNA::InterFilterGroupOperator op,
-        CosNA::AdminID& id WRAPPED_DECLARG );
+    CosNA::ConsumerAdmin_ptr new_for_consumers( CosNA::InterFilterGroupOperator, CosNA::AdminID& WRAPPED_DECLARG );
+    CosNA::SupplierAdmin_ptr new_for_suppliers( CosNA::InterFilterGroupOperator, CosNA::AdminID& id WRAPPED_DECLARG );
     CosNA::ConsumerAdmin_ptr get_consumeradmin(CosNA::AdminID id  WRAPPED_DECLARG );
     CosNA::SupplierAdmin_ptr get_supplieradmin(CosNA::AdminID id  WRAPPED_DECLARG );
     CosNA::AdminIDSeq *      get_all_consumeradmins( WRAPPED_DECLARG_VOID );
     CosNA::AdminIDSeq *      get_all_supplieradmins( WRAPPED_DECLARG_VOID );
 
-
     // Methods from CosN::AdminPropertiesAdmin Interface
     CosN::AdminProperties* get_admin( WRAPPED_DECLARG_VOID );
-    void set_admin(const CosN::AdminProperties& admin WRAPPED_DECLARG );
+    void set_admin(const CosN::AdminProperties& WRAPPED_DECLARG );
 
     // Methods from CosN::QoSAdmin Interface
     CosN::QoSProperties* get_qos( WRAPPED_DECLARG_VOID );
-    void set_qos(const CosN::QoSProperties& qos WRAPPED_DECLARG );
-    void validate_qos(const CosN::QoSProperties& r_qos,
-        CosN_NamedPropertyRangeSeq_outarg a_qos
-        WRAPPED_DECLARG );
+    void set_qos(const CosN::QoSProperties& WRAPPED_DECLARG );
+    void validate_qos(const CosN::QoSProperties&, CosN_NamedPropertyRangeSeq_outarg WRAPPED_DECLARG );
 
     // Additional methods from AttNotification::EventChannel
     CosN::EventTypeSeq* obtain_offered_types( WRAPPED_DECLARG_VOID );
@@ -110,7 +95,8 @@ public:
     CORBA::UShort ochange_threads() const	{ return _server_qos->numOChangeThreads;  }
     CORBA::UShort schange_threads() const	{ return _server_qos->numSChangeThreads;  }
 
-    void pull_period_s_n(unsigned long &s, unsigned long &n) const {
+    void pull_period_s_n(unsigned long &s, unsigned long &n) const
+    {
         unsigned long msec = (unsigned long)_server_qos->pullEventPeriod;
         s = msec / 1000;
         n = (msec % 1000) * 1000000;
@@ -120,31 +106,25 @@ public:
     void unregister(RDI_LocksHeld& held, SupplierAdmin_i* suplAdmin);
     void unregister(RDI_LocksHeld& held, ConsumerAdmin_i* consAdmin);
 
-    CORBA::Boolean update_mapping(RDI_LocksHeld&             held,
-        const CosN::EventTypeSeq&  added,
-        const CosN::EventTypeSeq&  deled,
-        ConsumerAdmin_i*           admin,
-        Filter_i*                  filter);
+    CORBA::Boolean update_mapping(RDI_LocksHeld&, const CosN::EventTypeSeq&, const CosN::EventTypeSeq&, ConsumerAdmin_i*, Filter_i*);
 
-    CORBA::Boolean update_mapping(RDI_LocksHeld&             held,
-        const CosN::EventTypeSeq&  added,
-        const CosN::EventTypeSeq&  deled,
-        RDIProxySupplier*          proxy,
-        Filter_i*                  filter);
+    CORBA::Boolean update_mapping(RDI_LocksHeld&, const CosN::EventTypeSeq&, const CosN::EventTypeSeq&, RDIProxySupplier*, Filter_i*);
 
-    struct ProxyDispatch_t {
+    struct ProxyDispatch_t
+    {
         RDI_StructuredEvent* _event;
         ConsumerAdmin_i*     _admin;
         RDI_FilterState_t    _state;
 
-        ProxyDispatch_t(RDI_StructuredEvent* e=0, 
-            ConsumerAdmin_i* a=0, RDI_FilterState_t s=NoFilters) : 
-        _event(e), _admin(a), _state(s) {;}
-        ProxyDispatch_t(const ProxyDispatch_t& p) : 
-        _event(p._event), _admin(p._admin), _state(p._state) {;}
-        ProxyDispatch_t& operator= (const ProxyDispatch_t& p) {
+        ProxyDispatch_t(RDI_StructuredEvent* e=0, ConsumerAdmin_i* a=0, RDI_FilterState_t s=NoFilters)
+            :  _event(e), _admin(a), _state(s) {;}
+        ProxyDispatch_t(const ProxyDispatch_t& p)
+            : _event(p._event), _admin(p._admin), _state(p._state) {;}
+        ProxyDispatch_t& operator= (const ProxyDispatch_t& p)
+        {
             _event=p._event; _admin=p._admin; 
-            _state=p._state; return *this;         }
+            _state=p._state; return *this;
+        }
     };
 
     // Update the hash table that keeps information about the event  //
@@ -152,9 +132,7 @@ public:
     // an existing entry is deleted, insert the delta into the       //
     // _ochange_pool, causing _offer_change msgs to be sent          //
 
-    void propagate_ochange(RDI_LocksHeld&             held,
-        const CosN::EventTypeSeq&  added,
-        const CosN::EventTypeSeq&  deled);
+    void propagate_ochange(RDI_LocksHeld&, const CosN::EventTypeSeq&, const CosN::EventTypeSeq&);
 
     // There have been some changes in the event types referenced in //
     // consumers filters. Insert the delta into the _schange_pool,   //

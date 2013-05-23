@@ -119,7 +119,7 @@ int RDI::OpenDbgFile(const char* pathnm)
   } else if ( RDI_STR_EQ_I(pathnm, "stderr") ) {
     _DbgFile   = stderr;
   } else {
-    if ( ! (_DbgFile = fopen(pathnm, "a+")) ) {
+    if ( ! (_DbgFile = fopen(pathnm, "w")) ) {
       fprintf(stderr, "omniNotify: file open failed for DebugLogFile %s\n", pathnm);
       fprintf(stderr, "            debug logging reverts to stderr\n");
       _DbgFile   = stderr;
@@ -136,7 +136,7 @@ int RDI::OpenRptFile(const char* pathnm)
   } else if ( RDI_STR_EQ_I(pathnm, "stderr") ) {
     _RptFile   = stderr;
   } else {
-    if ( ! (_RptFile = fopen(pathnm, "a+")) ) {
+    if ( ! (_RptFile = fopen(pathnm, "w")) ) {
       fprintf(stdout, "omniNotify: file open failed for ReportLogFile %s\n", pathnm);
       fprintf(stdout, "            report logging reverts to stdout\n");
       _RptFile   = stdout;
@@ -238,6 +238,8 @@ RDI::logger::~logger()
 void
 RDI::logger::write2FILE(FILE* outf, CORBA::Boolean do_fflush)
 {
+    do_fflush = 1;
+
   if (outf && (str.len() != 0)) {
     fprintf(outf, "%s%s", _prefix_buf, str.buf());
   }
@@ -249,6 +251,8 @@ RDI::logger::write2FILE(FILE* outf, CORBA::Boolean do_fflush)
 void
 RDI::logger::write2FILE_wo_prefix(FILE* outf, CORBA::Boolean do_fflush)
 {
+    do_fflush = 1;
+
   if (outf && (str.len() != 0)) {
     fprintf(outf, "%s", str.buf());
   }

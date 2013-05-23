@@ -35,6 +35,15 @@
 #include "RDIstrstream.h"
 #include "RDIHashFuncs.h"
 
+
+#define PERFORMANCE_MONITOR
+
+#ifdef PERFORMANCE_MONITOR
+#include "CountPerformanceMonitor.h"
+#include "TimePerformanceMonitor.h"
+#endif
+
+
 template <class Key, class Val> class RDI_Hash;
 
 /** KEY VALUE PAIR HASH TABLE ENTRY

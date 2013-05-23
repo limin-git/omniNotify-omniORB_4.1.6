@@ -47,15 +47,22 @@
 
 //#define PERFORMANCE_TEST_LOG
 //#define PROXY_DISPATCH_THREAD_POOL
+#define PERFORMANCE_MONITOR
+#define NO_FILTER_CHECKING
 
 
 #ifdef PERFORMANCE_TEST_LOG
-#include "stubs.h"
-#include "ThreadTimeStamp.h"
+    #include "stubs.h"
+    #include "ThreadTimeStamp.h"
 #endif
 
 #ifdef PROXY_DISPATCH_THREAD_POOL
-#include "ProxyDispatcheEentProcessorPool.h"
+    #include "ProxyDispatcheEentProcessorPool.h"
+#endif
+
+#ifdef PERFORMANCE_MONITOR
+    #include "CountPerformanceMonitor.h"
+    #include "TimePerformanceMonitor.h"
 #endif
 
 
@@ -1635,6 +1642,15 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
     continue;
 #endif
 
+#ifdef PERFORMANCE_MONITOR
+    CountPerformanceMonitor::instance().add_count( "ConsumerAdmin_i::dispatch_event", 1 );
+#endif
+
+#ifdef NO_FILTER_CHECKING
+    //bpushcur.val()->add_event(event);
+    //continue;
+#endif
+
     if ( astat == OrMatch ) {
       bpushcur.val()->add_event(event);
       continue;
@@ -1646,7 +1662,13 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
       continue;
     }
 
+#ifdef NO_FILTER_CHECKING
     tmap->lookupFilter(dname, tname, bpushcur.val(), flist);
+    continue;
+#endif
+
+    tmap->lookupFilter(dname, tname, bpushcur.val(), flist);
+
     if ( ! flist._star_star && ! flist._domn_star &&
 	 ! flist._star_type && ! flist._domn_type ) {
       if ( astat == OrMatch ) {

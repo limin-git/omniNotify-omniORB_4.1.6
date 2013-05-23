@@ -2919,8 +2919,11 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 	}
 
 	actsize = (qsize < bsize) ? qsize : bsize;
-	CosN::EventBatch notif(actsize);
-	notif.length(actsize);
+
+#ifndef NO_PROXY_SUPPLIER_PUSH_EVENT
+    CosN::EventBatch notif(actsize);
+    notif.length(actsize);
+#endif
 
 
 #ifdef PERFORMANCE_TEST_LOG
@@ -2951,7 +2954,11 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 #else
 		// XXX_TODO would rather not copy here, but not sure how to avoid it.
 		// XXX_TODO if going to copy, need a copy that shares the internal CORBA::Any buffers.
-		notif[i] = event[i]->get_cos_event();
+
+#ifndef NO_PROXY_SUPPLIER_PUSH_EVENT
+        notif[i] = event[i]->get_cos_event();
+#endif
+
 #endif
 	}
 	_nevents += actsize;

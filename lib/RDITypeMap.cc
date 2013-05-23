@@ -32,6 +32,13 @@
 #include "RDITypeMap.h"
 
 // #define NO_LOG_OUTPUT_TYPE_MAP //limin++
+#define PERFORMANCE_MONITOR
+
+#ifdef PERFORMANCE_MONITOR
+    #include "CountPerformanceMonitor.h"
+    #include "TimePerformanceMonitor.h"
+#endif
+
 
 
 RDI_TypeMap::RDI_TypeMap(EventChannel_i* channel, unsigned int hsize) :
@@ -386,6 +393,7 @@ RDI_TypeMap::lookupFilter(const char*                      dname,
 		    RDIProxySupplier*                proxy,
 		    RDI_TypeMap::FList_t&            filters)
 {
+
   VNode_t value;
   PNode_t* node;
   CosN::EventType evtype;
@@ -398,8 +406,8 @@ RDI_TypeMap::lookupFilter(const char*                      dname,
   if ( _tmap.lookup(evtype, value) == 1 ) {
     for ( node = value._prxy; node; node = node->_next ) {
       if ( node->_prxy == proxy ) {
-	filters._star_star = node->_fltr;
-	break;
+    filters._star_star = node->_fltr;
+    break;
       }
     }
   }
@@ -409,8 +417,8 @@ RDI_TypeMap::lookupFilter(const char*                      dname,
   if ( _tmap.lookup(evtype, value) == 1 ) {
     for ( node = value._prxy; node; node = node->_next ) {
       if ( node->_prxy == proxy ) {
-	filters._star_type = node->_fltr;
-	break;
+    filters._star_type = node->_fltr;
+    break;
       }
     }
   }
@@ -420,8 +428,8 @@ RDI_TypeMap::lookupFilter(const char*                      dname,
   if ( _tmap.lookup(evtype, value) == 1 ) {
     for ( node = value._prxy; node; node = node->_next ) {
       if ( node->_prxy == proxy ) {
-	filters._domn_star = node->_fltr;
-	break;
+    filters._domn_star = node->_fltr;
+    break;
       }
     }
   }
@@ -431,8 +439,8 @@ RDI_TypeMap::lookupFilter(const char*                      dname,
   if ( _tmap.lookup(evtype, value) == 1 ) {
     for ( node = value._prxy; node; node = node->_next ) {
       if ( node->_prxy == proxy ) {
-	filters._domn_type = node->_fltr;
-	break;
+    filters._domn_type = node->_fltr;
+    break;
       }
     }
   }

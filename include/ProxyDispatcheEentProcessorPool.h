@@ -1,11 +1,15 @@
-#ifndef ADMINDISPATCHEVENTPROCESSORPOOL_H_INCLUDED
-#define ADMINDISPATCHEVENTPROCESSORPOOL_H_INCLUDED
-
+#ifndef PROXY_DISPATCHE_EENT_PROCESSOR_POOL_H_INCLUDED
+#define PROXY_DISPATCHE_EENT_PROCESSOR_POOL_H_INCLUDED
 
 #include "QueueProcessorPool.h"
+#include "ThreadGuard.h"
+#include <sstream>
+
 
 #define PERFORMANCE_TEST_LOG
-#define PROXY_DISPATCH_THREAD_NUMBER 100
+#define PROXY_DISPATCH_THREAD_NUMBER 301
+
+#define DEBUG_THREAD_POOL_QUEUE_SIZE
 
 
 #ifdef PERFORMANCE_TEST_LOG
@@ -28,6 +32,9 @@ struct DispatchData
 
 
 struct ProxyDispatcheEentProcessorPool : public QueueProcessorPoolCallback<DispatchData>
+#ifdef DEBUG_THREAD_POOL_QUEUE_SIZE
+    ,public Thread
+#endif
 {
 public:
 
@@ -113,8 +120,6 @@ public:
             << ", count =" << barrier->m_count
             << "\n");
 #endif
-
-
     }
 
     AbstractSingleThreadBarrier* get_barrier( ConsumerAdmin_i* admin )
@@ -123,7 +128,7 @@ public:
 
         if ( admin != NULL )
         {
-            m_lock.acquire();
+            THREAD_GUARD( m_lock );
 
             std::map<ConsumerAdmin_i*, AbstractSingleThreadBarrier*>::iterator findIt = m_adimin_barrier_map.find( admin );
 
@@ -131,8 +136,6 @@ public:
             {
                 barrier = findIt->second;
             }
-
-            m_lock.release();
         }
 
         return barrier;
@@ -142,11 +145,9 @@ public:
     {
         if ( admin != NULL )
         {
-            m_lock.acquire();
+            THREAD_GUARD( m_lock );
 
-            m_adimin_barrier_map[admin] = new AbstractSingleThreadBarrier( admin->NumProxies() * batch_size );
-
-            m_lock.release();
+            m_adimin_barrier_map[admin] = new AbstractSingleThreadBarrier( admin->NumProxies() * max(1, batch_size) );
         }
     }
 
@@ -154,7 +155,7 @@ public:
     {
         if ( admin != NULL )
         {
-            m_lock.acquire();
+            THREAD_GUARD( m_lock );
 
             std::map<ConsumerAdmin_i*, AbstractSingleThreadBarrier*>::iterator findIt = m_adimin_barrier_map.find( admin );
 
@@ -165,8 +166,6 @@ public:
 
                 m_adimin_barrier_map.erase( findIt );
             }
-
-            m_lock.release();
         }
     }
 
@@ -203,7 +202,84 @@ private:
     ProxyDispatcheEentProcessorPool()
         : m_processor_poll(PROXY_DISPATCH_THREAD_NUMBER, *this, true)
     {
+#ifdef DEBUG_THREAD_POOL_QUEUE_SIZE
+        start();
+#endif
     }
+
+#ifdef DEBUG_THREAD_POOL_QUEUE_SIZE
+    virtual void run()
+    {
+        while ( true )
+        {
+            std::vector<unsigned long> queue_size = m_processor_poll.getQueueSizes();
+
+            unsigned long activate_thread_number = 0;
+            unsigned long total_queue_size = 0;
+            unsigned long last_value = queue_size[0];
+            unsigned long same_value_number = 1;
+
+            std::stringstream queue_sizes_strm;
+            queue_sizes_strm << queue_size[0];
+
+            for ( size_t i = 1; i < queue_size.size(); ++i )
+            {
+                total_queue_size += queue_size[i];
+
+                if ( queue_size[i] != last_value  )
+                {
+                    if ( 1 < same_value_number )
+                    {
+                        queue_sizes_strm << "[" << same_value_number << "]";
+                    }
+
+                    queue_sizes_strm << ", " << queue_size[i];
+
+                    last_value = queue_size[i];
+                    same_value_number = 1;
+                }
+                else
+                {
+                    same_value_number++;
+                }
+            }
+
+            queue_sizes_strm << "[" << same_value_number << "]";
+
+            std::stringstream queue_sizes_output_strm;
+            queue_sizes_output_strm
+                << ", activate_thread_number=" << activate_thread_number
+                << ", queue_sizes=" << total_queue_size
+                << "{" << queue_sizes_strm.rdbuf() << "}";
+
+            std::stringstream admin_strm;
+
+            for ( std::map<ConsumerAdmin_i*, AbstractSingleThreadBarrier*>::iterator it = m_adimin_barrier_map.begin(); it != m_adimin_barrier_map.end(); ++it )
+            {
+                ConsumerAdmin_i* admin = it->first;
+
+                if ( admin != NULL )
+                {
+                    admin_strm
+                        << ", admin[" << admin << "]{"
+                        << "proxy_number=" << admin->NumProxies()
+                        << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>( reinterpret_cast<ConsumerAdmin_i_stub*>(admin)->_channel )->_events->length()
+                        << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>( reinterpret_cast<ConsumerAdmin_i_stub*>(admin)->_channel )->_proxy_events.length()
+                        << "}";
+                }
+            }
+
+            RDIDbgForceLog( "ProxyDispatcheEentProcessorPool - "
+                << admin_strm.str().c_str()
+                << queue_sizes_output_strm.str().c_str()
+                << " \n" );
+
+            Thread::sleep( 1000 );
+        }
+    }
+
+    virtual void terminate() {;}
+#endif
 
 private:
 
