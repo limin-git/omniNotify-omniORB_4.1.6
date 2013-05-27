@@ -1152,20 +1152,7 @@ EventChannel_i::admin_dispatch()
 				}
 				TW_YIELD();
 
-
-                {
-                    // limin++
-
-                    // get next admin from group
-                    if (!(admin = group->iter_next())) 
-                    {
-                        break; // on to next admin group
-                    }
-
-                    fstate = NoFilters;
-                }
-#if 0
-
+#ifndef NO_ADMIN_DISPATCH
 				{ // introduce typemap read lock scope
 					// need to acquire typemap lock before acquiring admin lock
 					RDI_TYPEMAP_READ_SCOPE_LOCK_TRACK(typemap_lock, held.typemap, _type_map, WHATFN);
@@ -1249,6 +1236,18 @@ EventChannel_i::admin_dispatch()
 				} // end typemap read lock scope
 
 				continue; // on to next admin
+#else
+                {
+                    // limin++
+
+                    // get next admin from group
+                    if (!(admin = group->iter_next())) 
+                    {
+                        break; // on to next admin group
+                    }
+
+                    fstate = NoFilters;
+                }
 #endif
 
 use_proxy_threads:
@@ -1269,7 +1268,7 @@ use_proxy_threads:
 				{ // introduce proxy_lock lock scope
 					TW_SCOPE_LOCK(chan_proxy_lock, _proxy_lock, "chan_proxy_lock", WHATFN);
 
-#ifdef PERFORMANCE_TEST_LOG
+#ifdef PERFORMANCE_DEBUG_LOG
                     RDIDbgCosCPxyLog("Thrd=" << tid << ", Channel=" << MyID() << ", EventChannel_i::admin_dispatch - begin"
                         << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>(this)->_events->length()
                         << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>(this)->_proxy_events.length()
@@ -1280,11 +1279,11 @@ use_proxy_threads:
 					_proxy_events.insert_tail(pxdis);
 					_proxy_empty.broadcast();
 
-#ifdef PERFORMANCE_MONITOR
+#ifdef PERFORMANCE_REPORT_LOG
                     CountPerformanceMonitor::instance().add_count( "EventChannel_i::admin_dispatch", 1 );
 #endif
 
-#ifdef PERFORMANCE_TEST_LOG
+#ifdef PERFORMANCE_DEBUG_LOG
                     RDIDbgCosCPxyLog("Thrd=" << tid << ", Channel=" << MyID() << ", EventChannel_i::admin_dispatch - end"
                         << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>(this)->_events->length()
                         << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>(this)->_proxy_events.length()
@@ -1343,7 +1342,7 @@ EventChannel_i::proxy_dispatch()
             batch_pxdis.clear();
             batch_size = PROXY_DISPATCH_BATCH_SIZE < _proxy_events.length() ? PROXY_DISPATCH_BATCH_SIZE : _proxy_events.length();
 
-#ifdef PERFORMANCE_TEST_LOG
+#ifdef PERFORMANCE_DEBUG_LOG
             RDIDbgCosCPxyLog("Thrd=" << tid << ", Channel=" << MyID() << ", EventChannel_i::proxy_dispatch - begin"
                 << ", event_queue=" << _events->length()
                 << ", proxy_queue=" << _proxy_events.length()
@@ -1377,7 +1376,7 @@ EventChannel_i::proxy_dispatch()
 						TW_EARLY_RELEASE(chan_proxy_lock);
 #ifndef BATCH_PROXY_DISPATCH
 						pxdis._admin->dispatch_event(pxdis._event, pxdis._state, _type_map);
-#ifdef PERFORMANCE_MONITOR
+#ifdef PERFORMANCE_REPORT_LOG
                         CountPerformanceMonitor::instance().add_count( "EventChannel_i::proxy_dispatch", 1 );
 #endif
 
@@ -1385,6 +1384,12 @@ EventChannel_i::proxy_dispatch()
 
 #ifdef PROXY_DISPATCH_THREAD_POOL
                         ProxyDispatcheEentProcessorPool::instance().initialize_barrier( batch_pxdis[0]._admin, batch_size );
+#ifdef DEBUG_THREAD_POOL_BARRIER
+                        RDIDbgForceLog( "EventChannel_i::proxy_dispatch - initialized barrier for admin:" << batch_pxdis[0]._admin
+                            << ", proxy_number=" << batch_pxdis[0]._admin->NumProxies()
+                            << ", batch_size=" << batch_size
+                            << "\n" );
+#endif
 #endif
                         for ( size_t i = 0; i < batch_size; ++i )
                         {
@@ -1392,11 +1397,23 @@ EventChannel_i::proxy_dispatch()
                         }
 
 #ifdef PROXY_DISPATCH_THREAD_POOL
+#ifdef DEBUG_THREAD_POOL_BARRIER
+                        RDIDbgForceLog( "EventChannel_i::proxy_dispatch - waiting barrier begin for admin:" << batch_pxdis[0]._admin
+                            << ", proxy_number=" << batch_pxdis[0]._admin->NumProxies()
+                            << ", batch_size=" << batch_size
+                            << "\n" );
+#endif
                         ProxyDispatcheEentProcessorPool::instance().wait_barrier( batch_pxdis[0]._admin );
+#ifdef DEBUG_THREAD_POOL_BARRIER
+                        RDIDbgForceLog( "EventChannel_i::proxy_dispatch - waiting barrier end for admin:" << batch_pxdis[0]._admin
+                            << ", proxy_number=" << batch_pxdis[0]._admin->NumProxies()
+                            << ", batch_size=" << batch_size
+                            << "\n" );
+#endif
 #endif
 
 
-#ifdef PERFORMANCE_TEST_LOG
+#ifdef PERFORMANCE_DEBUG_LOG
                         RDIDbgCosCPxyLog("Thrd=" << tid << ", Channel=" << MyID() << ", EventChannel_i::proxy_dispatch - end"
                             << ", event_queue=" << _events->length()
                             << ", proxy_queue=" << _proxy_events.length()
@@ -1405,7 +1422,7 @@ EventChannel_i::proxy_dispatch()
                             << "\n");
 #endif
 
-#ifdef PERFORMANCE_MONITOR
+#ifdef PERFORMANCE_REPORT_LOG
                         CountPerformanceMonitor::instance().add_count( "EventChannel_i::proxy_dispatch", batch_size );
 #endif
 #endif

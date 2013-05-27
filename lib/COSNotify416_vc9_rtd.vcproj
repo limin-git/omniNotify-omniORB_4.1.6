@@ -625,6 +625,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\SingleThreadBarrier.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\static_check.h"
 				>
 			</File>

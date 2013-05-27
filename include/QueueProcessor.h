@@ -21,6 +21,7 @@
 #include "Thread.h"
 #include "ThreadGuard.h"
 #include "QueueItem.h"
+#include "RDI.h"
 #include <deque>
 #include <boost/shared_ptr.hpp>
 
@@ -48,7 +49,14 @@ public:
 
 	void insert( boost::shared_ptr<ITEM>& newItem )
 	{
+#ifdef DEBUG_THREAD_POOL_BARRIER
+        RDIDbgForceLog( "QueueProcessor::insert - 1 m_queue.size=" << m_queue.size() << "\n" );
+#endif
 		THREAD_GUARD( m_queueLock );
+
+#ifdef DEBUG_THREAD_POOL_BARRIER
+        RDIDbgForceLog( "QueueProcessor::insert - 2 m_queue.size=" << m_queue.size() << "\n" );
+#endif
 
 		unsigned long queueSize = m_queue.size();
 		if (queueSize == m_maxQueueSize)
@@ -59,7 +67,15 @@ public:
 		QueueItem<ITEM> newPtr( newItem );
 		m_queue.push_back( newPtr );
 
+#ifdef DEBUG_THREAD_POOL_BARRIER
+        RDIDbgForceLog( "QueueProcessor::insert - 3 m_queue.size=" << m_queue.size() << "\n" );
+#endif
+
 		m_semaphore.post();
+
+#ifdef DEBUG_THREAD_POOL_BARRIER
+        RDIDbgForceLog( "QueueProcessor::insert - 4 m_queue.size=" << m_queue.size() << "\n" );
+#endif
 	}
 
 	void insertUnique( boost::shared_ptr<ITEM>& newItem )
@@ -170,58 +186,6 @@ private:
 	unsigned long									m_maxQueueSize;
 	bool											m_keepRunning;
 	bool											m_logStats;
-};
-
-
-class AbstractSingleThreadBarrier
-{
-public:
-    AbstractSingleThreadBarrier(unsigned long initial = 1) 
-        : m_semaphore(0),
-          m_initial(initial)
-    {
-        if ( 0 < initial )
-        {
-            m_count = ( initial - 1 );
-        }
-        else
-        {
-            m_count = 0;
-        }
-    }
-
-    virtual ~AbstractSingleThreadBarrier()
-    {
-        m_semaphore.post();
-    }
-
-    void wait()
-    {
-        m_semaphore.wait();
-    }
-
-    void post()
-    {
-        {
-            THREAD_GUARD( m_countLock );
-
-            if ( 0 < m_count )
-            {
-                --m_count;
-                return;
-            }
-        }
-
-        m_semaphore.post();
-    }
-
-protected:
-    omni_semaphore m_semaphore;
-public:
-
-    omni_mutex m_countLock;
-    unsigned long m_count;
-    unsigned long m_initial;
 };
 
 

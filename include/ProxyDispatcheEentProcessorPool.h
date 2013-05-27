@@ -4,6 +4,7 @@
 #include "RDITypeMap.h"
 #include "QueueProcessorPool.h"
 #include "ThreadGuard.h"
+#include "SingleThreadBarrier.h"
 #include <sstream>
 
 
@@ -52,23 +53,29 @@ public:
         const char* dname = item->dname;
         const char* tname = item->tname;
 
-        AbstractSingleThreadBarrier* barrier = get_barrier( admin);
-
-        if ( NULL == barrier )
+        struct BarrierGuard
         {
-            RDI_Fatal("null barrier");
-        }
+            BarrierGuard( SingleThreadBarrier* barrier ) : m_barrier( barrier ) {;}
+
+            ~BarrierGuard()
+            {
+                if ( NULL == m_barrier ) { RDI_Fatal("null barrier"); }
+                m_barrier->post();
+            }
+
+            SingleThreadBarrier* m_barrier;
+        };
+
+        BarrierGuard barrier_buard( get_barrier( admin) );
 
         if ( astat == OrMatch ) {
             bpush->add_event(event);
-            barrier->post();
             return;
         }
         if ( ! bpush->has_filters() ) {
             if ( (astat == NoFilters) || (astat == AndMatch) ) {
                 bpush->add_event(event);
             }
-            barrier->post();
             return;
         }
 
@@ -105,25 +112,23 @@ public:
             }
         }
 
-        barrier->post();
-
-#ifdef PERFORMANCE_TEST_LOG
+#ifdef PERFORMANCE_DEBUG_LOG
         RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", queueProcessorPoolCallback - debug"
-            << ", initial count=" << barrier->m_initial
-            << ", count =" << barrier->m_count
+            << ", initial count=" << barrier_buard.m_barrier->m_initial
+            << ", count =" << barrier_buard.m_barrier->m_count
             << "\n");
 #endif
     }
 
-    AbstractSingleThreadBarrier* get_barrier( ConsumerAdmin_i* admin )
+    SingleThreadBarrier* get_barrier( ConsumerAdmin_i* admin )
     {
-        AbstractSingleThreadBarrier* barrier = NULL;
+        SingleThreadBarrier* barrier = NULL;
 
         if ( admin != NULL )
         {
             THREAD_GUARD( m_lock );
 
-            std::map<ConsumerAdmin_i*, AbstractSingleThreadBarrier*>::iterator findIt = m_adimin_barrier_map.find( admin );
+            std::map<ConsumerAdmin_i*, SingleThreadBarrier*>::iterator findIt = m_adimin_barrier_map.find( admin );
 
             if ( findIt != m_adimin_barrier_map.end() )
             {
@@ -144,7 +149,7 @@ public:
             {
                 THREAD_GUARD( m_lock );
 
-                m_adimin_barrier_map[admin] = new AbstractSingleThreadBarrier( admin->NumProxies() * batch_size );
+                m_adimin_barrier_map[admin] = new SingleThreadBarrier( admin->NumProxies() * batch_size );
             }
         }
     }
@@ -155,7 +160,7 @@ public:
         {
             THREAD_GUARD( m_lock );
 
-            std::map<ConsumerAdmin_i*, AbstractSingleThreadBarrier*>::iterator findIt = m_adimin_barrier_map.find( admin );
+            std::map<ConsumerAdmin_i*, SingleThreadBarrier*>::iterator findIt = m_adimin_barrier_map.find( admin );
 
             if ( findIt != m_adimin_barrier_map.end() )
             {
@@ -169,7 +174,7 @@ public:
 
     void wait_barrier( ConsumerAdmin_i* admin )
     {
-        AbstractSingleThreadBarrier* barrier = get_barrier( admin );
+        SingleThreadBarrier* barrier = get_barrier( admin );
 
         if ( barrier != NULL )
         {
@@ -192,7 +197,10 @@ public:
         item->dname = dname;
         item->tname = tname;
 
-        m_processor_poll.queueItem( admin->MyID() * PROXY_DISPATCH_THREAD_NUMBER + proxy->MyID(), item );
+#ifdef DEBUG_THREAD_POOL_BARRIER
+        RDIDbgForceLog( "ProxyDispatcheEentProcessorPool::queueItem - item id " << admin->_admin_id() * PROXY_DISPATCH_THREAD_NUMBER + proxy->_proxy_id() << "\n" );
+#endif
+        m_processor_poll.queueItem( admin->_admin_id() * PROXY_DISPATCH_THREAD_NUMBER + proxy->_proxy_id(), item );
     }
 
 private:
@@ -240,6 +248,11 @@ private:
                 {
                     same_value_number++;
                 }
+
+                if ( 0 < queue_size[i] )
+                {
+                    activate_thread_number++;
+                }
             }
 
             queue_sizes_strm << "[" << same_value_number << "]";
@@ -252,18 +265,22 @@ private:
 
             std::stringstream admin_strm;
 
-            for ( std::map<ConsumerAdmin_i*, AbstractSingleThreadBarrier*>::iterator it = m_adimin_barrier_map.begin(); it != m_adimin_barrier_map.end(); ++it )
             {
-                ConsumerAdmin_i* admin = it->first;
+                THREAD_GUARD( m_lock );
 
-                if ( admin != NULL )
+                for ( std::map<ConsumerAdmin_i*, SingleThreadBarrier*>::iterator it = m_adimin_barrier_map.begin(); it != m_adimin_barrier_map.end(); ++it )
                 {
-                    admin_strm
-                        << ", admin[" << admin << "]{"
-                        << "proxy_number=" << admin->NumProxies()
-                        << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>( reinterpret_cast<ConsumerAdmin_i_stub*>(admin)->_channel )->_events->length()
-                        << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>( reinterpret_cast<ConsumerAdmin_i_stub*>(admin)->_channel )->_proxy_events.length()
-                        << "}";
+                    ConsumerAdmin_i* admin = it->first;
+
+                    if ( admin != NULL )
+                    {
+                        admin_strm
+                            << ", admin[" << admin << "]{"
+                            << "proxy_number=" << admin->NumProxies()
+                            << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>( reinterpret_cast<ConsumerAdmin_i_stub*>(admin)->_channel )->_events->length()
+                            << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>( reinterpret_cast<ConsumerAdmin_i_stub*>(admin)->_channel )->_proxy_events.length()
+                            << "}";
+                    }
                 }
             }
 
@@ -282,7 +299,7 @@ private:
 private:
 
     omni_mutex m_lock; 
-    std::map<ConsumerAdmin_i*, AbstractSingleThreadBarrier*> m_adimin_barrier_map;
+    std::map<ConsumerAdmin_i*, SingleThreadBarrier*> m_adimin_barrier_map;
     QueueProcessorPool<DispatchData, QueueProcessorWorker<DispatchData> > m_processor_poll;
 };
 

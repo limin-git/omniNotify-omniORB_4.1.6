@@ -37,10 +37,10 @@
 #include "CosNotifyChannelAdmin_i.h"
 #include "RDIOplocksMacros.h"
 
-// #define PERFORMANCE_TEST_LOG
+// #define PERFORMANCE_DEBUG_LOG
 
 
-#ifdef PERFORMANCE_TEST_LOG
+#ifdef PERFORMANCE_DEBUG_LOG
 #include "stubs.h"
 #include "ThreadTimeStamp.h"
 #endif
@@ -2537,7 +2537,7 @@ SequenceProxyPushConsumer_i::push_structured_events(const CosN::EventBatch& even
         RDI_AssertAllocThrowNo(sevnt,"Memory allocation failure -- RDI_StructuredEvent\n");
         if ( (matched = _match_event(&events[ex], sevnt)) ) 
         {
-#ifdef PERFORMANCE_TEST_LOG
+#ifdef PERFORMANCE_DEBUG_LOG
             RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushConsumer_i::push_structured_events - begin"
                 << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_events->length()
                 << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_proxy_events.length() 
@@ -2547,7 +2547,7 @@ SequenceProxyPushConsumer_i::push_structured_events(const CosN::EventBatch& even
 
             out_of_space = _channel->new_structured_event(sevnt);
 
-#ifdef PERFORMANCE_TEST_LOG
+#ifdef PERFORMANCE_DEBUG_LOG
             RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushConsumer_i::push_structured_events - end"
                 << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_events->length()
                 << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_proxy_events.length() 

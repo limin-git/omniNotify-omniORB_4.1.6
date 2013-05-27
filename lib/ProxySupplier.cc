@@ -2917,8 +2917,8 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 #endif
 
 
-#ifdef PERFORMANCE_TEST_LOG
-    RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", proxy_id=" << this->MyID()
+#ifdef PERFORMANCE_DEBUG_LOG
+    RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", proxy_id=" << this->_proxy_id()
         << ", SequenceProxyPushSupplier_i::push_event - begin"
         << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_events->length()
         << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_proxy_events.length()
@@ -3088,8 +3088,8 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 		}
 	}
 
-#ifdef PERFORMANCE_TEST_LOG
-    RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", proxy_id=" << this->MyID()
+#ifdef PERFORMANCE_DEBUG_LOG
+    RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", proxy_id=" << this->_proxy_id()
         << ", SequenceProxyPushSupplier_i::push_event - end"
         << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_events->length()
         << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_proxy_events.length()

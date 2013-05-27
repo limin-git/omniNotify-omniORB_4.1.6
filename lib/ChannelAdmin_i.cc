@@ -1396,7 +1396,7 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
 				RDI_FilterState_t     astat, 
 				RDI_TypeMap*          tmap)
 {
-#ifdef PERFORMANCE_TEST_LOG
+#ifdef PERFORMANCE_DEBUG_LOG
   RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", ConsumerAdmin_i::dispatch_event - begin"
       << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_events->length()
       << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_proxy_events.length()
@@ -1617,10 +1617,34 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
 
   // Evaluate Filters for consumers using SequenceProxyPushSupplier_i
 
+#ifdef TEST_CONSUMERADMIN_DISPATCH_EVENT
+  size_t MAX_DISPATCH_PROXY_NUMBER = 6;
+  size_t cur_dispatched_num = 0;
+#endif
+
+#ifdef DEBUG_THREAD_POOL_BARRIER
+  size_t i = 0;
+#endif
+
   for ( bpushcur=_prx_batch_push.cursor(); bpushcur.is_valid(); ++bpushcur ) {
 
 #ifdef PROXY_DISPATCH_THREAD_POOL
     ProxyDispatcheEentProcessorPool::instance().queueItem( _channel, this, bpushcur.val(), tmap, astat, event, dname, tname );
+#ifdef DEBUG_THREAD_POOL_BARRIER
+    RDIDbgForceLog( "ConsumerAdmin_i::dispatch_event - queued item " << ++i << " of " << _prx_batch_push.length()
+        << "\n" );
+#endif
+    continue;
+#endif
+
+#ifdef TEST_CONSUMERADMIN_DISPATCH_EVENT
+    bpushcur.val()->add_event(event);
+
+    if ( MAX_DISPATCH_PROXY_NUMBER <= ++cur_dispatched_num )
+    {
+        break;
+    }
+
     continue;
 #endif
 
@@ -1719,7 +1743,7 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
     }
   }
 
-#ifdef PERFORMANCE_TEST_LOG
+#ifdef PERFORMANCE_DEBUG_LOG
   RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", ConsumerAdmin_i::dispatch_event - end"
       << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_events->length()
       << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_proxy_events.length()
