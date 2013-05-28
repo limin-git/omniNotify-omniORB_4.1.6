@@ -17,6 +17,8 @@
 #include "RDILocksHeld.h"
 #include "RDISeqDecls.h"
 
+#include "CosNotifyChannelAdmin_i.h"
+
 class RDI_TypeMap;
 class EventChannelFactory_i;
 
@@ -43,6 +45,7 @@ public:
 
     // Methods from CosNA::EventChannel Interface
     CosNA::EventChannelFactory_ptr MyFactory( WRAPPED_DECLARG_VOID );
+#if 0 // LIMIN TODO: remove none necessary functions
     CosNA::ConsumerAdmin_ptr default_consumer_admin( WRAPPED_DECLARG_VOID );
     CosNA::SupplierAdmin_ptr default_supplier_admin( WRAPPED_DECLARG_VOID );
     CosNF::FilterFactory_ptr default_filter_factory( WRAPPED_DECLARG_VOID );
@@ -52,7 +55,7 @@ public:
     CosNA::SupplierAdmin_ptr get_supplieradmin(CosNA::AdminID id  WRAPPED_DECLARG );
     CosNA::AdminIDSeq *      get_all_consumeradmins( WRAPPED_DECLARG_VOID );
     CosNA::AdminIDSeq *      get_all_supplieradmins( WRAPPED_DECLARG_VOID );
-
+#endif
     // Methods from CosN::AdminPropertiesAdmin Interface
     CosN::AdminProperties* get_admin( WRAPPED_DECLARG_VOID );
     void set_admin(const CosN::AdminProperties& WRAPPED_DECLARG );
@@ -69,6 +72,7 @@ public:
 
     // ----------------------------------------------------------------------------------
     // (Local only -- not available via RPC)
+#if 0 // LIMIN TODO: remove none necessary functions
 
     void server_qos_changed();
     RDI_NotifQoS*   qos_properties() 	{ return _qosprop; }
@@ -114,6 +118,7 @@ public:
 
     CORBA::Boolean update_mapping(RDI_LocksHeld&, const CosN::EventTypeSeq&, const CosN::EventTypeSeq&, RDIProxySupplier*, Filter_i*);
 
+#endif
     struct ProxyDispatch_t
     {
         RDI_StructuredEvent* _event;
@@ -131,6 +136,7 @@ public:
         }
     };
 
+#if 0 // LIMIN TODO: remove none necessary functions
     // Update the hash table that keeps information about the event  //
     // types supplied by suppliers.  When a new entry is created or  //
     // an existing entry is deleted, insert the delta into the       //
@@ -191,6 +197,7 @@ public:
     // N.B. only the macros in RDIOplocksMacros.h should call this function
     RDIOplockEntry** macro_get_oplockptr_ptr() { return &_oplockptr; }
     RDI_TypeMap*     macro_get_typemap_ptr()   { return _type_map; }
+#endif
 
 public:
     RDIOplockEntry*        _oplockptr;
@@ -324,6 +331,10 @@ public:
 };
 
 
+static void make_sure_same_size()
+{
+   LOKI_STATIC_CHECK( ( sizeof( EventChannel_i_stub ) == sizeof(EventChannel_i) ), same_size );
+}
 
 
 

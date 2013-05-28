@@ -37,81 +37,81 @@ public:
 
 template<class ITEM, class PROCESSORWORKER> class QueueProcessorPool
 {
-	public:
-		
-        QueueProcessorPool(int numberOfWorkers, QueueProcessorPoolCallback<ITEM>& callback, bool startWorkers = true)
-            : m_numWorkers(numberOfWorkers)
+public:
+	
+    QueueProcessorPool(int numberOfWorkers, QueueProcessorPoolCallback<ITEM>& callback, bool startWorkers = true)
+        : m_numWorkers(numberOfWorkers)
+    {
+        for (int i = 0; i < m_numWorkers; ++i)
         {
-            for (int i = 0; i < m_numWorkers; ++i)
-            {
-                m_workers.push_back(new PROCESSORWORKER(callback));
-            }
-		
-            if ( true == startWorkers )
-            {
-                startProcessing();
-            }
+            m_workers.push_back(new PROCESSORWORKER(callback));
+        }
+	
+        if ( true == startWorkers )
+        {
+            startProcessing();
+        }
+    }
+
+	virtual ~QueueProcessorPool()
+    {
+        for ( typename std::vector<PROCESSORWORKER*>::iterator iter = m_workers.begin(); iter != m_workers.end(); ++iter )
+        {
+            (*iter)->terminate();
         }
 
-		virtual ~QueueProcessorPool()
+        for ( typename std::vector<PROCESSORWORKER*>::iterator iter = m_workers.begin(); iter != m_workers.end(); ++iter )
         {
-            for ( typename std::vector<PROCESSORWORKER*>::iterator iter = m_workers.begin(); iter != m_workers.end(); ++iter )
-            {
-                (*iter)->terminate();
-            }
-
-            for ( typename std::vector<PROCESSORWORKER*>::iterator iter = m_workers.begin(); iter != m_workers.end(); ++iter )
-            {
-                (*iter)->terminateAndWait();
-                delete (*iter);
-            }
-
-            m_workers.clear();
-        }
-    
-        void startProcessing()
-        {
-			for ( typename std::vector< PROCESSORWORKER* >::iterator iter = m_workers.begin();
-                  iter != m_workers.end(); ++iter )
-            {
-                (*iter)->start();
-            }
-        }
-       
-        void stopProcessing()
-        {
-            for ( typename std::vector<PROCESSORWORKER*>::iterator iter = m_workers.begin();
-                  iter != m_workers.end(); ++iter )
-            {
-                (*iter)->terminateAndWait();
-            }
-        }
-    
-        void queueItem( unsigned long itemId, boost::shared_ptr<ITEM>& item )
-        {
-            if (NULL != item.get())
-            {
-                int worker = itemId % m_numWorkers;
-                m_workers[worker]->insert(item);
-            }
+            (*iter)->terminateAndWait();
+            delete (*iter);
         }
 
-		std::vector<unsigned long> getQueueSizes()
-		{
-			std::vector<unsigned long> sizes;
-			typename std::vector<PROCESSORWORKER*>::iterator iter;
-            for (iter = m_workers.begin(); iter != m_workers.end(); ++iter)
-            {
-                sizes.push_back((*iter)->getQueueSize());
-            }
+        m_workers.clear();
+    }
 
-			return sizes;
-		}
+    void startProcessing()
+    {
+		for ( typename std::vector< PROCESSORWORKER* >::iterator iter = m_workers.begin();
+              iter != m_workers.end(); ++iter )
+        {
+            (*iter)->start();
+        }
+    }
+   
+    void stopProcessing()
+    {
+        for ( typename std::vector<PROCESSORWORKER*>::iterator iter = m_workers.begin();
+              iter != m_workers.end(); ++iter )
+        {
+            (*iter)->terminateAndWait();
+        }
+    }
 
-	private:
+    void queueItem( unsigned long itemId, boost::shared_ptr<ITEM>& item )
+    {
+        if (NULL != item.get())
+        {
+            int worker = itemId % m_numWorkers;
+            m_workers[worker]->insert(item);
+        }
+    }
 
-        int                                         m_numWorkers;
-        std::vector< PROCESSORWORKER* >				m_workers;
+	std::vector<unsigned long> getQueueSizes()
+	{
+		std::vector<unsigned long> sizes;
+		typename std::vector<PROCESSORWORKER*>::iterator iter;
+        for (iter = m_workers.begin(); iter != m_workers.end(); ++iter)
+        {
+            sizes.push_back((*iter)->getQueueSize());
+        }
+
+		return sizes;
+	}
+
+private:
+
+    int                                         m_numWorkers;
+    std::vector< PROCESSORWORKER* >				m_workers;
 };
 
 template<class ITEM> class QueueProcessorWorker : public QueueProcessor<ITEM>

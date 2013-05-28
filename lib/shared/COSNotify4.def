@@ -307,6 +307,7 @@ EXPORTS
 ??0CosEvProxyPullSupplier@POA_AttNotification@@QAE@XZ
 ??0CosEvProxyPushConsumer@POA_AttNotification@@QAE@XZ
 ??0CosEvProxyPushSupplier@POA_AttNotification@@QAE@XZ
+??0CountPerformanceMonitor@@AAE@H@Z
 ??0Disconnected@CosEventComm@@QAE@XZ
 ??0EventBatch@CosNotification@@QAE@K@Z
 ??0EventBatch@CosNotification@@QAE@XZ
@@ -536,6 +537,9 @@ EXPORTS
 ??0TW_RWMutex@@QAE@XZ
 ??0TW_RWMutexLock@@QAE@AAHAAVTW_RWMutex@@H@Z
 ??0TW_TempRelease@@QAE@AAVTW_MutexLock@@@Z
+??0Thread@@QAE@XZ
+??0ThreadGuard@@QAE@AAVomni_mutex@@@Z
+??0ThreadTimeStamp@@AAE@XZ
 ??0TypeCode_var@CORBA@@QAE@PAVTypeCode@1@@Z
 ??0TypeCode_var@CORBA@@QAE@XZ
 ??0UserException@CORBA@@IAE@XZ
@@ -853,6 +857,7 @@ EXPORTS
 ??1ConstraintInfo@CosNotifyFilter@@QAE@XZ
 ??1ConstraintInfoSeq@CosNotifyFilter@@QAE@XZ
 ??1ConsumerAdmin_i@@EAE@XZ
+??1CountPerformanceMonitor@@UAE@XZ
 ??1EventBatch@CosNotification@@QAE@XZ
 ??1EventChannelBoundWorker@@UAE@XZ
 ??1EventChannelDispatch@@QAE@XZ
@@ -957,6 +962,9 @@ EXPORTS
 ??1TW_TempRelease@@QAE@XZ
 ??1TaggedComponent@IOP@@QAE@XZ
 ??1TaggedProfile@IOP@@QAE@XZ
+??1Thread@@UAE@XZ
+??1ThreadGuard@@UAE@XZ
+??1ThreadTimeStamp@@QAE@XZ
 ??1TypeCode_var@CORBA@@QAE@XZ
 ??1UnionMember@CORBA@@QAE@XZ
 ??1ValueMember@CORBA@@QAE@XZ
@@ -970,6 +978,8 @@ EXPORTS
 ??1logger@RDI@@QAE@XZ
 ??1node_t@RDI_Config@@QAE@XZ
 ??1yyFlexLexer@@UAE@XZ
+??2@YAPAXIPAX@Z
+??3@YAXPAX0@Z
 ??4?$RDI_HashCursor@JPAVConsumerAdmin_i@@@@QAE?AV0@ABV0@@Z
 ??4?$RDI_HashCursor@JPAVEventChannel_i@@@@QAE?AV0@ABV0@@Z
 ??4?$RDI_HashCursor@JPAVFilter_i@@@@QAE?AV0@ABV0@@Z
@@ -1470,6 +1480,8 @@ EXPORTS
 ??_FProxyDispatch_t@EventChannel_i@@QAEXXZ
 ??_FRDI_Op@@QAEXXZ
 ??_H@YGXPAXIHP6EPAX0@Z@Z
+??__F_instance@?1??instance@CountPerformanceMonitor@@SAAAU1@XZ@YAXXZ
+??__F_instance@?1??instance@ThreadTimeStamp@@SAAAU1@XZ@YAXXZ
 ?AddDbgFlags@RDI@@SAXI@Z
 ?AddRptFlags@RDI@@SAXI@Z
 ?CleanupAll@RDI@@SAXXZ
@@ -2141,6 +2153,8 @@ EXPORTS
 ?_init_eval_state@RDI_RVM@@AAEXXZ
 ?_init_vmap@RDI_StructuredEvent@@AAEXXZ
 ?_init_vmap_from_any@RDI_StructuredEvent@@AAEXXZ
+?_instance@?1??instance@CountPerformanceMonitor@@SAAAU2@XZ@4U2@A
+?_instance@?1??instance@ThreadTimeStamp@@SAAAU2@XZ@4U2@A
 ?_is_supported@FilterFactory_i@@QAE_NPBD@Z
 ?_left@RDIPriorityQueue@@CAKK@Z
 ?_match_event@RDIProxyConsumer@@IAE_NABVAny@CORBA@@@Z
@@ -3349,8 +3363,10 @@ EXPORTS
 ?get_cos_event@RDI_StructuredEvent@@QBEABUStructuredEvent@CosNotification@@XZ
 ?get_default_channel@RDINotifServer@@$4PPPPPPPM@A@AEPAV_objref_EventChannel@AttNotification@@XZ
 ?get_default_channel@RDINotifServer@@UAEPAV_objref_EventChannel@AttNotification@@XZ
+?get_difference_in_nanosecond@TimeStamp@ThreadTimeStamp@@QAEKKKKK@Z
 ?get_dname_rtval@RDI_StructuredEvent@@QAEPBVRDI_RTVal@@XZ
 ?get_domain_name@RDI_StructuredEvent@@QBEPBDXZ
+?get_elapse_in_nanosecond@TimeStamp@ThreadTimeStamp@@QAEKXZ
 ?get_ename_rtval@RDI_StructuredEvent@@QAEPBVRDI_RTVal@@XZ
 ?get_etype_rtval@RDI_StructuredEvent@@QAEPBVRDI_RTVal@@XZ
 ?get_event@RDIPriorityQueue@@QAEPAVRDI_StructuredEvent@@K@Z
@@ -3539,6 +3555,8 @@ EXPORTS
 ?insert_tail@?$RDI_List@PAVRDI_StructuredEvent@@@@QAEHABQAVRDI_StructuredEvent@@@Z
 ?insert_tail@?$RDI_List@UProxyDispatch_t@EventChannel_i@@@@QAEHABUProxyDispatch_t@EventChannel_i@@@Z
 ?install_all_defaults@RDI_AllQoS@@SAXAAVRDI_Config@@@Z
+?instance@CountPerformanceMonitor@@SAAAU1@XZ
+?instance@ThreadTimeStamp@@SAAAU1@XZ
 ?inuse@RDIOplockEntry@@QAEGXZ
 ?inuseone_wait@RDIOplockEntry@@QAEXXZ
 ?is_admin_prop@RDI_AdminQoS@@SA_NPBD@Z
@@ -3640,6 +3658,7 @@ EXPORTS
 ?length@?$RDI_List@PAVEventProxyPushSupplier_i@@@@QBEIXZ
 ?length@?$RDI_List@PAVRDI_StructuredEvent@@@@QBEIXZ
 ?length@?$RDI_List@UProxyDispatch_t@EventChannel_i@@@@QBEIXZ
+?length@?$RDI_List@UProxyDispatch_t@EventChannel_i_stub@@@@QBEIXZ
 ?length@?$RDI_SafeList@VConsumerAdmin_i@@@@QBEHXZ
 ?length@?$_CORBA_Sequence@J@@QAEXK@Z
 ?length@?$_CORBA_Sequence@J@@QBEKXZ
@@ -4359,6 +4378,7 @@ EXPORTS
 ?replace@?$RDI_Hash@UEventType@CosNotification@@UVNode_t@RDI_TypeMap@@@@QAEXABUEventType@CosNotification@@ABUVNode_t@RDI_TypeMap@@@Z
 ?replace@?$RDI_Hash@UKey_t@RDI_StructuredEvent@@UVal_t@2@@@QAEXABUKey_t@RDI_StructuredEvent@@ABUVal_t@3@@Z
 ?replace@?$RDI_Hash@VRDI_EventType@@K@@QAEXABVRDI_EventType@@ABK@Z
+?report@CountPerformanceMonitor@@QAEXXZ
 ?repos_id@RDI_RTVal@@QAEPADXZ
 ?reserve@RDIstrstream@@IAEXH@Z
 ?reset@RDI_RVM@@QAEXXZ
@@ -4384,6 +4404,7 @@ EXPORTS
 ?resume_connection@StructuredProxyPushSupplier_i@@UAEXXZ
 ?retn@RDIstrstream@@QAEPADXZ
 ?run@AnyPullWorker@@UAEXPAX@Z
+?run@CountPerformanceMonitor@@UAEXXZ
 ?run@EventChannelWorker@@UAEXPAX@Z
 ?run@EventPullWorker@@UAEXPAX@Z
 ?run@EventPushWorker@@UAEXPAX@Z
@@ -4394,6 +4415,7 @@ EXPORTS
 ?run@SeqPullWorker@@UAEXPAX@Z
 ?run@StrPullWorker@@UAEXPAX@Z
 ?run@WRAPPED_ORB_OA@@SAXXZ
+?runThread@Thread@@SAPAXPAX@Z
 ?run_garbage_collect@RDI_EventQueue@@ABEHXZ
 ?run_undetached@AnyProxyBoundWorker@@UAEPAXPAX@Z
 ?run_undetached@EventChannelBoundWorker@@UAEPAXPAX@Z
@@ -4540,6 +4562,7 @@ EXPORTS
 ?signal_pull_threads@RDI_PullSupplier@@QAEXXZ
 ?signal_push_threads@RDI_NotifyConsumer@@QAEXXZ
 ?simplify@RDI_RTVal@@QAEXXZ
+?sleep@Thread@@SAXI@Z
 ?split@?$RDI_Hash@JPAVConsumerAdmin_i@@@@AAEHXZ
 ?split@?$RDI_Hash@JPAVEventChannel_i@@@@AAEHXZ
 ?split@?$RDI_Hash@JPAVFilter_i@@@@AAEHXZ
@@ -4566,6 +4589,7 @@ EXPORTS
 ?split@?$RDI_Hash@VRDI_EventType@@K@@AAEHXZ
 ?split@?$RDI_Hash@VRDI_EventType@@PAX@@AAEHXZ
 ?start@RDI_Watch@@QAEXXZ
+?start@Thread@@QAEXXZ
 ?startTimeSupported@RDI_NotifQoS@@QAEX_N@Z
 ?startTimeSupported@RDI_NotifQoS@@QBE_NXZ
 ?stop@RDI_Watch@@QAEXXZ
@@ -4601,6 +4625,7 @@ EXPORTS
 ?suspend_connection@StructuredProxyPushSupplier_i@@$4PPPPPPPM@A@AEXXZ
 ?suspend_connection@StructuredProxyPushSupplier_i@@UAEXXZ
 ?swap@RDI_RTVal@@QAEXAAV1@@Z
+?terminate@CountPerformanceMonitor@@UAEXXZ
 ?timedwait@RDIOplockEntry@@QAEXKK@Z
 ?timeout@RDI_NotifQoS@@QAEXVRDI_TimeT@@@Z
 ?timeout@RDI_NotifQoS@@QBE?AVRDI_TimeT@@XZ

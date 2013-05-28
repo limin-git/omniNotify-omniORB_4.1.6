@@ -36,10 +36,10 @@ private:
 public:
 
 	QueueProcessor<ITEM> (unsigned long maxQueueSize = MAX_QUEUEPROCESSOR_QUEUE_SIZE, bool canDeleteItem = true) 
-	: m_semaphore(0),
-      m_maxQueueSize(maxQueueSize),
-      m_keepRunning(true),
-      m_logStats(false)
+	    : m_semaphore(0),
+          m_maxQueueSize(maxQueueSize),
+          m_keepRunning(true),
+          m_logStats(false)
 	{
 	}
 

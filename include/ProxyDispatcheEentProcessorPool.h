@@ -120,25 +120,6 @@ public:
 #endif
     }
 
-    SingleThreadBarrier* get_barrier( ConsumerAdmin_i* admin )
-    {
-        SingleThreadBarrier* barrier = NULL;
-
-        if ( admin != NULL )
-        {
-            THREAD_GUARD( m_lock );
-
-            std::map<ConsumerAdmin_i*, SingleThreadBarrier*>::iterator findIt = m_adimin_barrier_map.find( admin );
-
-            if ( findIt != m_adimin_barrier_map.end() )
-            {
-                barrier = findIt->second;
-            }
-        }
-
-        return barrier;
-    }
-
     void initialize_barrier( ConsumerAdmin_i* admin, size_t batch_size )
     {
         if ( admin != NULL )
@@ -153,6 +134,19 @@ public:
             }
         }
     }
+
+    void wait_barrier( ConsumerAdmin_i* admin )
+    {
+        SingleThreadBarrier* barrier = get_barrier( admin );
+
+        if ( barrier != NULL )
+        {
+            barrier->wait();
+        }
+
+        remove_barrier( admin );
+    }
+
 
     void remove_barrier( ConsumerAdmin_i* admin )
     {
@@ -172,18 +166,6 @@ public:
         }
     }
 
-    void wait_barrier( ConsumerAdmin_i* admin )
-    {
-        SingleThreadBarrier* barrier = get_barrier( admin );
-
-        if ( barrier != NULL )
-        {
-            barrier->wait();
-        }
-
-        remove_barrier( admin );
-    }
-
     void queueItem( EventChannel_i* channel, ConsumerAdmin_i* admin, SequenceProxyPushSupplier_i* proxy, RDI_TypeMap* tmap, RDI_FilterState_t astat, RDI_StructuredEvent*  event, const char* dname, const char* tname )
     {
         boost::shared_ptr<DispatchData> item( new DispatchData );
@@ -201,6 +183,25 @@ public:
         RDIDbgForceLog( "ProxyDispatcheEentProcessorPool::queueItem - item id " << admin->_admin_id() * PROXY_DISPATCH_THREAD_NUMBER + proxy->_proxy_id() << "\n" );
 #endif
         m_processor_poll.queueItem( admin->_admin_id() * PROXY_DISPATCH_THREAD_NUMBER + proxy->_proxy_id(), item );
+    }
+
+    SingleThreadBarrier* get_barrier( ConsumerAdmin_i* admin )
+    {
+        SingleThreadBarrier* barrier = NULL;
+
+        if ( admin != NULL )
+        {
+            THREAD_GUARD( m_lock );
+
+            std::map<ConsumerAdmin_i*, SingleThreadBarrier*>::iterator findIt = m_adimin_barrier_map.find( admin );
+
+            if ( findIt != m_adimin_barrier_map.end() )
+            {
+                barrier = findIt->second;
+            }
+        }
+
+        return barrier;
     }
 
 private:

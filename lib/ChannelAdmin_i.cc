@@ -47,6 +47,12 @@
 
 #include "Switchecs.h"
 
+#ifdef USE_START_START_REGION_MAPPING
+    extern omni_mutex g_region_proxy_map_lock;
+    extern std::map<unsigned long, std::set<RDIProxySupplier*> > g_region_proxy_map;
+#endif
+
+
 
 // ------------------------------------------------------------- //
 // ConsumerAdmin_i implementation                                //
@@ -1402,6 +1408,43 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
       << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>(_channel)->_proxy_events.length()
       << "\n");ThreadTimeStamp::instance().set_curtime( "ConsumerAdmin_i::dispatch_event" );
 #endif
+
+#ifdef USE_START_START_REGION_MAPPING
+    ; // 4 spaces indent stub
+    {
+        g_region_proxy_map_lock.acquire();
+
+        if ( false == g_region_proxy_map.empty() )
+        {
+            const RDI_RTVal * val = event->lookup_fdata_rtval( "Region" );
+
+            if ( val != NULL )
+            {
+                int region = ::atoi(val->_v_string_ptr);
+
+                std::map<unsigned long, std::set<RDIProxySupplier*> >::iterator findIt = g_region_proxy_map.find( region );
+
+                if ( findIt != g_region_proxy_map.end() )
+                {
+                    for ( std::set<RDIProxySupplier*>::iterator it = findIt->second.begin(); it != findIt->second.end(); ++it )
+                    {
+                        SequenceProxyPushSupplier_i* bpush = dynamic_cast<SequenceProxyPushSupplier_i*>( *it );
+
+                        if ( bpush != NULL )
+                        {
+                            bpush->add_event(event);
+
+                            RDIDbgForceLog( "\ConsumerAdmin_i::dispatch_event - using start start region type map." << " \n" );
+                        }
+                    }
+                }
+            }
+        }
+
+        g_region_proxy_map_lock.release();
+    }
+#endif
+
 
   RDI_HashCursor<CosNA::ProxyID, ProxyPushSupplier_i *>           apushcur;
   RDI_HashCursor<CosNA::ProxyID, ProxyPullSupplier_i *>           apullcur;
