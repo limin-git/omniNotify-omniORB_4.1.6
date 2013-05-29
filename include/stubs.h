@@ -17,8 +17,6 @@
 #include "RDILocksHeld.h"
 #include "RDISeqDecls.h"
 
-#include "CosNotifyChannelAdmin_i.h"
-
 class RDI_TypeMap;
 class EventChannelFactory_i;
 
@@ -331,10 +329,10 @@ public:
 };
 
 
-static void make_sure_same_size()
-{
-   LOKI_STATIC_CHECK( ( sizeof( EventChannel_i_stub ) == sizeof(EventChannel_i) ), same_size );
-}
+//static void make_sure_same_size()
+//{
+//   LOKI_STATIC_CHECK( ( sizeof( EventChannel_i_stub ) == sizeof(EventChannel_i) ), same_size );
+//}
 
 
 

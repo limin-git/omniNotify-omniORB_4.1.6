@@ -909,7 +909,6 @@ ConsumerAdmin_i::remove_proxy(RDI_LocksHeld& held, SequenceProxyPushSupplier_i* 
     { 
         return; 
     }
-    RDIDbgSPxyLog("xxstest Remove proxy [" << prx->_proxy_id() << "] from admin " << (void*)this << '\n');
     if ( _prx_batch_push.exists(prx->_proxy_id()) ) 
     {
         _prx_batch_push.remove(prx->_proxy_id());
@@ -1403,6 +1402,11 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
       << "\n");ThreadTimeStamp::instance().set_curtime( "ConsumerAdmin_i::dispatch_event" );
 #endif
 
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
+    ; // 4 spaces indent stub
+    _channel->consumer_admin_dispatch_event( event );
+#endif
+
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING
     ; // 4 spaces indent stub
     {
@@ -1414,24 +1418,20 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
 
             if ( val != NULL )
             {
-                int region = ::atoi(val->_v_string_ptr);
+                int location_key = ::atoi(val->_v_string_ptr);
 
-                LocationProxySupplierMap::iterator findIt = g_location_proxy_map.find( region );
+                LocationKey2ProxySupplierListMap::iterator findIt = g_location_proxy_map.find( location_key );
 
                 if ( findIt != g_location_proxy_map.end() )
                 {
-                    for ( ProxySupplierSet::iterator it = findIt->second.begin(); it != findIt->second.end(); ++it )
+                    for ( ProxySupplierList::iterator it = findIt->second.begin(); it != findIt->second.end(); ++it )
                     {
                         if (  *it != NULL )
                         {
                              (*it)->add_event(event);
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_DISPATCH_EVENT
-                            RDIDbgForceLog( "\ConsumerAdmin_i::dispatch_event - using start start region type map." << " \n" );
-#endif
-
-#ifdef REPLACE_WITH_LOCATION_PROXY_SUPPLIER_MAPPING
-                            return;
+                            RDIDbgForceLog( "\ConsumerAdmin_i::dispatch_event - using start start location_key type map." << " \n" );
 #endif
                         }
                     }
@@ -1440,7 +1440,6 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
         }
     }
 #endif
-
 
   RDI_HashCursor<CosNA::ProxyID, ProxyPushSupplier_i *>           apushcur;
   RDI_HashCursor<CosNA::ProxyID, ProxyPullSupplier_i *>           apullcur;

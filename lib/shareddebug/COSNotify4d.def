@@ -307,7 +307,6 @@ EXPORTS
 ??0CosEvProxyPullSupplier@POA_AttNotification@@QAE@XZ
 ??0CosEvProxyPushConsumer@POA_AttNotification@@QAE@XZ
 ??0CosEvProxyPushSupplier@POA_AttNotification@@QAE@XZ
-??0CountPerformanceMonitor@@AAE@H@Z
 ??0Disconnected@CosEventComm@@QAE@XZ
 ??0EventBatch@CosNotification@@QAE@K@Z
 ??0EventBatch@CosNotification@@QAE@XZ
@@ -537,8 +536,6 @@ EXPORTS
 ??0TW_RWMutex@@QAE@XZ
 ??0TW_RWMutexLock@@QAE@AAHAAVTW_RWMutex@@H@Z
 ??0TW_TempRelease@@QAE@AAVTW_MutexLock@@@Z
-??0Thread@@QAE@XZ
-??0ThreadGuard@@QAE@AAVomni_mutex@@@Z
 ??0ThreadTimeStamp@@AAE@XZ
 ??0TypeCode_var@CORBA@@QAE@PAVTypeCode@1@@Z
 ??0TypeCode_var@CORBA@@QAE@XZ
@@ -856,7 +853,6 @@ EXPORTS
 ??1ConstraintInfo@CosNotifyFilter@@QAE@XZ
 ??1ConstraintInfoSeq@CosNotifyFilter@@QAE@XZ
 ??1ConsumerAdmin_i@@EAE@XZ
-??1CountPerformanceMonitor@@UAE@XZ
 ??1EventBatch@CosNotification@@QAE@XZ
 ??1EventChannelBoundWorker@@UAE@XZ
 ??1EventChannelDispatch@@QAE@XZ
@@ -961,8 +957,6 @@ EXPORTS
 ??1TW_TempRelease@@QAE@XZ
 ??1TaggedComponent@IOP@@QAE@XZ
 ??1TaggedProfile@IOP@@QAE@XZ
-??1Thread@@UAE@XZ
-??1ThreadGuard@@UAE@XZ
 ??1ThreadTimeStamp@@QAE@XZ
 ??1TypeCode_var@CORBA@@QAE@XZ
 ??1UnionMember@CORBA@@QAE@XZ
@@ -1479,7 +1473,6 @@ EXPORTS
 ??_FProxyDispatch_t@EventChannel_i@@QAEXXZ
 ??_FRDI_Op@@QAEXXZ
 ??_H@YGXPAXIHP6EPAX0@Z@Z
-??__F_instance@?1??instance@CountPerformanceMonitor@@SAAAU1@XZ@YAXXZ
 ??__F_instance@?1??instance@ThreadTimeStamp@@SAAAU1@XZ@YAXXZ
 ?AddDbgFlags@RDI@@SAXI@Z
 ?AddRptFlags@RDI@@SAXI@Z
@@ -1771,7 +1764,7 @@ EXPORTS
 ?_add_ref@ServantBase@PortableServer@@$R4BAM@BE@PPPPPPPM@BA@AEXXZ
 ?_add_ref@ServantBase@PortableServer@@$R4BNI@CE@PPPPPPPM@BA@AEXXZ
 ?_add_ref@ServantBase@PortableServer@@$R4BPA@CE@PPPPPPPM@BA@AEXXZ
-?_add_ref@ServantBase@PortableServer@@$R4CBM@CA@PPPPPPPM@BA@AEXXZ
+?_add_ref@ServantBase@PortableServer@@$R4CDE@CA@PPPPPPPM@BA@AEXXZ
 ?_add_ref@ServantBase@PortableServer@@$R4DI@BE@PPPPPPPM@BA@AEXXZ
 ?_add_ref@ServantBase@PortableServer@@$R4DM@BI@PPPPPPPM@BA@AEXXZ
 ?_add_ref@ServantBase@PortableServer@@$R4EE@BE@PPPPPPPM@BA@AEXXZ
@@ -1867,7 +1860,7 @@ EXPORTS
 ?_dispatch@_impl_CosEvProxyPushSupplier@AttNotification@@$R4GM@BE@PPPPPPPM@7AE_NAAVomniCallHandle@@@Z
 ?_dispatch@_impl_EventChannel@AttNotification@@$4PPPPPPPM@A@AE_NAAVomniCallHandle@@@Z
 ?_dispatch@_impl_EventChannel@AttNotification@@$R47BM@PPPPPPPM@M@AE_NAAVomniCallHandle@@@Z
-?_dispatch@_impl_EventChannel@AttNotification@@$R4CBM@BM@PPPPPPPM@M@AE_NAAVomniCallHandle@@@Z
+?_dispatch@_impl_EventChannel@AttNotification@@$R4CDE@BM@PPPPPPPM@M@AE_NAAVomniCallHandle@@@Z
 ?_dispatch@_impl_EventChannel@CosEventChannelAdmin@@$4PPPPPPPM@A@AE_NAAVomniCallHandle@@@Z
 ?_dispatch@_impl_EventChannel@CosEventChannelAdmin@@$R477PPPPPPPM@M@AE_NAAVomniCallHandle@@@Z
 ?_dispatch@_impl_EventChannel@CosNotifyChannelAdmin@@$4PPPPPPPM@A@AE_NAAVomniCallHandle@@@Z
@@ -2029,7 +2022,7 @@ EXPORTS
 ?_do_get_interface@ServantBase@PortableServer@@$R0BAM@BE@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
 ?_do_get_interface@ServantBase@PortableServer@@$R0BNI@CE@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
 ?_do_get_interface@ServantBase@PortableServer@@$R0BPA@CE@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
-?_do_get_interface@ServantBase@PortableServer@@$R0CBM@CA@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
+?_do_get_interface@ServantBase@PortableServer@@$R0CDE@CA@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
 ?_do_get_interface@ServantBase@PortableServer@@$R0DI@BE@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
 ?_do_get_interface@ServantBase@PortableServer@@$R0DM@BI@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
 ?_do_get_interface@ServantBase@PortableServer@@$R0EE@BE@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
@@ -2058,7 +2051,7 @@ EXPORTS
 ?_downcast@ServantBase@PortableServer@@$R0BAM@BE@PPPPPPPM@BA@AEPAXXZ
 ?_downcast@ServantBase@PortableServer@@$R0BNI@CE@PPPPPPPM@BA@AEPAXXZ
 ?_downcast@ServantBase@PortableServer@@$R0BPA@CE@PPPPPPPM@BA@AEPAXXZ
-?_downcast@ServantBase@PortableServer@@$R0CBM@CA@PPPPPPPM@BA@AEPAXXZ
+?_downcast@ServantBase@PortableServer@@$R0CDE@CA@PPPPPPPM@BA@AEPAXXZ
 ?_downcast@ServantBase@PortableServer@@$R0DI@BE@PPPPPPPM@BA@AEPAXXZ
 ?_downcast@ServantBase@PortableServer@@$R0DM@BI@PPPPPPPM@BA@AEPAXXZ
 ?_downcast@ServantBase@PortableServer@@$R0EE@BE@PPPPPPPM@BA@AEPAXXZ
@@ -2152,7 +2145,6 @@ EXPORTS
 ?_init_eval_state@RDI_RVM@@AAEXXZ
 ?_init_vmap@RDI_StructuredEvent@@AAEXXZ
 ?_init_vmap_from_any@RDI_StructuredEvent@@AAEXXZ
-?_instance@?1??instance@CountPerformanceMonitor@@SAAAU2@XZ@4U2@A
 ?_instance@?1??instance@ThreadTimeStamp@@SAAAU2@XZ@4U2@A
 ?_is_supported@FilterFactory_i@@QAE_NPBD@Z
 ?_left@RDIPriorityQueue@@CAKK@Z
@@ -2186,7 +2178,7 @@ EXPORTS
 ?_mostDerivedRepoId@_impl_CosEvProxyPushSupplier@AttNotification@@$R0GM@BE@PPPPPPPM@7AEPBDXZ
 ?_mostDerivedRepoId@_impl_EventChannel@AttNotification@@$0PPPPPPPM@A@AEPBDXZ
 ?_mostDerivedRepoId@_impl_EventChannel@AttNotification@@$R07BM@PPPPPPPM@M@AEPBDXZ
-?_mostDerivedRepoId@_impl_EventChannel@AttNotification@@$R0CBM@BM@PPPPPPPM@M@AEPBDXZ
+?_mostDerivedRepoId@_impl_EventChannel@AttNotification@@$R0CDE@BM@PPPPPPPM@M@AEPBDXZ
 ?_mostDerivedRepoId@_impl_EventChannel@CosEventChannelAdmin@@$0PPPPPPPM@A@AEPBDXZ
 ?_mostDerivedRepoId@_impl_EventChannel@CosEventChannelAdmin@@$R077PPPPPPPM@M@AEPBDXZ
 ?_mostDerivedRepoId@_impl_EventChannel@CosNotifyChannelAdmin@@$0PPPPPPPM@A@AEPBDXZ
@@ -2376,7 +2368,7 @@ EXPORTS
 ?_ptrToInterface@_impl_CosEvProxyPushSupplier@AttNotification@@$R0GM@BE@PPPPPPPM@7AEPAXPBD@Z
 ?_ptrToInterface@_impl_EventChannel@AttNotification@@$0PPPPPPPM@A@AEPAXPBD@Z
 ?_ptrToInterface@_impl_EventChannel@AttNotification@@$R07BM@PPPPPPPM@M@AEPAXPBD@Z
-?_ptrToInterface@_impl_EventChannel@AttNotification@@$R0CBM@BM@PPPPPPPM@M@AEPAXPBD@Z
+?_ptrToInterface@_impl_EventChannel@AttNotification@@$R0CDE@BM@PPPPPPPM@M@AEPAXPBD@Z
 ?_ptrToInterface@_impl_EventChannel@CosEventChannelAdmin@@$0PPPPPPPM@A@AEPAXPBD@Z
 ?_ptrToInterface@_impl_EventChannel@CosEventChannelAdmin@@$R077PPPPPPPM@M@AEPAXPBD@Z
 ?_ptrToInterface@_impl_EventChannel@CosNotifyChannelAdmin@@$0PPPPPPPM@A@AEPAXPBD@Z
@@ -2553,7 +2545,7 @@ EXPORTS
 ?_remove_ref@ServantBase@PortableServer@@$R4BAM@BE@PPPPPPPM@BA@AEXXZ
 ?_remove_ref@ServantBase@PortableServer@@$R4BNI@CE@PPPPPPPM@BA@AEXXZ
 ?_remove_ref@ServantBase@PortableServer@@$R4BPA@CE@PPPPPPPM@BA@AEXXZ
-?_remove_ref@ServantBase@PortableServer@@$R4CBM@CA@PPPPPPPM@BA@AEXXZ
+?_remove_ref@ServantBase@PortableServer@@$R4CDE@CA@PPPPPPPM@BA@AEXXZ
 ?_remove_ref@ServantBase@PortableServer@@$R4DI@BE@PPPPPPPM@BA@AEXXZ
 ?_remove_ref@ServantBase@PortableServer@@$R4DM@BI@PPPPPPPM@BA@AEXXZ
 ?_remove_ref@ServantBase@PortableServer@@$R4EE@BE@PPPPPPPM@BA@AEXXZ
@@ -3100,6 +3092,7 @@ EXPORTS
 ?disconnect_structured_push_supplier@StructuredProxyPushSupplier_i@@UAEXXZ
 ?dispatch_event@ConsumerAdmin_i@@AAEXPAVRDI_StructuredEvent@@@Z
 ?dispatch_event@ConsumerAdmin_i@@AAEXPAVRDI_StructuredEvent@@W4RDI_FilterState_t@@PAVRDI_TypeMap@@@Z
+?dispatch_special_event@EventChannel_i@@QAEXPAVRDI_StructuredEvent@@@Z
 ?do_codegen@RDI_Constraint@@QAEXPAVRDI_PCState@@_N@Z
 ?do_command@ConsumerAdmin_i@@$4PPPPPPPM@A@AEPADPBDAA_N1V?$_CORBA_ObjRef_OUT_arg@V_objref_Interactive@AttNotification@@VInteractive_Helper@2@@@@Z
 ?do_command@ConsumerAdmin_i@@UAEPADPBDAA_N1V?$_CORBA_ObjRef_OUT_arg@V_objref_Interactive@AttNotification@@VInteractive_Helper@2@@@@Z
@@ -3498,6 +3491,7 @@ EXPORTS
 ?hash@RDI_EventType@@SAIPBX@Z
 ?high@RDI_UtcT@@QBEKXZ
 ?import_settings@RDI_Config@@QAE_NAAVRDIstrstream@@PBD@Z
+?in@_CORBA_String_member@@QBEPBDXZ
 ?in@_CORBA_String_var@@QBEPBDXZ
 ?incr_consumers@EventChannel_i@@QAE_NXZ
 ?incr_num_announcements@EventChannel_i@@QAEXXZ
@@ -3553,7 +3547,6 @@ EXPORTS
 ?insert_tail@?$RDI_List@PAVRDI_StructuredEvent@@@@QAEHABQAVRDI_StructuredEvent@@@Z
 ?insert_tail@?$RDI_List@UProxyDispatch_t@EventChannel_i@@@@QAEHABUProxyDispatch_t@EventChannel_i@@@Z
 ?install_all_defaults@RDI_AllQoS@@SAXAAVRDI_Config@@@Z
-?instance@CountPerformanceMonitor@@SAAAU1@XZ
 ?instance@ThreadTimeStamp@@SAAAU1@XZ
 ?inuse@RDIOplockEntry@@QAEGXZ
 ?inuseone_wait@RDIOplockEntry@@QAEXXZ
@@ -3849,6 +3842,7 @@ EXPORTS
 ?lookup@?$RDI_Hash@VRDI_EventType@@PAX@@QAEHABVRDI_EventType@@AAPAX@Z
 ?lookupFilter@RDI_TypeMap@@QAEXPBD0PAVConsumerAdmin_i@@AAUFList_t@1@@Z
 ?lookupFilter@RDI_TypeMap@@QAEXPBD0PAVRDIProxySupplier@@AAUFList_t@1@@Z
+?lookup_fdata_rtval@RDI_StructuredEvent@@QAEPBVRDI_RTVal@@PBD@Z
 ?lookup_rtval@RDI_StructuredEvent@@QAEPBVRDI_RTVal@@PBD@Z
 ?lookup_vahdr_rtval@RDI_StructuredEvent@@QAEPBVRDI_RTVal@@PBD@Z
 ?low@RDI_UtcT@@QBEKXZ
@@ -4376,7 +4370,6 @@ EXPORTS
 ?replace@?$RDI_Hash@UEventType@CosNotification@@UVNode_t@RDI_TypeMap@@@@QAEXABUEventType@CosNotification@@ABUVNode_t@RDI_TypeMap@@@Z
 ?replace@?$RDI_Hash@UKey_t@RDI_StructuredEvent@@UVal_t@2@@@QAEXABUKey_t@RDI_StructuredEvent@@ABUVal_t@3@@Z
 ?replace@?$RDI_Hash@VRDI_EventType@@K@@QAEXABVRDI_EventType@@ABK@Z
-?report@CountPerformanceMonitor@@QAEXXZ
 ?repos_id@RDI_RTVal@@QAEPADXZ
 ?reserve@RDIstrstream@@IAEXH@Z
 ?reset@RDI_RVM@@QAEXXZ
@@ -4402,7 +4395,6 @@ EXPORTS
 ?resume_connection@StructuredProxyPushSupplier_i@@UAEXXZ
 ?retn@RDIstrstream@@QAEPADXZ
 ?run@AnyPullWorker@@UAEXPAX@Z
-?run@CountPerformanceMonitor@@UAEXXZ
 ?run@EventChannelWorker@@UAEXPAX@Z
 ?run@EventPullWorker@@UAEXPAX@Z
 ?run@EventPushWorker@@UAEXPAX@Z
@@ -4413,7 +4405,6 @@ EXPORTS
 ?run@SeqPullWorker@@UAEXPAX@Z
 ?run@StrPullWorker@@UAEXPAX@Z
 ?run@WRAPPED_ORB_OA@@SAXXZ
-?runThread@Thread@@SAPAXPAX@Z
 ?run_garbage_collect@RDI_EventQueue@@ABEHXZ
 ?run_undetached@AnyProxyBoundWorker@@UAEPAXPAX@Z
 ?run_undetached@EventChannelBoundWorker@@UAEPAXPAX@Z
@@ -4560,7 +4551,6 @@ EXPORTS
 ?signal_pull_threads@RDI_PullSupplier@@QAEXXZ
 ?signal_push_threads@RDI_NotifyConsumer@@QAEXXZ
 ?simplify@RDI_RTVal@@QAEXXZ
-?sleep@Thread@@SAXI@Z
 ?split@?$RDI_Hash@JPAVConsumerAdmin_i@@@@AAEHXZ
 ?split@?$RDI_Hash@JPAVEventChannel_i@@@@AAEHXZ
 ?split@?$RDI_Hash@JPAVFilter_i@@@@AAEHXZ
@@ -4587,7 +4577,6 @@ EXPORTS
 ?split@?$RDI_Hash@VRDI_EventType@@K@@AAEHXZ
 ?split@?$RDI_Hash@VRDI_EventType@@PAX@@AAEHXZ
 ?start@RDI_Watch@@QAEXXZ
-?start@Thread@@QAEXXZ
 ?startTimeSupported@RDI_NotifQoS@@QAEX_N@Z
 ?startTimeSupported@RDI_NotifQoS@@QBE_NXZ
 ?stop@RDI_Watch@@QAEXXZ
@@ -4623,7 +4612,6 @@ EXPORTS
 ?suspend_connection@StructuredProxyPushSupplier_i@@$4PPPPPPPM@A@AEXXZ
 ?suspend_connection@StructuredProxyPushSupplier_i@@UAEXXZ
 ?swap@RDI_RTVal@@QAEXAAV1@@Z
-?terminate@CountPerformanceMonitor@@UAEXXZ
 ?timedwait@RDIOplockEntry@@QAEXKK@Z
 ?timeout@RDI_NotifQoS@@QAEXVRDI_TimeT@@@Z
 ?timeout@RDI_NotifQoS@@QBE?AVRDI_TimeT@@XZ
@@ -4651,6 +4639,7 @@ EXPORTS
 ?update@RDI_EventType@@SAXAAVEventTypeSeq@CosNotification@@ABV23@1@Z
 ?update@RDI_TypeMap@@QAE_NAAURDI_LocksHeld_s@@ABVEventTypeSeq@CosNotification@@1PAVConsumerAdmin_i@@PAVFilter_i@@@Z
 ?update@RDI_TypeMap@@QAE_NAAURDI_LocksHeld_s@@ABVEventTypeSeq@CosNotification@@1PAVRDIProxySupplier@@PAVFilter_i@@@Z
+?update_location_proxy_mapping@EventChannel_i@@QAE_NABVEventTypeSeq@CosNotification@@0PAVRDIProxySupplier@@PAVFilter_i@@@Z
 ?update_mapping@EventChannel_i@@QAE_NAAURDI_LocksHeld_s@@ABVEventTypeSeq@CosNotification@@1PAVConsumerAdmin_i@@PAVFilter_i@@@Z
 ?update_mapping@EventChannel_i@@QAE_NAAURDI_LocksHeld_s@@ABVEventTypeSeq@CosNotification@@1PAVRDIProxySupplier@@PAVFilter_i@@@Z
 ?val@?$RDI_HashCursor@JPAVConsumerAdmin_i@@@@QBEAAPAVConsumerAdmin_i@@XZ

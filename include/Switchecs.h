@@ -15,11 +15,11 @@
 //#define DEBUG_THREAD_POOL_QUEUE_SIZE
 //#define DEBUG_THREAD_POOL_BARRIER
 //#define TEST_CONSUMERADMIN_DISPATCH_EVENT                               //only dispatch 6 - test dispatch performance
-#define USE_LOCATION_PROXY_SUPPLIER_MAPPING                             // for filter: *,*( $Region == '123' )
+//#define USE_LOCATION_PROXY_SUPPLIER_MAPPING                             // for filter: *,*( $Region == '123' )
+#define USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL            //CosNotifyChannelAdmin_i.h:EventChannel_i
 #define REPLACE_WITH_LOCATION_PROXY_SUPPLIER_MAPPING
 #define USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING          //EventChannel_i::update_mapping
 //#define USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_DISPATCH_EVENT          //ConsumerAdmin_i::dispatch_event
-
 
 
 
@@ -58,10 +58,18 @@
     #include <vector>
 
     //defined in: EventChannel_i.cc
-    typedef std::set<SequenceProxyPushSupplier_i*> ProxySupplierSet;
-    typedef std::map<unsigned long, ProxySupplierSet> LocationProxySupplierMap;
+    typedef std::set<SequenceProxyPushSupplier_i*> ProxySupplierList;
+    typedef std::map<unsigned long, ProxySupplierList> LocationKey2ProxySupplierListMap;
     extern omni_mutex g_location_proxy_map_lock;
-    extern LocationProxySupplierMap g_location_proxy_map;
+    extern LocationKey2ProxySupplierListMap g_location_proxy_map;
+#endif
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
+    #include <sstream>
+    #include <map>
+    #include <set>
+    #include <list>
+    #include <vector>
 #endif
 
 
