@@ -15,9 +15,10 @@
 //#define DEBUG_THREAD_POOL_QUEUE_SIZE
 //#define DEBUG_THREAD_POOL_BARRIER
 //#define TEST_CONSUMERADMIN_DISPATCH_EVENT                               //only dispatch 6 - test dispatch performance
-//#define USE_LOCATION_PROXY_SUPPLIER_MAPPING                             // for filter: *,*( $Region == '123' )
+// for filter: *,*( $Region == '123' )
+//#define USE_LOCATION_PROXY_SUPPLIER_MAPPING                             //EventChannel_i::update_mapping
 #define USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL            //CosNotifyChannelAdmin_i.h:EventChannel_i
-#define REPLACE_WITH_LOCATION_PROXY_SUPPLIER_MAPPING
+#define USE_LOCATION_PROXY_SUPPLIER_MAPPING_NOT_TEST
 #define USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING          //EventChannel_i::update_mapping
 //#define USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_DISPATCH_EVENT          //ConsumerAdmin_i::dispatch_event
 

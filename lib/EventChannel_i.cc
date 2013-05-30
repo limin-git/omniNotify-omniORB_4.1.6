@@ -955,233 +955,10 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
   if (_shutmedown) { return 0; } // 0 means update failure
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
-  if ( true == update_location_proxy_mapping( added, deled, proxy, filter ) )
-  {
-      return true;
-  }
-#endif
+  bool has_start_star_region_filter = update_location_proxy_mapping( added, deled, proxy, filter );
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING
-    ; // 4 space indent stub
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
-    std::stringstream add_del_strm;
-    std::stringstream filter_strm;
-    std::stringstream add_proxy_strm;
-    std::stringstream remove_proxy_strm;
-
-    add_del_strm<< "\n\t" << "added: ";
-
-    for ( size_t i = 0; i < added.length(); ++i )
-    {
-        add_del_strm << "[" << added[i].domain_name.in() << "," << added[i].type_name.in() << "] ";
-    }
-
-    add_del_strm << "\n\t" << "deled: ";
-
-    for ( size_t i = 0; i < deled.length(); ++i )
-    {
-        add_del_strm << "[" << deled[i].domain_name.in() << "," << deled[i].type_name.in() << "]";
-    }
-
-    filter_strm << "\n\t" << "filter: ";
-
-    CosNF::ConstraintInfoSeq* all_constraints = NULL;
-    
-    if ( filter != NULL )
-    {
-        all_constraints = filter->get_all_constraints();
-    }
-
-    if ( all_constraints != NULL )
-    {
-        for ( size_t i = 0; i < all_constraints->length(); ++i )
-        {
-            filter_strm << i << ":[[";
-
-            CosNF::ConstraintInfo& constraint_info = (*all_constraints)[i];
-            CosNF::ConstraintExp& constraint_expression = constraint_info.constraint_expression;
-            CosNotification::EventTypeSeq& event_types = constraint_expression.event_types;
-
-            for ( size_t j = 0; j < event_types.length(); ++j )
-            {
-                filter_strm << "[" << event_types[j].domain_name.in() << "," << event_types[j].type_name.in() << "]";
-            }
-
-            filter_strm << "]";// event_types
-            filter_strm << constraint_expression.constraint_expr.in();
-            filter_strm << "] "; //constraint_expr
-        }
-    }
-    else
-    {
-        filter_strm << "<NULL>";
-    }
-#endif
-
-    struct FilterHelper 
-    {
-        FilterHelper( Filter_i* filter )
-            : m_filter( filter ),
-              m_location_key(-1)
-        {
-            m_location_key = get_localocation_key( filter );
-        }
-
-        bool hss_start_start_region_filter() // ( $Region == '123' )
-        {
-            return ( m_location_key != -1 );
-        }
-
-        int get_localocation_key( Filter_i* filter )
-        {
-            if ( m_filter != NULL )
-            {
-                CosNF::ConstraintInfoSeq* all_constraints = filter->get_all_constraints();
-
-                if ( all_constraints != NULL )
-                {
-                    for ( size_t i = 0; i < all_constraints->length(); ++i )
-                    {
-                        CosNF::ConstraintInfo& constraint_info = (*all_constraints)[i];
-                        CosNF::ConstraintExp& constraint_expression = constraint_info.constraint_expression;
-                        CosNotification::EventTypeSeq& event_types = constraint_expression.event_types;
-
-                        for ( size_t j = 0; j < event_types.length(); ++j )
-                        {
-                            if ( RDI_STR_EQ( event_types[j].domain_name, "*" ) && RDI_STR_EQ( event_types[j].type_name, "*" ) )
-                            {
-                                return get_location_key_from_constraint_expr( constraint_expression.constraint_expr.in() );;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return -1;
-        }
-
-        int get_location_key_from_constraint_expr( const char* constraint_expr )
-        {
-            const char* REGION_EXPRESSION = "$Region == '";   // Note: TA_CosUtility.cpp:gGenerateConstraintExpression
-            const char* AND_OPERATION = " ) and ( ";
-            static const int REGION_EXPRESSION_LENGTH = ::strlen(REGION_EXPRESSION);
-            const size_t MAX_NUMBER_LENGTH = 10;
-            
-            if ( std::strstr( const_cast<char*>(constraint_expr), AND_OPERATION ) != NULL )
-            {
-                return -1;
-            }
-
-            char* exp_beg = std::strstr( const_cast<char*>(constraint_expr), REGION_EXPRESSION );
-
-            if ( exp_beg != NULL )
-            {
-                char* number_beg = exp_beg + REGION_EXPRESSION_LENGTH;
-                char* number_end = ::strchr( number_beg, '\'' );
-                size_t number_len = number_end - number_beg; 
-
-                if ( number_end != NULL )
-                {
-                    char location_key_buf[MAX_NUMBER_LENGTH] = { 0 };
-
-                    std::strncpy( location_key_buf, number_beg, number_len );
-
-                    char* delim = 0;
-                    int vl = RDI_STRTOL(location_key_buf, &delim);
-                    if ((delim == 0) || (delim == location_key_buf) || (*delim != '\0'))
-                    {
-                        return -1;
-                    }
-
-                    return vl;
-                }
-            }
-
-            return -1;
-        }
-
-        Filter_i* m_filter;
-        int m_location_key;
-    };
-
-#ifdef REPLACE_WITH_LOCATION_PROXY_SUPPLIER_MAPPING
-    bool is_return_early = false;
-#endif
-
-    if ( added.length() )
-    {
-        if ( RDI_STR_EQ( added[0].domain_name, "*" ) && RDI_STR_EQ( added[0].type_name, "*" ) )
-        {
-            FilterHelper fiter_helper( filter );
-
-            if ( fiter_helper.hss_start_start_region_filter() )
-            {
-                {
-                    THREAD_GUARD( g_location_proxy_map_lock );
-                    g_location_proxy_map[fiter_helper.m_location_key].insert( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
-                }
-
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
-                add_proxy_strm
-                    << "\n\t" << "added proxy for location key: " << fiter_helper.m_location_key
-                    << ", location_number=" << g_location_proxy_map.size()
-                    << ", cur_loc_proxy_number=" << g_location_proxy_map[fiter_helper.m_location_key].size()
-                    << "\n";
-#endif
-#ifdef REPLACE_WITH_LOCATION_PROXY_SUPPLIER_MAPPING
-                is_return_early = true;
-#endif
-            }
-        }
-    }
-
-    if ( deled.length() )
-    {
-        if ( RDI_STR_EQ( deled[0].domain_name, "*" ) && RDI_STR_EQ( deled[0].type_name, "*" ) )
-        {
-            THREAD_GUARD( g_location_proxy_map_lock );
-
-            for ( LocationKey2ProxySupplierListMap::iterator it = g_location_proxy_map.begin(); it != g_location_proxy_map.end(); NULL )
-            {
-                ProxySupplierList::iterator findIt = it->second.find( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
-
-                if ( findIt != it->second.end() )
-                {
-                    it->second.erase( findIt );
-
-                    if ( true == it->second.empty() )
-                    {
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
-                        remove_proxy_strm
-                            << "\n\t" << "removed proxy for location key: " << it->first
-                            << ", location_number=" << g_location_proxy_map.size()
-                            << ", cur_loc_proxy_number=" << g_location_proxy_map[it->first].size()
-                            << "\n";
-#endif
-                        g_location_proxy_map.erase( it++ );
-                        continue;
-                    }
-                }
-
-                ++it;
-            }
-        }
-    }
-
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
-    if ( added.length() || deled.length() )
-    {
-        RDIDbgForceLog( "\nEventChannel_i::update_mapping - " << "[channel=" << this->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << filter->MyFID() << "]"
-            << add_del_strm.str().c_str()
-            << filter_strm.str().c_str()
-            << add_proxy_strm.str().c_str()
-            << remove_proxy_strm.str().c_str()
-            << " \n" );
-    }
-#endif
-
-#ifdef REPLACE_WITH_LOCATION_PROXY_SUPPLIER_MAPPING
-    if ( true == is_return_early )
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_NOT_TEST
+    if ( true == has_start_star_region_filter )
     {
         return true;
     }
@@ -1189,65 +966,8 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
 
 #endif
 
-  CORBA::Boolean res = _type_map->update(held, added, deled, proxy, filter);
-  return res;
-}
-
-
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
-bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter)
-{
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
-    std::stringstream add_del_strm;
-    std::stringstream filter_strm;
-    std::stringstream add_proxy_strm;
-    std::stringstream remove_proxy_strm;
-
-    add_del_strm<< "\n\t" << "added: ";
-
-    for ( size_t i = 0; i < added.length(); ++i )
-    {
-        add_del_strm << "[" << added[i].domain_name.in() << "," << added[i].type_name.in() << "] ";
-    }
-
-    add_del_strm << "\n\t" << "deled: ";
-
-    for ( size_t i = 0; i < deled.length(); ++i )
-    {
-        add_del_strm << "[" << deled[i].domain_name.in() << "," << deled[i].type_name.in() << "]";
-    }
-
-    filter_strm << "\n\t" << "filter: ";
-
-    CosNF::ConstraintInfoSeq* all_constraints = NULL;
-
-    if ( filter != NULL )
-    {
-        all_constraints = filter->get_all_constraints();
-    }
-
-    if ( all_constraints != NULL )
-    {
-        for ( size_t i = 0; i < all_constraints->length(); ++i )
-        {
-            filter_strm << i << ":[[";
-
-            CosNF::ConstraintInfo& constraint_info = (*all_constraints)[i];
-            CosNF::ConstraintExp& constraint_expression = constraint_info.constraint_expression;
-            CosNotification::EventTypeSeq& event_types = constraint_expression.event_types;
-
-            for ( size_t j = 0; j < event_types.length(); ++j )
-            {
-                filter_strm << "[" << event_types[j].domain_name.in() << "," << event_types[j].type_name.in() << "]";
-            }
-
-            filter_strm << "]";// event_types
-            filter_strm << constraint_expression.constraint_expr.in();
-            filter_strm << "] "; //constraint_expr
-        }
-    }
-#endif
-
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING
+    ; // 4 space indent stub
     struct FilterHelper 
     {
         static int get_localocation_key( Filter_i* filter ) // ( $Region == '123' )
@@ -1317,7 +1037,287 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
 
             return -1;
         }
+
+        static void get_filter_str( Filter_i* filter, std::ostream& strm )
+        {
+            if ( filter != NULL )
+            {
+                CosNF::ConstraintInfoSeq* all_constraints = filter->get_all_constraints();
+
+                if ( all_constraints != NULL )
+                {
+                    for ( size_t i = 0; i < all_constraints->length(); ++i )
+                    {
+                        strm << i << ":[[";
+
+                        CosNF::ConstraintInfo& constraint_info = (*all_constraints)[i];
+                        CosNF::ConstraintExp& constraint_expression = constraint_info.constraint_expression;
+                        CosNotification::EventTypeSeq& event_types = constraint_expression.event_types;
+
+                        get_event_type_list_str( event_types, strm );
+
+                        strm << "]";// event_types
+                        strm << constraint_expression.constraint_expr.in();
+                        strm << "] "; //constraint_expr
+                    }
+                }
+            }
+        }
+
+        static void get_event_type_str( const CosN::EventType& event_type, std::ostream& strm )
+        {
+            strm << "[" << event_type.domain_name.in() << "," << event_type.type_name.in() << "]";
+        }
+
+        static void get_event_type_list_str( const CosN::EventTypeSeq& event_type_list, std::ostream& strm )
+        {
+            for ( size_t i = 0; i < event_type_list.length(); ++i )
+            {
+                get_event_type_str( event_type_list[i], strm );
+            }
+        }
     };
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+    std::stringstream add_del_strm;
+    std::stringstream filter_strm;
+    std::stringstream add_proxy_strm;
+    std::stringstream remove_proxy_strm;
+
+    add_del_strm<< "\n\t" << "added: ";
+    FilterHelper::get_event_type_list_str( added, add_del_strm );
+
+    add_del_strm << "\n\t" << "deled: ";
+
+    FilterHelper::get_event_type_list_str( deled, add_del_strm );
+
+    filter_strm << "\n\t" << "filter: ";
+
+    FilterHelper::get_filter_str( filter, filter_strm );
+#endif
+
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_NOT_TEST
+    bool has_start_star_region_filter = false;
+#endif
+
+    if ( added.length() )
+    {
+        if ( RDI_STR_EQ( added[0].domain_name, "*" ) && RDI_STR_EQ( added[0].type_name, "*" ) )
+        {
+            int location_key = FilterHelper::get_localocation_key( filter );
+
+            if ( location_key != -1 )
+            {
+                {
+                    THREAD_GUARD( g_location_proxy_map_lock );
+                    g_location_proxy_map[location_key].insert( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
+                }
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+                add_proxy_strm
+                    << "\n\t" << "added proxy for location key: " << location_key
+                    << ", location_number=" << g_location_proxy_map.size()
+                    << ", cur_loc_proxy_number=" << g_location_proxy_map[location_key].size()
+                    << "\n";
+#endif
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_NOT_TEST
+                has_start_star_region_filter = true;
+#endif
+            }
+        }
+    }
+
+    if ( deled.length() )
+    {
+        if ( RDI_STR_EQ( deled[0].domain_name, "*" ) && RDI_STR_EQ( deled[0].type_name, "*" ) )
+        {
+            THREAD_GUARD( g_location_proxy_map_lock );
+
+            for ( LocationKey2ProxySupplierListMap::iterator it = g_location_proxy_map.begin(); it != g_location_proxy_map.end(); ++it )
+            {
+                unsigned long location_key = it->first;
+                ProxySupplierList& proxy_list = it->second;
+
+                ProxySupplierList::iterator findIt = proxy_list.find( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
+
+                if ( findIt != proxy_list.end() )
+                {
+                    proxy_list.erase( findIt );
+
+                    if ( true == proxy_list.empty() )
+                    {
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+                        remove_proxy_strm
+                            << "\n\t" << "removed proxy for location key: " << location_key
+                            << ", location_number=" << g_location_proxy_map.size()
+                            << ", cur_loc_proxy_number=" << g_location_proxy_map[location_key].size()
+                            << "\n";
+#endif
+                        g_location_proxy_map.erase( it );
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+    if ( added.length() || deled.length() )
+    {
+        RDIDbgForceLog( "\nEventChannel_i::update_mapping - " << "[channel=" << this->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << filter->MyFID() << "]"
+            << add_del_strm.str().c_str()
+            << filter_strm.str().c_str()
+            << add_proxy_strm.str().c_str()
+            << remove_proxy_strm.str().c_str()
+            << " \n" );
+    }
+#endif
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_NOT_TEST
+    if ( true == has_start_star_region_filter )
+    {
+        return true;
+    }
+#endif
+
+#endif
+
+  CORBA::Boolean res = _type_map->update(held, added, deled, proxy, filter);
+  return res;
+}
+
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
+bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter)
+{
+    struct FilterHelper 
+    {
+        static int get_localocation_key( Filter_i* filter ) // ( $Region == '123' )
+        {
+            if ( filter != NULL )
+            {
+                CosNF::ConstraintInfoSeq* all_constraints = filter->get_all_constraints();
+
+                if ( all_constraints != NULL )
+                {
+                    for ( size_t i = 0; i < all_constraints->length(); ++i )
+                    {
+                        CosNF::ConstraintInfo& constraint_info = (*all_constraints)[i];
+                        CosNF::ConstraintExp& constraint_expression = constraint_info.constraint_expression;
+                        CosNotification::EventTypeSeq& event_types = constraint_expression.event_types;
+
+                        for ( size_t j = 0; j < event_types.length(); ++j )
+                        {
+                            if ( RDI_STR_EQ( event_types[j].domain_name, "*" ) && RDI_STR_EQ( event_types[j].type_name, "*" ) )
+                            {
+                                return get_location_key_from_constraint_expr( constraint_expression.constraint_expr.in() );;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return -1;
+        }
+
+        static int get_location_key_from_constraint_expr( const char* constraint_expr )
+        {
+            static const char* REGION_EXPRESSION = "$Region == '";   // Note: TA_CosUtility.cpp:gGenerateConstraintExpression
+            static const char* AND_OPERATION = " ) and ( ";
+            static const size_t REGION_EXPRESSION_LENGTH = ::strlen(REGION_EXPRESSION);
+            static const size_t MAX_NUMBER_LENGTH = 10;
+
+            char* exp_beg = std::strstr( const_cast<char*>(constraint_expr), REGION_EXPRESSION );
+
+            if ( exp_beg != NULL )
+            {
+                if ( std::strstr( const_cast<char*>(constraint_expr), AND_OPERATION ) != NULL ) // Note: cannot deal with complex expression
+                {
+                    return -1;
+                }
+
+                char* number_beg = exp_beg + REGION_EXPRESSION_LENGTH;
+                char* number_end = ::strchr( number_beg, '\'' );
+                size_t number_len = number_end - number_beg; 
+
+                if ( number_end != NULL )
+                {
+                    char location_key_buf[MAX_NUMBER_LENGTH] = { 0 };
+
+                    std::strncpy( location_key_buf, number_beg, number_len );
+
+                    char* delim = 0;
+                    int vl = RDI_STRTOL(location_key_buf, &delim);
+                    if ((delim == 0) || (delim == location_key_buf) || (*delim != '\0'))
+                    {
+                        return -1;
+                    }
+
+                    return vl;
+                }
+            }
+
+            return -1;
+        }
+
+        static void get_filter_str( Filter_i* filter, std::ostream& strm )
+        {
+            if ( filter != NULL )
+            {
+                CosNF::ConstraintInfoSeq* all_constraints = filter->get_all_constraints();
+
+                if ( all_constraints != NULL )
+                {
+                    for ( size_t i = 0; i < all_constraints->length(); ++i )
+                    {
+                        strm << i << ":[[";
+
+                        CosNF::ConstraintInfo& constraint_info = (*all_constraints)[i];
+                        CosNF::ConstraintExp& constraint_expression = constraint_info.constraint_expression;
+                        CosNotification::EventTypeSeq& event_types = constraint_expression.event_types;
+
+                        get_event_type_list_str( event_types, strm );
+
+                        strm << "]";// event_types
+                        strm << constraint_expression.constraint_expr.in();
+                        strm << "] "; //constraint_expr
+                    }
+                }
+            }
+        }
+
+        static void get_event_type_str( const CosN::EventType& event_type, std::ostream& strm )
+        {
+            strm << "[" << event_type.domain_name.in() << "," << event_type.type_name.in() << "]";
+        }
+
+        static void get_event_type_list_str( const CosN::EventTypeSeq& event_type_list, std::ostream& strm )
+        {
+            for ( size_t i = 0; i < event_type_list.length(); ++i )
+            {
+                get_event_type_str( event_type_list[i], strm );
+            }
+        }
+    };
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+    std::stringstream add_del_strm;
+    std::stringstream filter_strm;
+    std::stringstream add_proxy_strm;
+    std::stringstream remove_proxy_strm;
+
+    add_del_strm<< "\n\t" << "added: ";
+    FilterHelper::get_event_type_list_str( added, add_del_strm );
+
+    add_del_strm << "\n\t" << "deled: ";
+
+    FilterHelper::get_event_type_list_str( deled, add_del_strm );
+
+    filter_strm << "\n\t" << "filter: ";
+
+    FilterHelper::get_filter_str( filter, filter_strm );
+#endif
 
     bool has_start_star_region_filter = false;
 
@@ -1351,6 +1351,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
             {
                 unsigned long location_key = it->first;
                 ProxySupplierList& proxy_list = it->second;
+                size_t cur_loc_proxy_number = proxy_list.size();
 
                 ProxySupplierList::iterator findIt = proxy_list.find( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
 
@@ -1360,15 +1361,16 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
 
                     if ( true == proxy_list.empty() )
                     {
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
-                        remove_proxy_strm
-                            << "\n\t" << "removed proxy for location key: " << location_key
-                            << ", location_number=" << m_location_key_2_proxies_map.size()
-                            << ", cur_loc_proxy_number=" << m_location_key_2_proxies_map[location_key].size()
-                            << "\n";
-#endif
                         m_location_key_2_proxies_map.erase( it );
                     }
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+                    remove_proxy_strm
+                        << "\n\t" << "removed proxy for location key: " << location_key
+                        << ", location_number=" << m_location_key_2_proxies_map.size()
+                        << ", cur_loc_proxy_number=" << --cur_loc_proxy_number
+                        << "\n";
+#endif
 
                     break; // the proxy has just one filter
                 }
@@ -1430,8 +1432,6 @@ void EventChannel_i::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
         }
     }
 }
-
-
 #endif
 
 
