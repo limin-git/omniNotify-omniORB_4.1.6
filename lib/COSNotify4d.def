@@ -1764,7 +1764,7 @@ EXPORTS
 ?_add_ref@ServantBase@PortableServer@@$R4BAM@BE@PPPPPPPM@BA@AEXXZ
 ?_add_ref@ServantBase@PortableServer@@$R4BNI@CE@PPPPPPPM@BA@AEXXZ
 ?_add_ref@ServantBase@PortableServer@@$R4BPA@CE@PPPPPPPM@BA@AEXXZ
-?_add_ref@ServantBase@PortableServer@@$R4CDE@CA@PPPPPPPM@BA@AEXXZ
+?_add_ref@ServantBase@PortableServer@@$R4CEM@CA@PPPPPPPM@BA@AEXXZ
 ?_add_ref@ServantBase@PortableServer@@$R4DI@BE@PPPPPPPM@BA@AEXXZ
 ?_add_ref@ServantBase@PortableServer@@$R4DM@BI@PPPPPPPM@BA@AEXXZ
 ?_add_ref@ServantBase@PortableServer@@$R4EE@BE@PPPPPPPM@BA@AEXXZ
@@ -1860,7 +1860,7 @@ EXPORTS
 ?_dispatch@_impl_CosEvProxyPushSupplier@AttNotification@@$R4GM@BE@PPPPPPPM@7AE_NAAVomniCallHandle@@@Z
 ?_dispatch@_impl_EventChannel@AttNotification@@$4PPPPPPPM@A@AE_NAAVomniCallHandle@@@Z
 ?_dispatch@_impl_EventChannel@AttNotification@@$R47BM@PPPPPPPM@M@AE_NAAVomniCallHandle@@@Z
-?_dispatch@_impl_EventChannel@AttNotification@@$R4CDE@BM@PPPPPPPM@M@AE_NAAVomniCallHandle@@@Z
+?_dispatch@_impl_EventChannel@AttNotification@@$R4CEM@BM@PPPPPPPM@M@AE_NAAVomniCallHandle@@@Z
 ?_dispatch@_impl_EventChannel@CosEventChannelAdmin@@$4PPPPPPPM@A@AE_NAAVomniCallHandle@@@Z
 ?_dispatch@_impl_EventChannel@CosEventChannelAdmin@@$R477PPPPPPPM@M@AE_NAAVomniCallHandle@@@Z
 ?_dispatch@_impl_EventChannel@CosNotifyChannelAdmin@@$4PPPPPPPM@A@AE_NAAVomniCallHandle@@@Z
@@ -2022,7 +2022,7 @@ EXPORTS
 ?_do_get_interface@ServantBase@PortableServer@@$R0BAM@BE@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
 ?_do_get_interface@ServantBase@PortableServer@@$R0BNI@CE@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
 ?_do_get_interface@ServantBase@PortableServer@@$R0BPA@CE@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
-?_do_get_interface@ServantBase@PortableServer@@$R0CDE@CA@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
+?_do_get_interface@ServantBase@PortableServer@@$R0CEM@CA@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
 ?_do_get_interface@ServantBase@PortableServer@@$R0DI@BE@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
 ?_do_get_interface@ServantBase@PortableServer@@$R0DM@BI@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
 ?_do_get_interface@ServantBase@PortableServer@@$R0EE@BE@PPPPPPPM@BA@AEPAVomniObjRef@@XZ
@@ -2051,7 +2051,7 @@ EXPORTS
 ?_downcast@ServantBase@PortableServer@@$R0BAM@BE@PPPPPPPM@BA@AEPAXXZ
 ?_downcast@ServantBase@PortableServer@@$R0BNI@CE@PPPPPPPM@BA@AEPAXXZ
 ?_downcast@ServantBase@PortableServer@@$R0BPA@CE@PPPPPPPM@BA@AEPAXXZ
-?_downcast@ServantBase@PortableServer@@$R0CDE@CA@PPPPPPPM@BA@AEPAXXZ
+?_downcast@ServantBase@PortableServer@@$R0CEM@CA@PPPPPPPM@BA@AEPAXXZ
 ?_downcast@ServantBase@PortableServer@@$R0DI@BE@PPPPPPPM@BA@AEPAXXZ
 ?_downcast@ServantBase@PortableServer@@$R0DM@BI@PPPPPPPM@BA@AEPAXXZ
 ?_downcast@ServantBase@PortableServer@@$R0EE@BE@PPPPPPPM@BA@AEPAXXZ
@@ -2178,7 +2178,7 @@ EXPORTS
 ?_mostDerivedRepoId@_impl_CosEvProxyPushSupplier@AttNotification@@$R0GM@BE@PPPPPPPM@7AEPBDXZ
 ?_mostDerivedRepoId@_impl_EventChannel@AttNotification@@$0PPPPPPPM@A@AEPBDXZ
 ?_mostDerivedRepoId@_impl_EventChannel@AttNotification@@$R07BM@PPPPPPPM@M@AEPBDXZ
-?_mostDerivedRepoId@_impl_EventChannel@AttNotification@@$R0CDE@BM@PPPPPPPM@M@AEPBDXZ
+?_mostDerivedRepoId@_impl_EventChannel@AttNotification@@$R0CEM@BM@PPPPPPPM@M@AEPBDXZ
 ?_mostDerivedRepoId@_impl_EventChannel@CosEventChannelAdmin@@$0PPPPPPPM@A@AEPBDXZ
 ?_mostDerivedRepoId@_impl_EventChannel@CosEventChannelAdmin@@$R077PPPPPPPM@M@AEPBDXZ
 ?_mostDerivedRepoId@_impl_EventChannel@CosNotifyChannelAdmin@@$0PPPPPPPM@A@AEPBDXZ
@@ -2368,7 +2368,7 @@ EXPORTS
 ?_ptrToInterface@_impl_CosEvProxyPushSupplier@AttNotification@@$R0GM@BE@PPPPPPPM@7AEPAXPBD@Z
 ?_ptrToInterface@_impl_EventChannel@AttNotification@@$0PPPPPPPM@A@AEPAXPBD@Z
 ?_ptrToInterface@_impl_EventChannel@AttNotification@@$R07BM@PPPPPPPM@M@AEPAXPBD@Z
-?_ptrToInterface@_impl_EventChannel@AttNotification@@$R0CDE@BM@PPPPPPPM@M@AEPAXPBD@Z
+?_ptrToInterface@_impl_EventChannel@AttNotification@@$R0CEM@BM@PPPPPPPM@M@AEPAXPBD@Z
 ?_ptrToInterface@_impl_EventChannel@CosEventChannelAdmin@@$0PPPPPPPM@A@AEPAXPBD@Z
 ?_ptrToInterface@_impl_EventChannel@CosEventChannelAdmin@@$R077PPPPPPPM@M@AEPAXPBD@Z
 ?_ptrToInterface@_impl_EventChannel@CosNotifyChannelAdmin@@$0PPPPPPPM@A@AEPAXPBD@Z
@@ -2545,7 +2545,7 @@ EXPORTS
 ?_remove_ref@ServantBase@PortableServer@@$R4BAM@BE@PPPPPPPM@BA@AEXXZ
 ?_remove_ref@ServantBase@PortableServer@@$R4BNI@CE@PPPPPPPM@BA@AEXXZ
 ?_remove_ref@ServantBase@PortableServer@@$R4BPA@CE@PPPPPPPM@BA@AEXXZ
-?_remove_ref@ServantBase@PortableServer@@$R4CDE@CA@PPPPPPPM@BA@AEXXZ
+?_remove_ref@ServantBase@PortableServer@@$R4CEM@CA@PPPPPPPM@BA@AEXXZ
 ?_remove_ref@ServantBase@PortableServer@@$R4DI@BE@PPPPPPPM@BA@AEXXZ
 ?_remove_ref@ServantBase@PortableServer@@$R4DM@BI@PPPPPPPM@BA@AEXXZ
 ?_remove_ref@ServantBase@PortableServer@@$R4EE@BE@PPPPPPPM@BA@AEXXZ
@@ -2915,6 +2915,7 @@ EXPORTS
 ?constraint_grammar@Filter_i@@UAEPADXZ
 ?constraint_grammar@MappingFilter_i@@$4PPPPPPPM@A@AEPADXZ
 ?constraint_grammar@MappingFilter_i@@UAEPADXZ
+?consumer_admin_dispatch_event@EventChannel_i@@QAEXPAVRDI_StructuredEvent@@@Z
 ?copybuffer@?$_CORBA_Sequence@J@@IAEXK@Z
 ?copybuffer@?$_CORBA_Sequence@PAVConstraintImpl@@@@IAEXK@Z
 ?copybuffer@?$_CORBA_Sequence@PAVConsumerAdmin_i@@@@IAEXK@Z
@@ -3092,7 +3093,6 @@ EXPORTS
 ?disconnect_structured_push_supplier@StructuredProxyPushSupplier_i@@UAEXXZ
 ?dispatch_event@ConsumerAdmin_i@@AAEXPAVRDI_StructuredEvent@@@Z
 ?dispatch_event@ConsumerAdmin_i@@AAEXPAVRDI_StructuredEvent@@W4RDI_FilterState_t@@PAVRDI_TypeMap@@@Z
-?consumer_admin_dispatch_event@EventChannel_i@@QAEXPAVRDI_StructuredEvent@@@Z
 ?do_codegen@RDI_Constraint@@QAEXPAVRDI_PCState@@_N@Z
 ?do_command@ConsumerAdmin_i@@$4PPPPPPPM@A@AEPADPBDAA_N1V?$_CORBA_ObjRef_OUT_arg@V_objref_Interactive@AttNotification@@VInteractive_Helper@2@@@@Z
 ?do_command@ConsumerAdmin_i@@UAEPADPBDAA_N1V?$_CORBA_ObjRef_OUT_arg@V_objref_Interactive@AttNotification@@VInteractive_Helper@2@@@@Z

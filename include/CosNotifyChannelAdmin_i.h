@@ -1822,12 +1822,13 @@ private:
   virtual ~EventChannel_i();
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
-    ; // 4 spaces indent stub
 public:
     typedef std::set<SequenceProxyPushSupplier_i*> ProxySupplierList;
     typedef std::map<unsigned long, ProxySupplierList> LocationKey2ProxySupplierListMap;
-    LocationKey2ProxySupplierListMap m_location_key_2_proxies_map;
-    
+
+    TW_Mutex m_location_key_2_proxy_list_map_lock;
+    LocationKey2ProxySupplierListMap m_location_key_2_proxy_list_map;
+
     bool update_location_proxy_mapping(const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter);
     void consumer_admin_dispatch_event(RDI_StructuredEvent*  event);
 #endif

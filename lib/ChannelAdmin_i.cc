@@ -1402,13 +1402,29 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
       << "\n");ThreadTimeStamp::instance().set_curtime( "ConsumerAdmin_i::dispatch_event" );
 #endif
 
+  RDI_HashCursor<CosNA::ProxyID, ProxyPushSupplier_i *>           apushcur;
+  RDI_HashCursor<CosNA::ProxyID, ProxyPullSupplier_i *>           apullcur;
+  RDI_HashCursor<CosNA::ProxyID, StructuredProxyPushSupplier_i *> spushcur;
+  RDI_HashCursor<CosNA::ProxyID, StructuredProxyPullSupplier_i *> spullcur;
+  RDI_HashCursor<CosNA::ProxyID, SequenceProxyPushSupplier_i *>   bpushcur;
+  RDI_HashCursor<CosNA::ProxyID, SequenceProxyPullSupplier_i *>   bpullcur;
+  RDI_TypeMap::FNode_t* fnode=0;
+  RDI_TypeMap::FList_t flist;
+
+  // When consumers use 'subscription_change()'  to register 
+  // interest in specific event types, we have 'has_filters()' return true
+  // so that we execute the filter evaluation logic. However, there are no
+  // filters registered and, hence, we need the '!fnode->_fltr' below...
+
+  if ( _num_proxies == 0 ) {
+    return;
+  }
+
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
-    ; // 4 spaces indent stub
     _channel->consumer_admin_dispatch_event( event );
 #endif
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING
-    ; // 4 spaces indent stub
     {
         THREAD_GUARD( g_location_proxy_map_lock );
 
@@ -1441,23 +1457,6 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
     }
 #endif
 
-  RDI_HashCursor<CosNA::ProxyID, ProxyPushSupplier_i *>           apushcur;
-  RDI_HashCursor<CosNA::ProxyID, ProxyPullSupplier_i *>           apullcur;
-  RDI_HashCursor<CosNA::ProxyID, StructuredProxyPushSupplier_i *> spushcur;
-  RDI_HashCursor<CosNA::ProxyID, StructuredProxyPullSupplier_i *> spullcur;
-  RDI_HashCursor<CosNA::ProxyID, SequenceProxyPushSupplier_i *>   bpushcur;
-  RDI_HashCursor<CosNA::ProxyID, SequenceProxyPullSupplier_i *>   bpullcur;
-  RDI_TypeMap::FNode_t* fnode=0;
-  RDI_TypeMap::FList_t flist;
-
-  // When consumers use 'subscription_change()'  to register 
-  // interest in specific event types, we have 'has_filters()' return true
-  // so that we execute the filter evaluation logic. However, there are no
-  // filters registered and, hence, we need the '!fnode->_fltr' below...
-
-  if ( _num_proxies == 0 ) {
-    return;
-  }
   const char* dname = event->get_domain_name();
   const char* tname = event->get_type_name();
 
