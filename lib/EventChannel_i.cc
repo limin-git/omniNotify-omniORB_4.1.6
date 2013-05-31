@@ -44,7 +44,7 @@
 #include "Switchecs.h"
 #define PROXY_DISPATCH_BATCH_SIZE 100
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL
     // defination
     omni_mutex g_location_proxy_map_lock;
     LocationKey2ProxySupplierListMap g_location_proxy_map;
@@ -957,7 +957,7 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
   bool has_start_star_region_filter = update_location_proxy_mapping( added, deled, proxy, filter );
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_NOT_TEST
+#ifndef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_TEST
     if ( true == has_start_star_region_filter )
     {
         return true;
@@ -966,7 +966,7 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
 
 #endif
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL
     ; // 4 space indent stub
     struct FilterHelper 
     {
@@ -1078,7 +1078,7 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
         }
     };
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL_LOG_UPDATE_MAPPING
     std::stringstream add_del_strm;
     std::stringstream filter_strm;
     std::stringstream add_proxy_strm;
@@ -1097,7 +1097,7 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
 #endif
 
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_NOT_TEST
+#ifndef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL_TEST
     bool has_start_star_region_filter = false;
 #endif
 
@@ -1114,14 +1114,14 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
                     g_location_proxy_map[location_key].insert( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
                 }
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL_LOG_UPDATE_MAPPING
                 add_proxy_strm
                     << "\n\t" << "added proxy for location key: " << location_key
                     << ", location_number=" << g_location_proxy_map.size()
                     << ", cur_loc_proxy_number=" << g_location_proxy_map[location_key].size()
                     << "\n";
 #endif
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_NOT_TEST
+#ifndef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL_TEST
                 has_start_star_region_filter = true;
 #endif
             }
@@ -1147,7 +1147,7 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
 
                     if ( true == proxy_list.empty() )
                     {
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL_LOG_UPDATE_MAPPING
                         remove_proxy_strm
                             << "\n\t" << "removed proxy for location key: " << location_key
                             << ", location_number=" << g_location_proxy_map.size()
@@ -1162,7 +1162,7 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
         }
     }
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL_LOG_UPDATE_MAPPING
     if ( added.length() || deled.length() )
     {
         RDIDbgForceLog( "\nEventChannel_i::update_mapping - " << "[channel=" << this->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << filter->MyFID() << "]"
@@ -1174,7 +1174,7 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
     }
 #endif
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_NOT_TEST
+#ifndef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL_TEST
     if ( true == has_start_star_region_filter )
     {
         return true;
@@ -1189,6 +1189,8 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
 
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
+#undef WHATFN
+#define WHATFN "EventChannel_i::update_location_proxy_mapping"
 bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter)
 {
     struct FilterHelper 
@@ -1261,7 +1263,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
             return -1;
         }
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
         static void get_filter_str( Filter_i* filter, std::ostream& strm )
         {
             if ( filter != NULL )
@@ -1306,7 +1308,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
 #endif
     };
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
     std::stringstream add_del_strm;
     std::stringstream filter_strm;
     std::stringstream add_proxy_strm;
@@ -1335,12 +1337,11 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
             if ( location_key != -1 )
             {
                 {
-                    int held = 0;
-                    TW_MutexLock lock_guard( held, m_location_key_2_proxy_list_map_lock );
+                    TW_SCOPE_LOCK(l2p_map_lock, m_location_key_2_proxy_list_map_lock, "l2p_map_lock", WHATFN);
                     m_location_key_2_proxy_list_map[location_key].insert( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
                 }
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
                 add_proxy_strm
                     << "\n\t" << "added proxy for location key: " << location_key
                     << ", location_number=" << m_location_key_2_proxy_list_map.size()
@@ -1356,8 +1357,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
     {
         if ( RDI_STR_EQ( deled[0].domain_name, "*" ) && RDI_STR_EQ( deled[0].type_name, "*" ) )
         {
-            int held = 0;
-            TW_MutexLock lock_guard( held, m_location_key_2_proxy_list_map_lock );
+            TW_SCOPE_LOCK(l2p_map_lock, m_location_key_2_proxy_list_map_lock, "l2p_map_lock", WHATFN);
 
             for ( LocationKey2ProxySupplierListMap::iterator it = m_location_key_2_proxy_list_map.begin(); it != m_location_key_2_proxy_list_map.end(); ++it )
             {
@@ -1376,7 +1376,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
                         m_location_key_2_proxy_list_map.erase( it );
                     }
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
                     remove_proxy_strm
                         << "\n\t" << "removed proxy for location key: " << location_key
                         << ", location_number=" << m_location_key_2_proxy_list_map.size()
@@ -1390,7 +1390,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
         }
     }
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_UPDATE_MAPPING
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
     if ( added.length() || deled.length() )
     {
         RDIDbgForceLog( "EventChannel_i::update_location_proxy_mapping - " << "[channel=" << this->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << filter->MyFID() << "]"
@@ -1405,6 +1405,8 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
     return has_start_star_region_filter;
 }
 
+#undef WHATFN
+#define WHATFN "EventChannel_i::propagate_ochange"
 void EventChannel_i::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
 {
     if ( false == m_location_key_2_proxy_list_map.empty() )
@@ -1421,8 +1423,7 @@ void EventChannel_i::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
                 return;
             }
 
-            int held = 0;
-            TW_MutexLock lock_guard( held, m_location_key_2_proxy_list_map_lock );
+            TW_SCOPE_LOCK(l2p_map_lock, m_location_key_2_proxy_list_map_lock, "l2p_map_lock", WHATFN);
 
             LocationKey2ProxySupplierListMap::iterator findIt = m_location_key_2_proxy_list_map.find( location_key );
 
@@ -1438,7 +1439,7 @@ void EventChannel_i::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
                     {
                         proxy->add_event(event);
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_DISPATCH_EVENT
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
                         RDIDbgForceLog( "\EventChannel_i::consumer_admin_dispatch_event - using location proxy mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
 #endif
                     }
@@ -2862,6 +2863,44 @@ EventChannel_i::out_debug_info(RDIstrstream& str, CORBA::Boolean show_events)
     str << *conscur.val() << '\n';
   }
   str << *(_type_map);
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_OUT_DEBUG_INFO
+    //Ref: RDI_TypeMap::log_output
+
+    str << "----------------\nLocationProxyMap\n----------------\n";
+
+    TW_SCOPE_LOCK(l2p_map_lock, m_location_key_2_proxy_list_map_lock, "l2p_map_lock", WHATFN);
+
+    if ( false == m_location_key_2_proxy_list_map.empty() )
+    {
+        str << "*::* ( $Region == 'L' )";
+    }
+    else
+    {
+        str << "\t(no entries)\n";
+    }
+
+    for ( LocationKey2ProxySupplierListMap::iterator it = m_location_key_2_proxy_list_map.begin(); it != m_location_key_2_proxy_list_map.end(); ++it )
+    {
+        unsigned long location_key = it->first;
+        ProxySupplierList& proxy_list = it->second;
+
+        str << "\n\tL ";
+        str.setw(3); str << location_key;
+        str << ": ";
+
+        for ( ProxySupplierList::iterator proxy_it = proxy_list.begin(); proxy_it != proxy_list.end(); ++proxy_it )
+        {
+            str.setw(9); str << *proxy_it;
+        }
+    }
+
+    str << "\n";
+
+#endif
+#endif
+
 }
 
 #undef WHATFN

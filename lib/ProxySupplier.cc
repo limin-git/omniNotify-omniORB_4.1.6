@@ -3583,12 +3583,12 @@ StructuredProxyPushSupplier_i::log_output(RDIstrstream& str) const
 RDIstrstream&
 SequenceProxyPushSupplier_i::log_output(RDIstrstream& str) const
 {
-  str << (void*)this << " -- " << RDI_PRX_TYPE(_prxtype) << " ID ";
-  str.setw(3); str << _pserial;
+  str.setw(7); str << (void*)this << " -- " << RDI_PRX_TYPE(_prxtype) << " ID ";
+  str.setw(5); str << _pserial;
   if ( ! CORBA::is_nil(_pfilter) ) str << " PFilter " << (void*)_pfilter;
   if ( ! CORBA::is_nil(_lfilter) ) str << " LFilter " << (void*)_lfilter;
   str << _pxstate;
-  str << "QSize "<< _ntfqueue.length() << " #Push "<< _nevents;
+  str << "QSize "; str.setw(5); str << _ntfqueue.length() << " #Push "<< _nevents;
   if ( _rqstypes.length() != 0 ) {
     for (CORBA::ULong ix = 0; ix < _rqstypes.length(); ix++) {
       str << "\n\t" << _rqstypes[ix].domain_name; 

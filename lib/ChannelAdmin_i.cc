@@ -1424,7 +1424,7 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
     _channel->consumer_admin_dispatch_event( event );
 #endif
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL
     {
         THREAD_GUARD( g_location_proxy_map_lock );
 
@@ -1446,7 +1446,7 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
                         {
                              (*it)->add_event(event);
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_LOG_DISPATCH_EVENT
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL_LOG_DISPATCH_EVENT
                             RDIDbgForceLog( "\ConsumerAdmin_i::dispatch_event - using start start location_key type map." << " \n" );
 #endif
                         }
