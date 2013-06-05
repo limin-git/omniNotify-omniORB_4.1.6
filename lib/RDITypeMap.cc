@@ -534,7 +534,7 @@ RDI_TypeMap::log_output(RDIstrstream& str)
     }
   }
 #else
-    _tmap.length(); // just for compile
+   _tmap.length(); // just for compile
 #endif
 
   return str;

@@ -1274,7 +1274,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
                 {
                     for ( size_t i = 0; i < all_constraints->length(); ++i )
                     {
-                        strm << i << ":[";
+                        strm << i << ":{";
 
                         CosNF::ConstraintInfo& constraint_info = (*all_constraints)[i];
                         CosNF::ConstraintExp& constraint_expression = constraint_info.constraint_expression;
@@ -1283,7 +1283,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
                         get_event_type_list_str( event_types, strm );
 
                         strm << constraint_expression.constraint_expr.in();
-                        strm << "] "; //constraint_expr
+                        strm << "} "; //constraint_expr
                     }
                 }
             }
@@ -1291,7 +1291,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
 
         static void get_event_type_str( const CosN::EventType& event_type, std::ostream& strm )
         {
-            strm << "[" << event_type.domain_name.in() << "," << event_type.type_name.in() << "]";
+            strm << "(" << event_type.domain_name.in() << "," << event_type.type_name.in() << ")";
         }
 
         static void get_event_type_list_str( const CosN::EventTypeSeq& event_type_list, std::ostream& strm )

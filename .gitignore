@@ -23,3 +23,6 @@
 *.ipch
 *.d
 *.aps
+*.def
+*.rc
+
