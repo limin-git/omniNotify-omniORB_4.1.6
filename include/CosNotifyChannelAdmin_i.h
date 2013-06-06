@@ -1825,9 +1825,11 @@ private:
 public:
     typedef std::set<SequenceProxyPushSupplier_i*> ProxySupplierList;
     typedef std::map<unsigned long, ProxySupplierList> LocationKey2ProxySupplierListMap;
+    typedef std::map<std::string, LocationKey2ProxySupplierListMap> Domain2LocationKey2ProxySupplierListMap;
 
     TW_Mutex m_location_key_2_proxy_list_map_lock;
     LocationKey2ProxySupplierListMap m_location_key_2_proxy_list_map;
+    Domain2LocationKey2ProxySupplierListMap m_domain_2_location_key_2_proxy_list_map;
 
     bool update_location_proxy_mapping(const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter);
     void consumer_admin_dispatch_event(RDI_StructuredEvent*  event);

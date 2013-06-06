@@ -1211,7 +1211,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
 
                         for ( size_t j = 0; j < event_types.length(); ++j )
                         {
-                            if ( RDI_STR_EQ( event_types[j].domain_name, "*" ) && RDI_STR_EQ( event_types[j].type_name, "*" ) )
+                            if ( /*RDI_STR_EQ( event_types[j].domain_name, "*" ) &&*/ RDI_STR_EQ( event_types[j].type_name, "*" ) )
                             {
                                 return get_location_key_from_constraint_expr( constraint_expression.constraint_expr.in() );;
                             }
@@ -1291,7 +1291,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
 
         static void get_event_type_str( const CosN::EventType& event_type, std::ostream& strm )
         {
-            strm << "(" << event_type.domain_name.in() << "," << event_type.type_name.in() << ")";
+            strm << "(" << event_type.domain_name.in() << "::" << event_type.type_name.in() << ")";
         }
 
         static void get_event_type_list_str( const CosN::EventTypeSeq& event_type_list, std::ostream& strm )
@@ -1343,9 +1343,31 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
                 add_proxy_strm
-                    << "\n\t" << "added proxy for location key: " << location_key
+                    << "\n\t" << "added a proxy with filter {[(*::*)]( $Region == '" << location_key << "' )}"
                     << ", location_number=" << m_location_key_2_proxy_list_map.size()
                     << ", cur_loc_proxy_number=" << m_location_key_2_proxy_list_map[location_key].size()
+                    << "\n";
+#endif
+                has_start_star_region_filter = true;
+            }
+        }
+        else if ( RDI_STR_EQ( added[0].type_name, "*" ) )
+        {
+            int location_key = FilterHelper::get_localocation_key( filter );
+
+            if ( location_key != -1 )
+            {
+                {
+                    TW_SCOPE_LOCK(l2p_map_lock, m_location_key_2_proxy_list_map_lock, "l2p_map_lock", WHATFN);
+                    m_domain_2_location_key_2_proxy_list_map[added[0].domain_name.in()][location_key].insert( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
+                }
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+                add_proxy_strm
+                    << "\n\t" << "added a proxy with filter {[(" << added[0].domain_name << "::*)]( $Region == '" << location_key << "' )}"
+                    << ", location_number=" << m_domain_2_location_key_2_proxy_list_map[added[0].domain_name.in()].size()
+                    << ", cur_loc_proxy_number=" << m_domain_2_location_key_2_proxy_list_map[added[0].domain_name.in()][location_key].size()
+                    << ", domain_number=" << m_domain_2_location_key_2_proxy_list_map.size()
                     << "\n";
 #endif
                 has_start_star_region_filter = true;
@@ -1378,13 +1400,59 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
                     remove_proxy_strm
-                        << "\n\t" << "removed proxy for location key: " << location_key
+                        << "\n\t" << "removed a proxy with filter {[(*::*)]( $Region == '" << location_key << "' )}"
                         << ", location_number=" << m_location_key_2_proxy_list_map.size()
                         << ", cur_loc_proxy_number=" << --cur_loc_proxy_number
                         << "\n";
 #endif
 
                     break; // the proxy has just one filter
+                }
+            }
+        }
+        else if ( RDI_STR_EQ( deled[0].type_name, "*" ) )
+        {
+            TW_SCOPE_LOCK(l2p_map_lock, m_location_key_2_proxy_list_map_lock, "l2p_map_lock", WHATFN);
+
+            Domain2LocationKey2ProxySupplierListMap::iterator find_domain_it = m_domain_2_location_key_2_proxy_list_map.find( deled[0].domain_name.in() );
+
+            if ( find_domain_it != m_domain_2_location_key_2_proxy_list_map.end() )
+            {
+                LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map = find_domain_it->second;
+
+                for ( LocationKey2ProxySupplierListMap::iterator it = location_key_2_proxy_list_map.begin(); it != location_key_2_proxy_list_map.end(); ++it )
+                {
+                    unsigned long location_key = it->first;
+                    ProxySupplierList& proxy_list = it->second;
+                    size_t cur_loc_proxy_number = proxy_list.size();
+
+                    ProxySupplierList::iterator find_proxy_it = proxy_list.find( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
+
+                    if ( find_proxy_it != proxy_list.end() )
+                    {
+                        proxy_list.erase( find_proxy_it );
+
+                        if ( true == proxy_list.empty() )
+                        {
+                            location_key_2_proxy_list_map.erase( it );
+                        }
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+                        remove_proxy_strm
+                            << "\n\t" << "removed a proxy with filter {[(" << deled[0].domain_name.in() << "::*)]( $Region == '"  << location_key << "' )}"
+                            << ", location_number=" << m_location_key_2_proxy_list_map.size()
+                            << ", cur_loc_proxy_number=" << --cur_loc_proxy_number
+                            << ", domain_number=" << m_domain_2_location_key_2_proxy_list_map.size() - ( true == location_key_2_proxy_list_map.empty() )
+                            << "\n";
+#endif
+
+                        break; // the proxy has just one filter
+                    }
+                }
+
+                if ( true == location_key_2_proxy_list_map.empty() )
+                {
+                    m_domain_2_location_key_2_proxy_list_map.erase( find_domain_it );
                 }
             }
         }
@@ -1409,7 +1477,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
 #define WHATFN "EventChannel_i::propagate_ochange"
 void EventChannel_i::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
 {
-    if ( false == m_location_key_2_proxy_list_map.empty() )
+    if ( false == m_location_key_2_proxy_list_map.empty() || false == m_domain_2_location_key_2_proxy_list_map.empty() )
     {
         const RDI_RTVal * val = event->lookup_fdata_rtval( "Region" );
 
@@ -1425,23 +1493,57 @@ void EventChannel_i::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
 
             TW_SCOPE_LOCK(l2p_map_lock, m_location_key_2_proxy_list_map_lock, "l2p_map_lock", WHATFN);
 
-            LocationKey2ProxySupplierListMap::iterator findIt = m_location_key_2_proxy_list_map.find( location_key );
-
-            if ( findIt != m_location_key_2_proxy_list_map.end() )
+            if ( false == m_location_key_2_proxy_list_map.empty() )
             {
-                ProxySupplierList& proxy_list = findIt->second;
+                LocationKey2ProxySupplierListMap::iterator find_location_it = m_location_key_2_proxy_list_map.find( location_key );
 
-                for ( ProxySupplierList::iterator it = proxy_list.begin(); it != proxy_list.end(); ++it )
+                if ( find_location_it != m_location_key_2_proxy_list_map.end() )
                 {
-                    SequenceProxyPushSupplier_i* proxy = *it;
+                    ProxySupplierList& proxy_list = find_location_it->second;
 
-                    if (  proxy != NULL )
+                    for ( ProxySupplierList::iterator it = proxy_list.begin(); it != proxy_list.end(); ++it )
                     {
-                        proxy->add_event(event);
+                        SequenceProxyPushSupplier_i* proxy = *it;
+
+                        if (  proxy != NULL )
+                        {
+                            proxy->add_event(event);
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
-                        RDIDbgForceLog( "\EventChannel_i::consumer_admin_dispatch_event - using location proxy mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
+                            RDIDbgForceLog( "\EventChannel_i::consumer_admin_dispatch_event - using location proxy mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
 #endif
+                        }
+                    }
+                }
+            }
+
+            if ( false == m_domain_2_location_key_2_proxy_list_map.empty() )
+            {
+                Domain2LocationKey2ProxySupplierListMap::iterator find_domain_it = m_domain_2_location_key_2_proxy_list_map.find( event->get_domain_name() );
+
+                if ( find_domain_it != m_domain_2_location_key_2_proxy_list_map.end() )
+                {
+                    LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map = find_domain_it->second;
+
+                    LocationKey2ProxySupplierListMap::iterator find_location_it = location_key_2_proxy_list_map.find( location_key );
+
+                    if ( find_location_it != location_key_2_proxy_list_map.end() )
+                    {
+                        ProxySupplierList& proxy_list = find_location_it->second;
+
+                        for ( ProxySupplierList::iterator it = proxy_list.begin(); it != proxy_list.end(); ++it )
+                        {
+                            SequenceProxyPushSupplier_i* proxy = *it;
+
+                            if (  proxy != NULL )
+                            {
+                                proxy->add_event(event);
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
+                                RDIDbgForceLog( "\EventChannel_i::consumer_admin_dispatch_event - using location proxy mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
+#endif
+                            }
+                        }
                     }
                 }
             }
@@ -2872,13 +2974,15 @@ EventChannel_i::out_debug_info(RDIstrstream& str, CORBA::Boolean show_events)
 
     TW_SCOPE_LOCK(l2p_map_lock, m_location_key_2_proxy_list_map_lock, "l2p_map_lock", WHATFN);
 
+    if ( m_location_key_2_proxy_list_map.empty() && m_domain_2_location_key_2_proxy_list_map.empty() )
+    {
+        str << "\t(no entries)\n";
+        return;
+    }
+
     if ( false == m_location_key_2_proxy_list_map.empty() )
     {
         str << "*::* ( $Region == 'L' )";
-    }
-    else
-    {
-        str << "\t(no entries)\n";
     }
 
     for ( LocationKey2ProxySupplierListMap::iterator it = m_location_key_2_proxy_list_map.begin(); it != m_location_key_2_proxy_list_map.end(); ++it )
@@ -2896,7 +3000,40 @@ EventChannel_i::out_debug_info(RDIstrstream& str, CORBA::Boolean show_events)
         }
     }
 
-    str << "\n";
+    if ( false == m_location_key_2_proxy_list_map.empty() )
+    {
+        str << "\n";
+    }
+
+    for ( Domain2LocationKey2ProxySupplierListMap::iterator it = m_domain_2_location_key_2_proxy_list_map.begin(); it != m_domain_2_location_key_2_proxy_list_map.end(); ++it )
+    {
+        const std::string& domain_name = it->first;
+        LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map = it->second;
+
+        str << domain_name.c_str() << "::* ( $Region == 'L' )";
+
+        if ( location_key_2_proxy_list_map.empty() )
+        {
+            str << "\n\t(no entries)";
+        }
+
+        for ( LocationKey2ProxySupplierListMap::iterator it = location_key_2_proxy_list_map.begin(); it != location_key_2_proxy_list_map.end(); ++it )
+        {
+            unsigned long location_key = it->first;
+            ProxySupplierList& proxy_list = it->second;
+
+            str << "\n\tL ";
+            str.setw(3); str << location_key;
+            str << ": ";
+
+            for ( ProxySupplierList::iterator proxy_it = proxy_list.begin(); proxy_it != proxy_list.end(); ++proxy_it )
+            {
+                str.setw(9); str << *proxy_it;
+            }
+        }
+
+        str << "\n";
+    }
 
 #endif
 #endif
