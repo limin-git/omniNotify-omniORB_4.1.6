@@ -1424,43 +1424,6 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
     _channel->m_ta_type_map.consumer_admin_dispatch_event( event );
 #endif
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
-    _channel->consumer_admin_dispatch_event( event );
-#endif
-
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL
-    {
-        THREAD_GUARD( g_location_proxy_map_lock );
-
-        if ( false == g_location_proxy_map.empty() )
-        {
-            const RDI_RTVal * val = event->lookup_fdata_rtval( "Region" );
-
-            if ( val != NULL )
-            {
-                int location_key = ::atoi(val->_v_string_ptr);
-
-                LocationKey2ProxySupplierListMap::iterator findIt = g_location_proxy_map.find( location_key );
-
-                if ( findIt != g_location_proxy_map.end() )
-                {
-                    for ( ProxySupplierList::iterator it = findIt->second.begin(); it != findIt->second.end(); ++it )
-                    {
-                        if (  *it != NULL )
-                        {
-                             (*it)->add_event(event);
-
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL_LOG_DISPATCH_EVENT
-                            RDIDbgForceLog( "\ConsumerAdmin_i::dispatch_event - using start start location_key type map." << " \n" );
-#endif
-                        }
-                    }
-                }
-            }
-        }
-    }
-#endif
-
   const char* dname = event->get_domain_name();
   const char* tname = event->get_type_name();
 

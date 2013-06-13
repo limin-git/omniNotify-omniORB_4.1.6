@@ -1824,21 +1824,6 @@ private:
 public:
     TA_TypeMap m_ta_type_map;
 #endif
-
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
-public:
-    typedef std::set<SequenceProxyPushSupplier_i*> ProxySupplierList;
-    typedef std::map<unsigned long, ProxySupplierList> LocationKey2ProxySupplierListMap;
-    typedef std::map<std::string, LocationKey2ProxySupplierListMap> Domain2LocationKey2ProxySupplierListMap;
-
-    RDI_TypeMap*                            _type_map_2;
-    TW_Mutex                                m_location_key_2_proxy_list_map_lock;
-    LocationKey2ProxySupplierListMap        m_location_key_2_proxy_list_map;
-    Domain2LocationKey2ProxySupplierListMap m_domain_2_location_key_2_proxy_list_map;
-
-    bool update_location_proxy_mapping(RDI_LocksHeld& held, const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter);
-    void consumer_admin_dispatch_event(RDI_StructuredEvent*  event);
-#endif
 };
 
 #undef WHATFN

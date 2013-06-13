@@ -22,7 +22,9 @@ void TA_TypeMap::initialize( EventChannel_i* channel, RDI_TypeMap*& original_typ
 }
 
 
-bool TA_TypeMap::ta_update(RDI_LocksHeld& held, const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter)
+#undef WHATFN
+#define WHATFN "TA_TypeMap::ta_update"
+bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter )
 {
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
     std::stringstream add_del_strm;
@@ -40,7 +42,7 @@ bool TA_TypeMap::ta_update(RDI_LocksHeld& held, const CosN::EventTypeSeq& added,
     get_filter_str( filter, filter_strm );
 #endif
 
-    bool has_start_star_region_filter = false;
+    bool handled_by_ta_type_map = false;
 
     if ( added.length() )
     {
@@ -51,7 +53,7 @@ bool TA_TypeMap::ta_update(RDI_LocksHeld& held, const CosN::EventTypeSeq& added,
             if ( location_key != -1 )
             {
                 {
-                    TW_SCOPE_LOCK(l2p_map_lock, m_location_key_2_proxy_list_map_lock, "l2p_map_lock", WHATFN);
+                    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
                     m_location_key_2_proxy_list_map[location_key].insert( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
                 }
 
@@ -62,7 +64,7 @@ bool TA_TypeMap::ta_update(RDI_LocksHeld& held, const CosN::EventTypeSeq& added,
                     << ", cur_loc_proxy_number=" << m_location_key_2_proxy_list_map[location_key].size()
                     << "\n";
 #endif
-                has_start_star_region_filter = true;
+                handled_by_ta_type_map = true;
             }
         }
         else if ( RDI_STR_EQ( added[0].type_name, "*" ) )
@@ -72,7 +74,7 @@ bool TA_TypeMap::ta_update(RDI_LocksHeld& held, const CosN::EventTypeSeq& added,
             if ( location_key != -1 )
             {
                 {
-                    TW_SCOPE_LOCK(l2p_map_lock, m_location_key_2_proxy_list_map_lock, "l2p_map_lock", WHATFN);
+                    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
                     m_domain_2_location_key_2_proxy_list_map[added[0].domain_name.in()][location_key].insert( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
                 }
 
@@ -84,7 +86,7 @@ bool TA_TypeMap::ta_update(RDI_LocksHeld& held, const CosN::EventTypeSeq& added,
                     << ", domain_number=" << m_domain_2_location_key_2_proxy_list_map.size()
                     << "\n";
 #endif
-                has_start_star_region_filter = true;
+                handled_by_ta_type_map = true;
             }
         }
     }
@@ -93,7 +95,7 @@ bool TA_TypeMap::ta_update(RDI_LocksHeld& held, const CosN::EventTypeSeq& added,
     {
         if ( RDI_STR_EQ( deled[0].domain_name, "*" ) && RDI_STR_EQ( deled[0].type_name, "*" ) )
         {
-            TW_SCOPE_LOCK(l2p_map_lock, m_location_key_2_proxy_list_map_lock, "l2p_map_lock", WHATFN);
+            TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
 
             for ( LocationKey2ProxySupplierListMap::iterator it = m_location_key_2_proxy_list_map.begin(); it != m_location_key_2_proxy_list_map.end(); ++it )
             {
@@ -110,7 +112,7 @@ bool TA_TypeMap::ta_update(RDI_LocksHeld& held, const CosN::EventTypeSeq& added,
                     if ( true == proxy_list.empty() )
                     {
                         m_location_key_2_proxy_list_map.erase( it );
-                        has_start_star_region_filter = true;
+                        handled_by_ta_type_map = true;
                     }
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
@@ -127,7 +129,7 @@ bool TA_TypeMap::ta_update(RDI_LocksHeld& held, const CosN::EventTypeSeq& added,
         }
         else if ( RDI_STR_EQ( deled[0].type_name, "*" ) )
         {
-            TW_SCOPE_LOCK(l2p_map_lock, m_location_key_2_proxy_list_map_lock, "l2p_map_lock", WHATFN);
+            TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
 
             Domain2LocationKey2ProxySupplierListMap::iterator find_domain_it = m_domain_2_location_key_2_proxy_list_map.find( deled[0].domain_name.in() );
 
@@ -150,7 +152,7 @@ bool TA_TypeMap::ta_update(RDI_LocksHeld& held, const CosN::EventTypeSeq& added,
                         if ( true == proxy_list.empty() )
                         {
                             location_key_2_proxy_list_map.erase( it );
-                            has_start_star_region_filter = true;
+                            handled_by_ta_type_map = true;
                         }
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
@@ -186,7 +188,7 @@ bool TA_TypeMap::ta_update(RDI_LocksHeld& held, const CosN::EventTypeSeq& added,
     }
 #endif
 
-    if ( false == has_start_star_region_filter )
+    if ( false == handled_by_ta_type_map )
     {
         m_type_map_1->update(held, added, deled, proxy, filter);
     }
@@ -195,6 +197,8 @@ bool TA_TypeMap::ta_update(RDI_LocksHeld& held, const CosN::EventTypeSeq& added,
 }
 
 
+#undef WHATFN
+#define WHATFN "TA_TypeMap::consumer_admin_dispatch_event"
 void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
 {
     if ( false == m_location_key_2_proxy_list_map.empty() || false == m_domain_2_location_key_2_proxy_list_map.empty() )
@@ -211,7 +215,7 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
                 return;
             }
 
-            TW_SCOPE_LOCK(l2p_map_lock, m_location_key_2_proxy_list_map_lock, "l2p_map_lock", WHATFN);
+            TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
 
             if ( false == m_location_key_2_proxy_list_map.empty() )
             {
@@ -269,6 +273,77 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
             }
         }
     }
+}
+
+
+#undef WHATFN
+#define WHATFN "TA_TypeMap::log_output"
+RDIstrstream& TA_TypeMap::log_output(RDIstrstream& str)
+{
+    //Ref: RDI_TypeMap::log_output
+    str << "----------\nTA_TypeMap\n----------\n";
+
+    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
+
+    if ( m_location_key_2_proxy_list_map.empty() && m_domain_2_location_key_2_proxy_list_map.empty() )
+    {
+        str << "\t(no entries)\n";
+        return str;
+    }
+
+    if ( false == m_location_key_2_proxy_list_map.empty() )
+    {
+        str << "*::* ( $Region == 'L' )";
+
+        for ( LocationKey2ProxySupplierListMap::iterator it = m_location_key_2_proxy_list_map.begin(); it != m_location_key_2_proxy_list_map.end(); ++it )
+        {
+            unsigned long location_key = it->first;
+            ProxySupplierList& proxy_list = it->second;
+
+            str << "\n\tL ";
+            str.setw(3); str << location_key;
+            str << ": ";
+
+            for ( ProxySupplierList::iterator proxy_it = proxy_list.begin(); proxy_it != proxy_list.end(); ++proxy_it )
+            {
+                str.setw(9); str << *proxy_it;
+            }
+        }
+
+        str << "\n";
+    }
+
+    for ( Domain2LocationKey2ProxySupplierListMap::iterator it = m_domain_2_location_key_2_proxy_list_map.begin(); it != m_domain_2_location_key_2_proxy_list_map.end(); ++it )
+    {
+        const std::string& domain_name = it->first;
+        LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map = it->second;
+
+        str << domain_name.c_str() << "::* ( $Region == 'L' )";
+
+        if ( location_key_2_proxy_list_map.empty() )
+        {
+            str << "\n\t(no entries)";
+        }
+
+        for ( LocationKey2ProxySupplierListMap::iterator it = location_key_2_proxy_list_map.begin(); it != location_key_2_proxy_list_map.end(); ++it )
+        {
+            unsigned long location_key = it->first;
+            ProxySupplierList& proxy_list = it->second;
+
+            str << "\n\tL ";
+            str.setw(3); str << location_key;
+            str << ": ";
+
+            for ( ProxySupplierList::iterator proxy_it = proxy_list.begin(); proxy_it != proxy_list.end(); ++proxy_it )
+            {
+                str.setw(9); str << *proxy_it;
+            }
+        }
+
+        str << "\n";
+    }
+
+    return str;
 }
 
 
