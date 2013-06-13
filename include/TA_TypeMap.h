@@ -21,6 +21,7 @@ class TA_TypeMap
 public:
 
     TA_TypeMap();
+    ~TA_TypeMap();
     void initialize( EventChannel_i* channel, RDI_TypeMap*& original_type_map );
     bool ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter );
     void consumer_admin_dispatch_event(RDI_StructuredEvent*  event);

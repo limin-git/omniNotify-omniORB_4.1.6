@@ -11,6 +11,14 @@ TA_TypeMap::TA_TypeMap()
 }
 
 
+TA_TypeMap::~TA_TypeMap()
+{
+    // DO NOT delete m_type_map_1
+    delete m_type_map_2;
+    m_type_map_2 = NULL;
+}
+
+
 void TA_TypeMap::initialize( EventChannel_i* channel, RDI_TypeMap*& original_type_map )
 {
     delete original_type_map;
@@ -42,7 +50,7 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
     get_filter_str( filter, filter_strm );
 #endif
 
-    bool handled_by_ta_type_map = false;
+    bool ta_typemap_updated = false;
 
     if ( added.length() )
     {
@@ -55,6 +63,7 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
                 {
                     TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
                     m_location_key_2_proxy_list_map[location_key].insert( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
+                    ta_typemap_updated = true;
                 }
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
@@ -64,7 +73,6 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
                     << ", cur_loc_proxy_number=" << m_location_key_2_proxy_list_map[location_key].size()
                     << "\n";
 #endif
-                handled_by_ta_type_map = true;
             }
         }
         else if ( RDI_STR_EQ( added[0].type_name, "*" ) )
@@ -76,6 +84,7 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
                 {
                     TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
                     m_domain_2_location_key_2_proxy_list_map[added[0].domain_name.in()][location_key].insert( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
+                    ta_typemap_updated = true;
                 }
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
@@ -86,7 +95,6 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
                     << ", domain_number=" << m_domain_2_location_key_2_proxy_list_map.size()
                     << "\n";
 #endif
-                handled_by_ta_type_map = true;
             }
         }
     }
@@ -112,7 +120,7 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
                     if ( true == proxy_list.empty() )
                     {
                         m_location_key_2_proxy_list_map.erase( it );
-                        handled_by_ta_type_map = true;
+                        ta_typemap_updated = true;
                     }
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
@@ -152,7 +160,7 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
                         if ( true == proxy_list.empty() )
                         {
                             location_key_2_proxy_list_map.erase( it );
-                            handled_by_ta_type_map = true;
+                            ta_typemap_updated = true;
                         }
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
@@ -188,12 +196,12 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
     }
 #endif
 
-    if ( false == handled_by_ta_type_map )
+    if ( false == ta_typemap_updated )
     {
         m_type_map_1->update(held, added, deled, proxy, filter);
     }
 
-    return m_type_map_2->update(held, added, deled, proxy, filter);;
+    return m_type_map_2->update(held, added, deled, proxy, filter);
 }
 
 
@@ -234,7 +242,7 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
                             proxy->add_event(event);
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
-                            RDIDbgForceLog( "\TA_TypeMap::consumer_admin_dispatch_event - using location proxy mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
+                            RDIDbgForceLog( "\TA_TypeMap::consumer_admin_dispatch_event - using ta type mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
 #endif
                         }
                     }
@@ -264,7 +272,7 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
                                 proxy->add_event(event);
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
-                                RDIDbgForceLog( "\TA_TypeMap::consumer_admin_dispatch_event - using location proxy mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
+                                RDIDbgForceLog( "\TA_TypeMap::consumer_admin_dispatch_event - using ta type mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
 #endif
                             }
                         }
@@ -383,16 +391,16 @@ int TA_TypeMap::extract_location_key_from_filter_constraint_expr( const char* co
     static const size_t REGION_EXPRESSION_LENGTH = ::strlen(REGION_EXPRESSION);
     static const size_t MAX_NUMBER_LENGTH = 10;
 
-    char* exp_beg = std::strstr( const_cast<char*>(constraint_expr), REGION_EXPRESSION );
+    char* expr_beg = std::strstr( const_cast<char*>(constraint_expr), REGION_EXPRESSION );
 
-    if ( exp_beg != NULL )
+    if ( expr_beg != NULL )
     {
         if ( std::strstr( const_cast<char*>(constraint_expr), AND_OPERATION ) != NULL ) // Note: cannot deal with complex expression
         {
             return -1;
         }
 
-        char* number_beg = exp_beg + REGION_EXPRESSION_LENGTH;
+        char* number_beg = expr_beg + REGION_EXPRESSION_LENGTH;
         char* number_end = ::strchr( number_beg, '\'' );
         size_t number_len = number_end - number_beg;
 
