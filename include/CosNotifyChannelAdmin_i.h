@@ -1820,6 +1820,11 @@ private:
 
   virtual ~EventChannel_i();
 
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
+public:
+    TA_TypeMap m_ta_type_map;
+#endif
+
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
 public:
     typedef std::set<SequenceProxyPushSupplier_i*> ProxySupplierList;

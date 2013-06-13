@@ -4,26 +4,27 @@
 
 
 TA_TypeMap::TA_TypeMap()
-    :  _type_map_1(NULL),
-       _type_map_2(NULL)
+    : m_channel(NULL),
+      m_type_map_1(NULL),
+      m_type_map_2(NULL)
 {
 }
 
 
-void TA_TypeMap::initialize( EventChannel_i* channel, RDI_TypeMap*& origin_type_map )
+void TA_TypeMap::initialize( EventChannel_i* channel, RDI_TypeMap*& original_type_map )
 {
-    delete origin_type_map;
-    origin_type_map = new RDI_TypeMap(NULL, 256);
+    delete original_type_map;
+    original_type_map = new RDI_TypeMap(NULL, 256); // DO NOT propagate subscription change
 
-    _type_map_1 = origin_type_map;
-    _type_map_2 = new RDI_TypeMap(channel, 256);
+    m_channel = channel;
+    m_type_map_1 = original_type_map;
+    m_type_map_2 = new RDI_TypeMap(channel, 256); // DO propagate subscription change
 }
 
 
-bool TA_TypeMap::update_location_proxy_mapping(RDI_LocksHeld& held, const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter)
+bool TA_TypeMap::ta_update(RDI_LocksHeld& held, const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter)
 {
-
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
     std::stringstream add_del_strm;
     std::stringstream filter_strm;
     std::stringstream add_proxy_strm;
@@ -45,7 +46,7 @@ bool TA_TypeMap::update_location_proxy_mapping(RDI_LocksHeld& held, const CosN::
     {
         if ( RDI_STR_EQ( added[0].domain_name, "*" ) && RDI_STR_EQ( added[0].type_name, "*" ) )
         {
-            int location_key = get_localocation_key( filter );
+            int location_key = extract_location_key_from_filter( filter );
 
             if ( location_key != -1 )
             {
@@ -54,7 +55,7 @@ bool TA_TypeMap::update_location_proxy_mapping(RDI_LocksHeld& held, const CosN::
                     m_location_key_2_proxy_list_map[location_key].insert( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
                 }
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
                 add_proxy_strm
                     << "\n\t" << "added a proxy with filter {[(*::*)]( $Region == '" << location_key << "' )}"
                     << ", location_number=" << m_location_key_2_proxy_list_map.size()
@@ -66,7 +67,7 @@ bool TA_TypeMap::update_location_proxy_mapping(RDI_LocksHeld& held, const CosN::
         }
         else if ( RDI_STR_EQ( added[0].type_name, "*" ) )
         {
-            int location_key = get_localocation_key( filter );
+            int location_key = extract_location_key_from_filter( filter );
 
             if ( location_key != -1 )
             {
@@ -75,7 +76,7 @@ bool TA_TypeMap::update_location_proxy_mapping(RDI_LocksHeld& held, const CosN::
                     m_domain_2_location_key_2_proxy_list_map[added[0].domain_name.in()][location_key].insert( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
                 }
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
                 add_proxy_strm
                     << "\n\t" << "added a proxy with filter {[(" << added[0].domain_name << "::*)]( $Region == '" << location_key << "' )}"
                     << ", location_number=" << m_domain_2_location_key_2_proxy_list_map[added[0].domain_name.in()].size()
@@ -112,7 +113,7 @@ bool TA_TypeMap::update_location_proxy_mapping(RDI_LocksHeld& held, const CosN::
                         has_start_star_region_filter = true;
                     }
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
                     remove_proxy_strm
                         << "\n\t" << "removed a proxy with filter {[(*::*)]( $Region == '" << location_key << "' )}"
                         << ", location_number=" << m_location_key_2_proxy_list_map.size()
@@ -152,7 +153,7 @@ bool TA_TypeMap::update_location_proxy_mapping(RDI_LocksHeld& held, const CosN::
                             has_start_star_region_filter = true;
                         }
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
                         remove_proxy_strm
                             << "\n\t" << "removed a proxy with filter {[(" << deled[0].domain_name.in() << "::*)]( $Region == '"  << location_key << "' )}"
                             << ", location_number=" << m_location_key_2_proxy_list_map.size()
@@ -173,10 +174,10 @@ bool TA_TypeMap::update_location_proxy_mapping(RDI_LocksHeld& held, const CosN::
         }
     }
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
     if ( added.length() || deled.length() )
     {
-        RDIDbgForceLog( "EventChannel_i::update_location_proxy_mapping - " << "[channel=" << this->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << filter->MyFID() << "]"
+        RDIDbgForceLog( "TA_TypeMap::ta_update - " << "[channel=" << m_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << filter->MyFID() << "]"
             << add_del_strm.str().c_str()
             << filter_strm.str().c_str()
             << add_proxy_strm.str().c_str()
@@ -187,10 +188,10 @@ bool TA_TypeMap::update_location_proxy_mapping(RDI_LocksHeld& held, const CosN::
 
     if ( false == has_start_star_region_filter )
     {
-        _type_map_1->update(held, added, deled, proxy, filter);
+        m_type_map_1->update(held, added, deled, proxy, filter);
     }
 
-    return _type_map_2->update(held, added, deled, proxy, filter);;
+    return m_type_map_2->update(held, added, deled, proxy, filter);;
 }
 
 
@@ -228,8 +229,8 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
                         {
                             proxy->add_event(event);
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
-                            RDIDbgForceLog( "\EventChannel_i::consumer_admin_dispatch_event - using location proxy mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
+                            RDIDbgForceLog( "\TA_TypeMap::consumer_admin_dispatch_event - using location proxy mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
 #endif
                         }
                     }
@@ -258,8 +259,8 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
                             {
                                 proxy->add_event(event);
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
-                                RDIDbgForceLog( "\EventChannel_i::consumer_admin_dispatch_event - using location proxy mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
+                                RDIDbgForceLog( "\TA_TypeMap::consumer_admin_dispatch_event - using location proxy mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
 #endif
                             }
                         }
@@ -271,7 +272,7 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
 }
 
 
-int TA_TypeMap::get_localocation_key( Filter_i* filter ) // ( $Region == '123' )
+int TA_TypeMap::extract_location_key_from_filter( Filter_i* filter ) // ( $Region == '123' )
 {
     if ( filter != NULL )
     {
@@ -287,9 +288,9 @@ int TA_TypeMap::get_localocation_key( Filter_i* filter ) // ( $Region == '123' )
 
                 for ( size_t j = 0; j < event_types.length(); ++j )
                 {
-                    if ( /*RDI_STR_EQ( event_types[j].domain_name, "*" ) &&*/ RDI_STR_EQ( event_types[j].type_name, "*" ) )
+                    if ( RDI_STR_EQ( event_types[j].type_name, "*" ) )
                     {
-                        return get_location_key_from_constraint_expr( constraint_expression.constraint_expr.in() );;
+                        return extract_location_key_from_filter_constraint_expr( constraint_expression.constraint_expr.in() );;
                     }
                 }
             }
@@ -300,7 +301,7 @@ int TA_TypeMap::get_localocation_key( Filter_i* filter ) // ( $Region == '123' )
 }
 
 
-int TA_TypeMap::get_location_key_from_constraint_expr( const char* constraint_expr )
+int TA_TypeMap::extract_location_key_from_filter_constraint_expr( const char* constraint_expr )
 {
     static const char*  REGION_EXPRESSION = "$Region == '";   // Note: TA_CosUtility.cpp:gGenerateConstraintExpression
     static const char*  AND_OPERATION = " ) and ( ";
@@ -341,7 +342,7 @@ int TA_TypeMap::get_location_key_from_constraint_expr( const char* constraint_ex
 }
 
 
-#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
 void TA_TypeMap::get_filter_str( Filter_i* filter, std::ostream& strm )
 {
     if ( filter != NULL )

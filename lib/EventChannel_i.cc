@@ -50,6 +50,10 @@
     LocationKey2ProxySupplierListMap g_location_proxy_map;
 #endif
 
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
+    #include "TA_TypeMap.cpp"
+#endif
+
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
 //                             EventChannel_i                            //
@@ -104,6 +108,10 @@ EventChannel_i::EventChannel_i(EventChannelFactory_i*        cfactory,
 
   // Create the type mapping object to be used for matching
   _type_map = new RDI_TypeMap(this, 256);
+
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
+    m_ta_type_map.initialize( this, _type_map );
+#endif
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
     delete _type_map;
@@ -960,6 +968,10 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
   RDI_OPLOCK_COND_SCOPE_LOCK_TRACK(channel_lock, held.channel, WHATFN);
   if (!held.channel) { return 0; }
   if (_shutmedown) { return 0; } // 0 means update failure
+
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
+  return m_ta_type_map.ta_update( held, added, deled, proxy, filter );
+#endif
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
     bool has_start_star_region_filter = update_location_proxy_mapping( held, added, deled, proxy, filter );

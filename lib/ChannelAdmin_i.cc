@@ -1420,6 +1420,10 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
     return;
   }
 
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
+    _channel->m_ta_type_map.consumer_admin_dispatch_event( event );
+#endif
+
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
     _channel->consumer_admin_dispatch_event( event );
 #endif
