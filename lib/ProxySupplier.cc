@@ -3346,7 +3346,6 @@ void
 SequenceProxyPushSupplier_i::add_event(RDI_StructuredEvent* entry)
 {
   RDI_OPLOCK_SCOPE_LOCK(proxy_lock, WHATFN, RDI_THROW_INV_OBJREF);
-
   if (_add_event(entry)) {
     if ( _worker ) { 
       RDI_OPLOCK_SIGNAL;

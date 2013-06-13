@@ -104,6 +104,13 @@ EventChannel_i::EventChannel_i(EventChannelFactory_i*        cfactory,
 
   // Create the type mapping object to be used for matching
   _type_map = new RDI_TypeMap(this, 256);
+
+#ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
+    delete _type_map;
+    _type_map   = new RDI_TypeMap(NULL, 256); // for ConsumerAdmin_i::dispatch_event
+    _type_map_2 = new RDI_TypeMap(this, 256); // for EventChannel_i::propagate_ochange
+#endif
+
   RDI_AssertAllocThrowNo(_type_map, "Memory allocation failure - RDI_TypeMap\n");
 
   // Create the manager for the queue of announced events
@@ -955,20 +962,15 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
   if (_shutmedown) { return 0; } // 0 means update failure
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
-  bool has_start_star_region_filter = update_location_proxy_mapping( added, deled, proxy, filter );
-
+    bool has_start_star_region_filter = update_location_proxy_mapping( held, added, deled, proxy, filter );
 #ifndef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_TEST
-    if ( true == has_start_star_region_filter )
-    {
-        return true;
-    }
+    return ( has_start_star_region_filter ? true : _type_map->update(held, added, deled, proxy, filter) );
 #endif
-
 #endif
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_GLOBAL
     ; // 4 space indent stub
-    struct FilterHelper 
+    struct FilterHelper
     {
         static int get_localocation_key( Filter_i* filter ) // ( $Region == '123' )
         {
@@ -1016,7 +1018,7 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
 
                 char* number_beg = exp_beg + REGION_EXPRESSION_LENGTH;
                 char* number_end = ::strchr( number_beg, '\'' );
-                size_t number_len = number_end - number_beg; 
+                size_t number_len = number_end - number_beg;
 
                 if ( number_end != NULL )
                 {
@@ -1191,9 +1193,9 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL
 #undef WHATFN
 #define WHATFN "EventChannel_i::update_location_proxy_mapping"
-bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter)
+bool EventChannel_i::update_location_proxy_mapping(RDI_LocksHeld& held, const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter)
 {
-    struct FilterHelper 
+    struct FilterHelper
     {
         static int get_localocation_key( Filter_i* filter ) // ( $Region == '123' )
         {
@@ -1225,8 +1227,8 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
 
         static int get_location_key_from_constraint_expr( const char* constraint_expr )
         {
-            static const char* REGION_EXPRESSION = "$Region == '";   // Note: TA_CosUtility.cpp:gGenerateConstraintExpression
-            static const char* AND_OPERATION = " ) and ( ";
+            static const char*  REGION_EXPRESSION = "$Region == '";   // Note: TA_CosUtility.cpp:gGenerateConstraintExpression
+            static const char*  AND_OPERATION = " ) and ( ";
             static const size_t REGION_EXPRESSION_LENGTH = ::strlen(REGION_EXPRESSION);
             static const size_t MAX_NUMBER_LENGTH = 10;
 
@@ -1241,7 +1243,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
 
                 char* number_beg = exp_beg + REGION_EXPRESSION_LENGTH;
                 char* number_end = ::strchr( number_beg, '\'' );
-                size_t number_len = number_end - number_beg; 
+                size_t number_len = number_end - number_beg;
 
                 if ( number_end != NULL )
                 {
@@ -1283,7 +1285,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
                         get_event_type_list_str( event_types, strm );
 
                         strm << constraint_expression.constraint_expr.in();
-                        strm << "} "; //constraint_expr
+                        strm << "} ";
                     }
                 }
             }
@@ -1318,11 +1320,9 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
     FilterHelper::get_event_type_list_str( added, add_del_strm );
 
     add_del_strm << "\n\t" << "deled: ";
-
     FilterHelper::get_event_type_list_str( deled, add_del_strm );
 
     filter_strm << "\n\t" << "filter: ";
-
     FilterHelper::get_filter_str( filter, filter_strm );
 #endif
 
@@ -1396,6 +1396,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
                     if ( true == proxy_list.empty() )
                     {
                         m_location_key_2_proxy_list_map.erase( it );
+                        has_start_star_region_filter = true;
                     }
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
@@ -1435,6 +1436,7 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
                         if ( true == proxy_list.empty() )
                         {
                             location_key_2_proxy_list_map.erase( it );
+                            has_start_star_region_filter = true;
                         }
 
 #ifdef USE_LOCATION_PROXY_SUPPLIER_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
@@ -1469,6 +1471,8 @@ bool EventChannel_i::update_location_proxy_mapping(const CosN::EventTypeSeq& add
             << " \n" );
     }
 #endif
+
+    _type_map_2->update(held, added, deled, proxy, filter);
 
     return has_start_star_region_filter;
 }
@@ -1926,7 +1930,7 @@ EventChannel_i::proxy_dispatch()
 	{
 		//TW_YIELD(); 
 		{ // introduce proxy_lock lock scope
-            TW_SCOPE_LOCK(chan_proxy_lock, _proxy_lock, "chan_proxy_lock", WHATFN);
+			TW_SCOPE_LOCK(chan_proxy_lock, _proxy_lock, "chan_proxy_lock", WHATFN);
 			while ( ! _shutmedown && ! _proxy_events.length() ) 
 			{
 				numev = 0;
@@ -2983,25 +2987,22 @@ EventChannel_i::out_debug_info(RDIstrstream& str, CORBA::Boolean show_events)
     if ( false == m_location_key_2_proxy_list_map.empty() )
     {
         str << "*::* ( $Region == 'L' )";
-    }
 
-    for ( LocationKey2ProxySupplierListMap::iterator it = m_location_key_2_proxy_list_map.begin(); it != m_location_key_2_proxy_list_map.end(); ++it )
-    {
-        unsigned long location_key = it->first;
-        ProxySupplierList& proxy_list = it->second;
-
-        str << "\n\tL ";
-        str.setw(3); str << location_key;
-        str << ": ";
-
-        for ( ProxySupplierList::iterator proxy_it = proxy_list.begin(); proxy_it != proxy_list.end(); ++proxy_it )
+        for ( LocationKey2ProxySupplierListMap::iterator it = m_location_key_2_proxy_list_map.begin(); it != m_location_key_2_proxy_list_map.end(); ++it )
         {
-            str.setw(9); str << *proxy_it;
-        }
-    }
+            unsigned long location_key = it->first;
+            ProxySupplierList& proxy_list = it->second;
 
-    if ( false == m_location_key_2_proxy_list_map.empty() )
-    {
+            str << "\n\tL ";
+            str.setw(3); str << location_key;
+            str << ": ";
+
+            for ( ProxySupplierList::iterator proxy_it = proxy_list.begin(); proxy_it != proxy_list.end(); ++proxy_it )
+            {
+                str.setw(9); str << *proxy_it;
+            }
+        }
+
         str << "\n";
     }
 

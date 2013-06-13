@@ -35,7 +35,6 @@
 #include "RDIstrstream.h"
 #include "RDIHashFuncs.h"
 
-
 template <class Key, class Val> class RDI_Hash;
 
 /** KEY VALUE PAIR HASH TABLE ENTRY
@@ -147,7 +146,6 @@ public:
   inline void  statistics(RDIstrstream& str);
 
   Cursor cursor(void) const		{ return this; }
-		
 
 private:
 
