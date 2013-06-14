@@ -1082,7 +1082,6 @@ ConsumerAdmin_i::obj_gc(RDI_TimeT curtime, CORBA::ULong deadAdmin, CORBA::ULong 
   }
 
   { // introduce temporary lock release scope
-
     RDI_OPLOCK_SCOPE_RELEASE_TRACK(held.cadmin, WHATFN);
 
     for (i = 0; i < num_cpush; i++) {
@@ -1424,6 +1423,10 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
     _channel->m_ta_type_map.consumer_admin_dispatch_event( event );
 #endif
 
+#ifdef USE_TA_RDI_TYPE_MAPPING_IN_EVENT_CHANNEL
+    _channel->m_ta_type_map.consumer_admin_dispatch_event( event );
+#endif
+
   const char* dname = event->get_domain_name();
   const char* tname = event->get_type_name();
 
@@ -1664,7 +1667,6 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
     }
 
     tmap->lookupFilter(dname, tname, bpushcur.val(), flist);
-
     if ( ! flist._star_star && ! flist._domn_star &&
 	 ! flist._star_type && ! flist._domn_type ) {
       if ( astat == OrMatch ) {
@@ -1697,7 +1699,6 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
       }
     }
   }
-
 
   // Evaluate Filters for consumers using SequenceProxyPullSupplier_i
 

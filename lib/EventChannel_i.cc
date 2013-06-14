@@ -48,6 +48,10 @@
     #include "TA_TypeMap.cpp"
 #endif
 
+#ifdef USE_TA_RDI_TYPE_MAPPING_IN_EVENT_CHANNEL
+    #include "TA_RDITypeMap.cpp"
+#endif
+
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
 //                             EventChannel_i                            //
@@ -104,6 +108,10 @@ EventChannel_i::EventChannel_i(EventChannelFactory_i*        cfactory,
   _type_map = new RDI_TypeMap(this, 256);
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
+    m_ta_type_map.initialize( this, _type_map );
+#endif
+
+#ifdef USE_TA_RDI_TYPE_MAPPING_IN_EVENT_CHANNEL
     m_ta_type_map.initialize( this, _type_map );
 #endif
 
@@ -958,7 +966,11 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
   if (_shutmedown) { return 0; } // 0 means update failure
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
-  return m_ta_type_map.ta_update( held, added, deled, proxy, filter );
+    return m_ta_type_map.ta_update( held, added, deled, proxy, filter );
+#endif
+
+#ifdef USE_TA_RDI_TYPE_MAPPING_IN_EVENT_CHANNEL
+    return m_ta_type_map.ta_update( held, added, deled, proxy, filter );
 #endif
 
   CORBA::Boolean res = _type_map->update(held, added, deled, proxy, filter);
@@ -1265,7 +1277,6 @@ EventChannel_i::admin_dispatch()
 #endif
 
 use_proxy_threads:
-
 				// matched at admin level and there are proxy threads, so queue a pxdis
 				// note that admin lock is no longer held
 				if (_shutmedown) 
@@ -2379,7 +2390,7 @@ EventChannel_i::out_debug_info(RDIstrstream& str, CORBA::Boolean show_events)
   str << *(_type_map);
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
-#ifdef USETA_TYPE_MAPPING_IN_EVENT_CHANNEL_OUT_DEBUG_INFO
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_OUT_DEBUG_INFO
   str << m_ta_type_map;
 #endif
 #endif

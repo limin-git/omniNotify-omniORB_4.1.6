@@ -57,7 +57,7 @@ class EventChannelFactory_i;
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
 //   GENERAL NOTES                                                       //
-////// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
 //
 // Proxy disposal is tricky because there can be outstanding outcalls
 // at the time a disposal is requested.  If there are *incoming* calls
@@ -1823,6 +1823,11 @@ private:
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
 public:
     TA_TypeMap m_ta_type_map;
+#endif
+
+#ifdef USE_TA_RDI_TYPE_MAPPING_IN_EVENT_CHANNEL
+public:
+    TA_RDITypeMap m_ta_type_map;
 #endif
 };
 

@@ -1,3 +1,6 @@
+#ifndef TA_TYPE_MAP_CPP_INCLUDED
+#define TA_TYPE_MAP_CPP_INCLUDED
+
 #include "TA_TypeMap.h"
 #include "RDITypeMap.h"
 #include "RDILocksHeld.h"
@@ -284,6 +287,7 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
 }
 
 
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_OUT_DEBUG_INFO
 #undef WHATFN
 #define WHATFN "TA_TypeMap::log_output"
 RDIstrstream& TA_TypeMap::log_output(RDIstrstream& str)
@@ -353,6 +357,7 @@ RDIstrstream& TA_TypeMap::log_output(RDIstrstream& str)
 
     return str;
 }
+#endif // USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_OUT_DEBUG_INFO
 
 
 int TA_TypeMap::extract_location_key_from_filter( Filter_i* filter ) // ( $Region == '123' )
@@ -469,4 +474,6 @@ void TA_TypeMap::get_event_type_list_str( const CosN::EventTypeSeq& event_type_l
 
     strm << "]";
 }
+#endif // USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+
 #endif
