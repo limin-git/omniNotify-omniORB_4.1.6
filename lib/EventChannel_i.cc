@@ -1191,7 +1191,6 @@ EventChannel_i::admin_dispatch()
 							RDIDbgChanLog("   - ADispatch thread " << tid << " for channel " << _serial << " exits\n");
 							goto admin_dispatch_exit;
 						}
-
 						// get next admin from group
 						if (!(admin = group->iter_next())) 
 						{
@@ -1287,9 +1286,7 @@ use_proxy_threads:
 				pxdis._event = sevnt;
 				pxdis._admin = admin;
 				pxdis._state = fstate;
-
 				RDI_SEVENT_INCR_REF_COUNTER(sevnt, WHATFN);
-
 				{ // introduce proxy_lock lock scope
 					TW_SCOPE_LOCK(chan_proxy_lock, _proxy_lock, "chan_proxy_lock", WHATFN);
 
@@ -1316,7 +1313,9 @@ use_proxy_threads:
                         << "\n");
 #endif
 				} // end proxy_lock lock scope
+
 				// (on to next admin)
+
 			} // end admin loop
 		} // end admin group loop 
 	} // end outer loop
@@ -1459,7 +1458,7 @@ EventChannel_i::proxy_dispatch()
 		// was inserted into the proxy queue
 		
 #ifndef BATCH_PROXY_DISPATCH
-        RDI_SEVENT_DECR_REF_COUNTER(pxdis._event, WHATFN);
+		RDI_SEVENT_DECR_REF_COUNTER(pxdis._event, WHATFN);
 		pxdis._event = 0; 
 		pxdis._admin = 0;
 #else
@@ -2379,7 +2378,18 @@ EventChannel_i::out_debug_info(RDIstrstream& str, CORBA::Boolean show_events)
     str << *(_qosprop) << "\n\n";
     str << _admin_qos << '\n';
   } // end qos lock scope
+
+#ifdef OUT_DEBUG_INFO_SHOW_EVENTS
+    show_events = 1;
+#endif
+
   _events->out_debug_info(str, show_events);
+
+#ifdef OUT_DEBUG_INFO_PROXY_EVENTS
+  str << "\n------------\nProxy Events\n------------\n";
+  str << "Length " << _proxy_events.length() << "\n";
+#endif
+
   str << '\n' << *(_admin_group) << '\n';
   for ( suplcur = _supl_admin.cursor(); suplcur.is_valid(); ++suplcur) {
     str << *suplcur.val() << '\n';

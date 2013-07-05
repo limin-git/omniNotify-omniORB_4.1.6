@@ -673,6 +673,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\ObjectAddress.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\ProxyDispatcheEentProcessorPool.h"
 				>
 			</File>

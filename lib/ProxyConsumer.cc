@@ -39,6 +39,7 @@
 
 // #define PERFORMANCE_DEBUG_LOG
 
+#include "Switchecs.h"
 
 #ifdef PERFORMANCE_DEBUG_LOG
 #include "stubs.h"
@@ -2715,7 +2716,17 @@ StructuredProxyPushConsumer_i::log_output(RDIstrstream& str) const
 RDIstrstream&
 SequenceProxyPushConsumer_i::log_output(RDIstrstream& str) const
 {
-  str << (void*)this  << " -- "  << RDI_PRX_TYPE(_prxtype) << " ID ";
+  str.setw(8); str << (void*)this;
+
+#ifdef LOG_OUTPUT_ADDRESS
+  std::string address = ObjectAddress::get_object_address_str( _supplier );
+  if ( false == address.empty() )
+  {
+      str << " -- ADDRESS "; str.setw(21); str << address.c_str();
+  }
+#endif
+
+  str << " -- "  << RDI_PRX_TYPE(_prxtype) << " ID ";
   str.setw(3); str << _pserial;
   str << _pxstate;
   return str << " #Events " << _nevents;

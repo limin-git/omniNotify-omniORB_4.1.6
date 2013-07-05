@@ -1135,7 +1135,7 @@ private:
   */
 
 class ConsumerAdmin_i :	 
-	public RDINotifySubscribe,
+	public RDINotifySubscribe, 
 	WRAPPED_SKELETON_SUPER(AttNotification, ConsumerAdmin) 
 {
   friend class EventChannel_i;

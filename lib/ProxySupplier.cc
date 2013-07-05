@@ -3582,7 +3582,17 @@ StructuredProxyPushSupplier_i::log_output(RDIstrstream& str) const
 RDIstrstream&
 SequenceProxyPushSupplier_i::log_output(RDIstrstream& str) const
 {
-  str.setw(8); str << (void*)this << " -- " << RDI_PRX_TYPE(_prxtype) << " ID ";
+  str.setw(8); str << (void*)this;
+
+#ifdef LOG_OUTPUT_ADDRESS
+    std::string address = ObjectAddress::get_object_address_str( _consumer );
+    if ( false == address.empty() )
+    {
+        str << " -- ADDRESS "; str.setw(21); str << address.c_str();
+    }
+#endif
+
+  str << " -- " << RDI_PRX_TYPE(_prxtype) << " ID ";
   str.setw(10); str << _pserial;
   if ( ! CORBA::is_nil(_pfilter) ) str << " PFilter " << (void*)_pfilter;
   if ( ! CORBA::is_nil(_lfilter) ) str << " LFilter " << (void*)_lfilter;
@@ -3594,6 +3604,7 @@ SequenceProxyPushSupplier_i::log_output(RDIstrstream& str) const
       str << "::" << _rqstypes[ix].type_name;
     }
   }
+
   return str;
 }
 

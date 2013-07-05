@@ -25,19 +25,15 @@ public:
     void initialize( EventChannel_i* channel, RDI_TypeMap*& original_type_map );
     bool ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter );
     void consumer_admin_dispatch_event(RDI_StructuredEvent*  event);
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_OUT_DEBUG_INFO
     RDIstrstream& log_output(RDIstrstream& str);
-#endif
 
 private:
 
     static int extract_location_key_from_filter( Filter_i* filter );
     static int extract_location_key_from_filter_constraint_expr( const char* constraint_expr );  // ( $Region == '123' )
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
     static void get_filter_str( Filter_i* filter, std::ostream& strm );
     static void get_event_type_str( const CosN::EventType& event_type, std::ostream& strm );
     static void get_event_type_list_str( const CosN::EventTypeSeq& event_type_list, std::ostream& strm );
-#endif
 
 public:
 
