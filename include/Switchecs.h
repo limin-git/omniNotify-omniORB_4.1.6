@@ -2,9 +2,9 @@
 #define SWITCHES_H_INCLUDED
 
 
-#define LOG_OUTPUT_ADDRESS
-#define OUT_DEBUG_INFO_SHOW_EVENTS                                      //EventChannel_i::out_debug_info
-#define OUT_DEBUG_INFO_PROXY_EVENTS                                     //EventChannel_i::out_debug_info
+#define LOG_OUTPUT_OBJECT_ADDRESS
+#define DO_COMMAND_DEBUG_SHOW_EVENTS                                      //EventChannel_i::do_command
+#define OUT_DEBUG_INFO_PROXY_EVENTS                                       //EventChannel_i::out_debug_info
 //#define NO_TYPEMAP_LOG_OUTPUT                                           //RDI_TypeMap::log_output
 //#define NO_SEQUENCE_PROXY_PUSH_SUPPLIER_PUSH_EVENT                      //SequenceProxyPushSupplier_i::push_event
 //#define NO_GC_ON_EVENT_QUEUE_INSERT                                     //RDI_EventQueue::insert
@@ -66,7 +66,7 @@
     #include "TA_RDITypeMap.h"
 #endif
 
-#ifdef LOG_OUTPUT_ADDRESS
+#ifdef LOG_OUTPUT_OBJECT_ADDRESS
     #include "ObjectAddress.h"
 #endif
 

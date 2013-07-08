@@ -1,8 +1,8 @@
 #ifndef OBJECT_ADDRESS_H_INCLUDED
 #define OBJECT_ADDRESS_H_INCLUDED
 
+#include <omniORB4/CORBA.h>
 #include "omniorb_poa_wrappers.h"
-#include <string>
 #include <sstream>
 
 
@@ -10,67 +10,97 @@ class ObjectAddress
 {
 public:
 
-    static std::string get_object_address_str(CORBA::Object_ptr obj)
+    static const std::string& get_object_address_str( CORBA::Object_ptr obj )
     {
-        std::string host;
-        unsigned long port;
-        std::stringstream strm;
+        typedef std::map<CORBA::Object_ptr, std::string> CacheMap;
+        static CacheMap cache;
+        static CacheMap cache2;
+        static omni_mutex cache_lock;
 
-        if ( get_object_address( obj, host, port ) )
+        cache_lock.acquire();
+
+        CacheMap::iterator find_it = cache.find( obj );
+
+        if ( find_it == cache.end() )
         {
-            strm << host << ":" << port;
+            //if ( 100000 <= cache.size() )
+            if ( 300 <= cache.size() )
+            {
+                cache2.clear();
+                cache.swap( cache2 );
+            }
+
+            std::string host;
+            unsigned long port;
+            std::stringstream strm;
+
+            if ( true == get_object_address( obj, host, port ) )
+            {
+                strm << host << ":" << port;
+                find_it = cache.insert( CacheMap::value_type( obj, strm.str() ) ).first;
+            }
+            else
+            {
+                cache_lock.release();
+
+                static const std::string empty;
+                return empty;
+            }
         }
 
-        return strm.str();
+        cache_lock.release();
+        return find_it->second;
     }
 
-    static bool get_object_address(CORBA::Object_ptr obj, std::string& host, unsigned long& port)
+    static bool get_object_address( CORBA::Object_ptr obj, std::string& host, unsigned long& port )
     {
         CORBA::String_var str_ior =  WRAPPED_ORB_OA::orb()->object_to_string( obj );
 
-        if ( strlen(str_ior) != 0 )
+        if ( strlen(str_ior) == 0 )
         {
-            IOP::IOR ior;
+            return false;
+        }
 
-            try
+        IOP::IOR ior;
+
+        try
+        {
+            string_to_ior( str_ior, ior );
+
+            if ( ior.profiles.length() == 0 && strlen(ior.type_id) == 0 )
             {
-                string_to_ior(str_ior,ior);
+                return false;
+            }
 
-                if ( ior.profiles.length() == 0 && strlen(ior.type_id) == 0 )
+            for ( unsigned long count = 0; count < ior.profiles.length(); ++count )
+            {
+                if ( ior.profiles[count].tag == IOP::TAG_INTERNET_IOP)
                 {
-                    return false;
-                }
-                else
-                {
-                    for ( unsigned long count = 0; count < ior.profiles.length(); count++)
-                    {
-                        if (ior.profiles[count].tag == IOP::TAG_INTERNET_IOP)
-                        {
-                            IIOP::ProfileBody pBody;
-                            IIOP::unmarshalProfile(ior.profiles[count],pBody);
+                    IIOP::ProfileBody pBody;
+                    IIOP::unmarshalProfile( ior.profiles[count], pBody );
 
-                            host = (const char*) pBody.address.host;
-                            port = pBody.address.port;
+                    host = (const char*) pBody.address.host;
+                    port = pBody.address.port;
 
-                            return true;
-                        }
-                    }
+                    return true;
                 }
             }
-            catch (CORBA::MARSHAL&)
-            {
-            }
-            catch (...)
-            {
-            }
+        }
+        catch ( CORBA::MARSHAL& )
+        {
+            NULL;
+        }
+        catch ( ... )
+        {
+            NULL;
         }
 
         return false;
     }
 
-    static void string_to_ior(const char* iorstr,IOP::IOR& ior)
+    static void string_to_ior( const char* iorstr, IOP::IOR& ior )
     {
-        size_t s = (iorstr ? strlen(iorstr) : 0);
+        size_t s = ( iorstr ? strlen(iorstr) : 0 );
 
         if ( s < 4 )
         {
@@ -89,20 +119,20 @@ public:
 
         cdrMemoryStream buf((CORBA::ULong)s, 0);
 
-        for (int i = 0; i < (int)s; i++)
+        for ( int i = 0; i < (int)s; ++i )
         {
-            int j = i*2;
+            int j = i * 2;
             CORBA::Octet v;
 
-            if (p[j] >= '0' && p[j] <= '9')
+            if ( p[j] >= '0' && p[j] <= '9')
             {
                 v = ((p[j] - '0') << 4);
             }
-            else if (p[j] >= 'a' && p[j] <= 'f')
+            else if ( p[j] >= 'a' && p[j] <= 'f')
             {
                 v = ((p[j] - 'a' + 10) << 4);
             }
-            else if (p[j] >= 'A' && p[j] <= 'F')
+            else if ( p[j] >= 'A' && p[j] <= 'F')
             {
                 v = ((p[j] - 'A' + 10) << 4);
             }
@@ -111,15 +141,15 @@ public:
                 throw CORBA::MARSHAL(0,CORBA::COMPLETED_NO);
             }
 
-            if (p[j+1] >= '0' && p[j+1] <= '9')
+            if ( p[j+1] >= '0' && p[j+1] <= '9')
             {
                 v += (p[j+1] - '0');
             }
-            else if (p[j+1] >= 'a' && p[j+1] <= 'f')
+            else if ( p[j+1] >= 'a' && p[j+1] <= 'f')
             {
                 v += (p[j+1] - 'a' + 10);
             }
-            else if (p[j+1] >= 'A' && p[j+1] <= 'F')
+            else if ( p[j+1] >= 'A' && p[j+1] <= 'F')
             {
                 v += (p[j+1] - 'A' + 10);
             }
@@ -138,6 +168,7 @@ public:
         ior.type_id = IOP::IOR::unmarshaltype_id(buf);
         ior.profiles <<= buf;
     }
+
 };
 
 

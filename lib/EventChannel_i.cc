@@ -2379,10 +2379,6 @@ EventChannel_i::out_debug_info(RDIstrstream& str, CORBA::Boolean show_events)
     str << _admin_qos << '\n';
   } // end qos lock scope
 
-#ifdef OUT_DEBUG_INFO_SHOW_EVENTS
-    show_events = 1;
-#endif
-
   _events->out_debug_info(str, show_events);
 
 #ifdef OUT_DEBUG_INFO_PROXY_EVENTS
@@ -2684,6 +2680,11 @@ EventChannel_i::do_command(const char* cmnd, CORBA::Boolean& success,
   } else if ((p.argc == 1) && RDI_STR_EQ_I(p.argv[0], "debug")) {
     out_heading(str);
     out_debug_info(str);
+#ifdef DO_COMMAND_DEBUG_SHOW_EVENTS
+  } else if ((p.argc == 1) && RDI_STR_EQ_I(p.argv[0], "debug_show_events")) {
+      out_heading(str);
+      out_debug_info(str, 1);
+#endif
   } else if ((p.argc == 1) && RDI_STR_EQ_I(p.argv[0], "config")) {
     out_heading(str);
     out_config(str);
