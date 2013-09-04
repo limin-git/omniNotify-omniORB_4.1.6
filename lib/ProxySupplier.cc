@@ -581,7 +581,9 @@ RDIProxySupplier::get_filter(CosNF::FilterID fltrID)
 {
   RDI_OPLOCK_SCOPE_LOCK(proxy_lock, WHATFN, RDI_THROW_INV_OBJREF);
   if (_pxstate == RDI_Disconnected) { RDI_THROW_INV_OBJREF; }
+#ifdef THROW_ON_PROXY_STATE_EXCEPTION
   if (_pxstate == RDI_Exception) { RDI_THROW_INV_OBJREF; }
+#endif
 #ifndef NO_OBJ_GC
   _last_use.set_curtime();
 #endif

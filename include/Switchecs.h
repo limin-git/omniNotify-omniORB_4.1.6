@@ -2,6 +2,7 @@
 #define SWITCHES_H_INCLUDED
 
 
+#define THROW_ON_PROXY_STATE_EXCEPTION                                    //RDIProxySupplier::get_filter
 #define LOG_OUTPUT_OBJECT_ADDRESS
 #define DO_COMMAND_DEBUG_SHOW_EVENTS                                      //EventChannel_i::do_command
 #define OUT_DEBUG_INFO_PROXY_EVENTS                                       //EventChannel_i::out_debug_info

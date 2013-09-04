@@ -402,6 +402,44 @@ const char*                  RDI_NProp12_supmsg    = 0;
 #define RDI_NProp12_check    check_prop_config_time
 #define RDI_NProp12_checkset checkset_prop_config_time
 
+
+#ifdef TA_PROPERTY
+
+const unsigned int           RDI_NProp13_num       = 13;
+const char*                  RDI_NProp13_name      = "RemoveEventsPerConsumerThreshold";
+const CORBA::TypeCode_ptr    RDI_NProp13_tcde      = CORBA::_tc_long;
+const CORBA::Long            RDI_NProp13_lval      = (CORBA::Long)0;
+const CORBA::Long            RDI_NProp13_hval      = RDI_LONG_MAX;
+// max events per consumer limited to event queue size, but no way to specify that here
+const CORBA::Long            RDI_NProp13_lsupval   = (CORBA::Long)0;
+const CORBA::Long            RDI_NProp13_hsupval   = RDI_LONG_MAX;
+const RDI_UnsupPropTest      RDI_NProp13_unsuprop  = RDI_UnsupPropTest_Message;
+const RDI_RangeTest_long     RDI_NProp13_tstrange  = RDI_RangeTest_long_impl;
+const RDI_UnavPropTest       RDI_NProp13_unavprop  = RDI_UnavPropTest_false;
+const RDI_SetRange_long      RDI_NProp13_setrange  = RDI_SetRange_long_impl;
+const char*                  RDI_NProp13_supmsg    = 0;
+#define RDI_NProp13_check     check_prop_config_hilo
+#define RDI_NProp13_checkset  checkset_prop_config_hilo
+
+const unsigned int           RDI_NProp14_num       = 14;
+const char*                  RDI_NProp14_name      = "RemoveEventsPerConsumerNumber";
+const CORBA::TypeCode_ptr    RDI_NProp14_tcde      = CORBA::_tc_long;
+const CORBA::Long            RDI_NProp14_lval      = (CORBA::Long)0;
+const CORBA::Long            RDI_NProp14_hval      = RDI_LONG_MAX;
+// max events per consumer limited to event queue size, but no way to specify that here
+const CORBA::Long            RDI_NProp14_lsupval   = (CORBA::Long)0;
+const CORBA::Long            RDI_NProp14_hsupval   = RDI_LONG_MAX;
+const RDI_UnsupPropTest      RDI_NProp14_unsuprop  = RDI_UnsupPropTest_Message;
+const RDI_RangeTest_long     RDI_NProp14_tstrange  = RDI_RangeTest_long_impl;
+const RDI_UnavPropTest       RDI_NProp14_unavprop  = RDI_UnavPropTest_false;
+const RDI_SetRange_long      RDI_NProp14_setrange  = RDI_SetRange_long_impl;
+const char*                  RDI_NProp14_supmsg    = 0;
+#define RDI_NProp14_check     check_prop_config_hilo
+#define RDI_NProp14_checkset  checkset_prop_config_hilo
+
+#endif // TA_PROPERTY
+
+
 // validate_nprop is used within a while loop that has the following vars in scope:
 //    otype : type of entity doing the validation
 //    a_qos : the current qos properties of this entity
@@ -1140,6 +1178,10 @@ RDI_NotifQoS::RDI_NotifQoS(RDI_NotifQoS* parent) :
   _priority_set(0), _timeout_set(0), _startTimeSupported_set(0), 
   _stopTimeSupported_set(0), _orderPolicy_set(0), _discardPolicy_set(0),
   _pacingInterval_set(0), _maxEventsPerConsumer_set(0), _maximumBatchSize_set(0)
+#ifdef TA_PROPERTY
+  , _removeEventsPerConsumerThreshold_set(0)
+  , _removeEventsPerConsumerNumber_set(0)
+#endif
 {
   if (!_parent) {
     _all_inherited = 0;
@@ -1152,7 +1194,10 @@ RDI_NotifQoS::RDI_NotifQoS(RDI_NotifQoS* parent) :
     discardPolicy(CosN::FifoOrder);
     maxEventsPerConsumer(0);
     maximumBatchSize(8);
-
+#ifdef TA_PROPERTY
+    removeEventsPerConsumerThreshold(0);
+    removeEventsPerConsumerNumber(0);
+#endif
     _timeout.set_rel_msecs(0);
     // default pacing interval is 1 second
     _pacingInterval.set_rel_secs(1);
@@ -1168,6 +1213,10 @@ RDI_NotifQoS::RDI_NotifQoS(RDI_NotifQoS* parent) :
     _pacingInterval_set = 1;
     _maxEventsPerConsumer_set = 1;
     _maximumBatchSize_set = 1;
+#ifdef TA_PROPERTY
+    _removeEventsPerConsumerThreshold = 1;
+    _removeEventsPerConsumerNumber = 1;
+#endif
   }
 }
 
@@ -1184,6 +1233,10 @@ RDI_NotifQoS& RDI_NotifQoS::operator= (const RDI_NotifQoS& qos)
   _pacingInterval        	= qos._pacingInterval;
   _maxEventsPerConsumer  	= qos._maxEventsPerConsumer;
   _maximumBatchSize      	= qos._maximumBatchSize;
+#ifdef TA_PROPERTY
+  _removeEventsPerConsumerThreshold = qos._removeEventsPerConsumerThreshold;
+  _removeEventsPerConsumerNumber = qos._removeEventsPerConsumerNumber;
+#endif
 
   _eventReliability_set      	= qos._eventReliability_set;
   _connectionReliability_set 	= qos._connectionReliability_set;
@@ -1196,6 +1249,10 @@ RDI_NotifQoS& RDI_NotifQoS::operator= (const RDI_NotifQoS& qos)
   _pacingInterval_set        	= qos._pacingInterval_set;
   _maxEventsPerConsumer_set  	= qos._maxEventsPerConsumer_set;
   _maximumBatchSize_set      	= qos._maximumBatchSize_set;
+#ifdef TA_PROPERTY
+  _removeEventsPerConsumerThreshold_set = qos._removeEventsPerConsumerThreshold_set;
+  _removeEventsPerConsumerNumber_set = qos._removeEventsPerConsumerNumber_set;
+#endif
 
   _parent                	= qos._parent;
   _all_inherited                = qos._all_inherited;
@@ -1217,7 +1274,13 @@ RDI_NotifQoS::is_qos_prop(const char* pname) {
 	   RDI_STR_EQ(pname, RDI_NProp9_name)  ||  
 	   RDI_STR_EQ(pname, RDI_NProp10_name) ||  
 	   RDI_STR_EQ(pname, RDI_NProp11_name) ||  
+#ifdef TA_PROPERTY
+       RDI_STR_EQ(pname, RDI_NProp12_name) ||  
+       RDI_STR_EQ(pname, RDI_NProp13_name) ||  
+       RDI_STR_EQ(pname, RDI_NProp14_name) );
+#else
 	   RDI_STR_EQ(pname, RDI_NProp12_name) );
+#endif
 }
 
 CosN::QoSProperties* 
@@ -1260,6 +1323,12 @@ RDI_NotifQoS::get_qos(RDI_ObjectKind otype) const
   (*qos)[idx++].value <<= maxEventsPerConsumer();
   (*qos)[idx].name = CORBA::string_dup(CosN::MaximumBatchSize);
   (*qos)[idx++].value <<= maximumBatchSize();
+#ifdef TA_PROPERTY
+  (*qos)[idx].name = CORBA::string_dup("RemoveEventsPerConsumerThreshold");
+  (*qos)[idx++].value <<= removeEventsPerConsumerThreshold();
+  (*qos)[idx].name = CORBA::string_dup("RemoveEventsPerConsumerNumber");
+  (*qos)[idx++].value <<= removeEventsPerConsumerNumber();
+#endif
   return qos;
 }
 
@@ -1320,6 +1389,14 @@ void RDI_NotifQoS::set_qos(const CosN::QoSProperties& r_qos)
     } else if ( RDI_STR_EQ(r_qos[ix].name, "MaximumBatchSize") ) {
       r_qos[ix].value >>= l;
       maximumBatchSize(l);
+#ifdef TA_PROPERTY
+    } else if ( RDI_STR_EQ(r_qos[ix].name, "RemoveEventsPerConsumerThreshold") ) {
+        r_qos[ix].value >>= l;
+        removeEventsPerConsumerThreshold(l);
+    } else if ( RDI_STR_EQ(r_qos[ix].name, "RemoveEventsPerConsumerNumber") ) {
+        r_qos[ix].value >>= l;
+        removeEventsPerConsumerNumber(l);
+#endif
     }
   }
 }
@@ -1366,6 +1443,11 @@ RDI_NotifQoS::validate(const CosN::QoSProperties& r_qos,
     validate_nprop(RDI_NProp10);
     validate_nprop(RDI_NProp11);
     validate_nprop(RDI_NProp12);
+#ifdef TA_PROPERTY
+    validate_nprop(RDI_NProp13);
+    validate_nprop(RDI_NProp14);
+#endif
+
     // above all use continue; r_qos[ix].name was not recognized
     error[ix_e].code = CosN::BAD_PROPERTY;
     error[ix_e].name = r_qos[ix].name;
@@ -1398,6 +1480,10 @@ RDI_NotifQoS::validate(const CosN::QoSProperties& r_qos,
     add_range(RDI_NProp10); // DiscardPolicy
     add_range(RDI_NProp11); // MaximumBatchSize
     add_range(RDI_NProp12); // PacingInterval
+#ifdef TA_PROPERTY
+    add_range(RDI_NProp13); // RemoveEventsPerConsumerThreshold
+    add_range(RDI_NProp14); // RemoveEventsPerConsumerNumber
+#endif
   }
   range.length(ix_e); // Correct the length of this list
   return succ;
@@ -1580,6 +1666,38 @@ void RDI_NotifQoS::maximumBatchSize(CORBA::Long max_batch_size)
   _maximumBatchSize_set = 1;
   _all_inherited = 0;
 }
+
+#ifdef TA_PROPERTY
+
+CORBA::Long RDI_NotifQoS::removeEventsPerConsumerThreshold() const
+{
+    if (_removeEventsPerConsumerThreshold_set) return _removeEventsPerConsumerThreshold;
+    RDI_Assert(_parent, "Strange case, _parent should be set\n");
+    return _parent->removeEventsPerConsumerThreshold();
+}
+
+void RDI_NotifQoS::removeEventsPerConsumerThreshold(CORBA::Long remove_events_per_consumer_threshold)
+{
+    _removeEventsPerConsumerThreshold = remove_events_per_consumer_threshold;
+    _removeEventsPerConsumerThreshold_set = 1;
+    _all_inherited = 0;
+}
+
+CORBA::Long RDI_NotifQoS::removeEventsPerConsumerNumber() const
+{
+    if (_removeEventsPerConsumerNumber_set) return _removeEventsPerConsumerNumber;
+    RDI_Assert(_parent, "Strange case, _parent should be set\n");
+    return _parent->removeEventsPerConsumerNumber();
+}
+
+void RDI_NotifQoS::removeEventsPerConsumerNumber(CORBA::Long remove_events_per_consumer_number)
+{
+    _removeEventsPerConsumerNumber = remove_events_per_consumer_number;
+    _removeEventsPerConsumerNumber_set = 1;
+    _all_inherited = 0;
+}
+
+#endif // TA_PROPERTY
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
 //                          AdminQoS Properties                          //
@@ -2233,6 +2351,10 @@ void RDI_AllQoS::install_all_defaults(RDI_Config& config) {
   config.set_value("PacingInterval",		"1000");
   config.set_value("MaxEventsPerConsumer",	"0");
   config.set_value("MaximumBatchSize",		"8");
+#ifdef TA_PROPERTY
+  config.set_value("RemoveEventsPerConsumerThreshold",	"0");
+  config.set_value("RemoveEventsPerConsumerNumber",	    "0");
+#endif
   config.set_value("MaxQueueLength",		"0");
   config.set_value("MaxConsumers",		"0");
   config.set_value("MaxSuppliers",		"0");
@@ -2328,6 +2450,10 @@ CORBA::Boolean RDI_AllQoS::validate_initial_config(RDIstrstream&  str,
   RDI_NProp10_check(RDI_NProp10, sval, n_qos.discardPolicy(sval)); // DiscardPolicy
   RDI_NProp11_check(RDI_NProp11, lval, n_qos.maximumBatchSize(lval)); // MaximumBatchSize
   RDI_NProp12_check(RDI_NProp12, n_qos.pacingInterval); // PacingInterval
+#ifdef TA_PROPERTY
+  RDI_NProp13_check(RDI_NProp13,lval, n_qos.removeEventsPerConsumerThreshold(lval)); // RemoveEventsPerConsumerThreshold
+  RDI_NProp13_check(RDI_NProp14,lval, n_qos.removeEventsPerConsumerNumber(lval)); // RemoveEventsPerConsumerNumber
+#endif
   
   //
   // ** AdminQoS Properties **
@@ -2460,6 +2586,10 @@ CORBA::Boolean RDI_AllQoS::parse_set_command(RDIstrstream&           str,
   RDI_NProp10_checkset(RDI_NProp10, sval); // DiscardPolicy
   RDI_NProp11_checkset(RDI_NProp11, lval); // MaximumBatchSize
   RDI_NProp12_checkset(RDI_NProp12);       // PacingInterval
+#ifdef TA_PROPERTY
+  RDI_NProp13_checkset(RDI_NProp13, lval); // RemoveEventsPerConsumerThreshold
+  RDI_NProp14_checkset(RDI_NProp14, lval); // RemoveEventsPerConsumerNumber
+#endif
 
   //
   // ** AdminQoS Properties **
@@ -2565,7 +2695,23 @@ RDIstrstream& RDI_NotifQoS::log_output(RDIstrstream& str) const
   } else {
     str << " | MaximumBatchSize      "       ; str.setw(6);
   }
+#ifdef TA_PROPERTY
+  str << maximumBatchSize();
+  if (_parent && _removeEventsPerConsumerThreshold_set) {
+      str << " |*RemoveEventsPerConsumerThreshold  "       ; str.setw(6);
+  } else {
+      str << " | RemoveEventsPerConsumerThreshold  "       ; str.setw(6);
+  }
+  str << removeEventsPerConsumerThreshold();
+  if (_parent && _removeEventsPerConsumerNumber_set) {
+      str << " |*RemoveEventsPerConsumerNumber  "       ; str.setw(6);
+  } else {
+      str << " | RemoveEventsPerConsumerNumber  "       ; str.setw(6);
+  }
+  str << removeEventsPerConsumerNumber() << '\n';
+#else
   str << maximumBatchSize() << '\n';
+#endif
   if (_parent && _timeout_set) {
     str << "  *Timeout(s,n)          (" << timeout_s << "," << timeout_n << ")\n";
   } else {

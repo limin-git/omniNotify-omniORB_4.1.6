@@ -23,8 +23,7 @@ public:
 
         if ( find_it == cache.end() )
         {
-            //if ( 100000 <= cache.size() )
-            if ( 300 <= cache.size() )
+            if ( 100000 <= cache.size() )
             {
                 cache2.clear();
                 cache.swap( cache2 );
