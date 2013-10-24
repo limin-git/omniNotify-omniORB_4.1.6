@@ -744,7 +744,7 @@ RDI_NotifyConsumer::notify()
                 goto notifcon_notify_exit;
             }
             node->_inuse = 1;
-            } // end scope lock
+        } // end scope lock
 
     // NOTE: we update 'node' and may update '_ndeleted' in the
     //       following segment without holding the lock.  While

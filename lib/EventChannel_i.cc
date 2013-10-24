@@ -49,7 +49,7 @@
 #endif
 
 #ifdef USE_TA_RDI_TYPE_MAPPING_IN_EVENT_CHANNEL
-    #include "TA_RDITypeMap.cpp"
+    //#include "TA_RDITypeMap.cpp"
 #endif
 
 

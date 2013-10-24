@@ -31,6 +31,7 @@ private:
 
     static int extract_location_key_from_filter( Filter_i* filter );
     static int extract_location_key_from_filter_constraint_expr( const char* constraint_expr );  // ( $Region == '123' )
+    static int extract_location_key_from_event( RDI_StructuredEvent* event );
     static void get_filter_str( Filter_i* filter, std::ostream& strm );
     static void get_event_type_str( const CosN::EventType& event_type, std::ostream& strm );
     static void get_event_type_list_str( const CosN::EventTypeSeq& event_type_list, std::ostream& strm );

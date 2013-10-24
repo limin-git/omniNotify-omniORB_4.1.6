@@ -210,29 +210,56 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
 
 #undef WHATFN
 #define WHATFN "TA_TypeMap::consumer_admin_dispatch_event"
-void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
+void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event)
 {
     if ( false == m_location_key_2_proxy_list_map.empty() || false == m_domain_2_location_key_2_proxy_list_map.empty() )
     {
-        const RDI_RTVal * val = event->lookup_fdata_rtval( "Region" );
+        //const RDI_RTVal * val = event->lookup_fdata_rtval( "Region" );
 
-        if ( val != NULL )
+        int location_key = extract_location_key_from_event( event );
+
+        if ( -1 == location_key )
         {
-            char* delim = 0;
-            int location_key = RDI_STRTOL(val->_v_string_ptr, &delim);
-            if ((delim == 0) || (delim == val->_v_string_ptr) || (*delim != '\0'))
+            return;
+        }
+
+        TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
+
+        if ( false == m_location_key_2_proxy_list_map.empty() )
+        {
+            LocationKey2ProxySupplierListMap::iterator find_location_it = m_location_key_2_proxy_list_map.find( location_key );
+
+            if ( find_location_it != m_location_key_2_proxy_list_map.end() )
             {
-                // TODO: log an error.
-                return;
+                ProxySupplierList& proxy_list = find_location_it->second;
+
+                for ( ProxySupplierList::iterator it = proxy_list.begin(); it != proxy_list.end(); ++it )
+                {
+                    SequenceProxyPushSupplier_i* proxy = *it;
+
+                    if (  proxy != NULL )
+                    {
+                        proxy->add_event(event);
+
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
+                        RDIDbgForceLog( "\TA_TypeMap::consumer_admin_dispatch_event - using ta type mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
+#endif
+                    }
+                }
             }
+        }
 
-            TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
+        if ( false == m_domain_2_location_key_2_proxy_list_map.empty() )
+        {
+            Domain2LocationKey2ProxySupplierListMap::iterator find_domain_it = m_domain_2_location_key_2_proxy_list_map.find( event->get_domain_name() );
 
-            if ( false == m_location_key_2_proxy_list_map.empty() )
+            if ( find_domain_it != m_domain_2_location_key_2_proxy_list_map.end() )
             {
-                LocationKey2ProxySupplierListMap::iterator find_location_it = m_location_key_2_proxy_list_map.find( location_key );
+                LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map = find_domain_it->second;
 
-                if ( find_location_it != m_location_key_2_proxy_list_map.end() )
+                LocationKey2ProxySupplierListMap::iterator find_location_it = location_key_2_proxy_list_map.find( location_key );
+
+                if ( find_location_it != location_key_2_proxy_list_map.end() )
                 {
                     ProxySupplierList& proxy_list = find_location_it->second;
 
@@ -247,37 +274,6 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent*  event)
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
                             RDIDbgForceLog( "\TA_TypeMap::consumer_admin_dispatch_event - using ta type mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
 #endif
-                        }
-                    }
-                }
-            }
-
-            if ( false == m_domain_2_location_key_2_proxy_list_map.empty() )
-            {
-                Domain2LocationKey2ProxySupplierListMap::iterator find_domain_it = m_domain_2_location_key_2_proxy_list_map.find( event->get_domain_name() );
-
-                if ( find_domain_it != m_domain_2_location_key_2_proxy_list_map.end() )
-                {
-                    LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map = find_domain_it->second;
-
-                    LocationKey2ProxySupplierListMap::iterator find_location_it = location_key_2_proxy_list_map.find( location_key );
-
-                    if ( find_location_it != location_key_2_proxy_list_map.end() )
-                    {
-                        ProxySupplierList& proxy_list = find_location_it->second;
-
-                        for ( ProxySupplierList::iterator it = proxy_list.begin(); it != proxy_list.end(); ++it )
-                        {
-                            SequenceProxyPushSupplier_i* proxy = *it;
-
-                            if (  proxy != NULL )
-                            {
-                                proxy->add_event(event);
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
-                                RDIDbgForceLog( "\TA_TypeMap::consumer_admin_dispatch_event - using ta type mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
-#endif
-                            }
                         }
                     }
                 }
@@ -428,6 +424,51 @@ int TA_TypeMap::extract_location_key_from_filter_constraint_expr( const char* co
 
     return -1;
 }
+
+
+int TA_TypeMap::extract_location_key_from_event( RDI_StructuredEvent* event )
+{
+    try
+    {
+        const CosN::StructuredEvent& cos_event = event->get_cos_event();
+        _CORBA_ULong length = cos_event.filterable_data.length();
+
+        for ( size_t i = 0; i < length; ++i )
+        {
+            const CosN::Property& property = cos_event.filterable_data[i];
+
+            if ( RDI_STR_EQ( "Region", property.name.in() ) )
+            {
+                CORBA::TypeCode_var tmp_tcp = property.value.type();
+
+                if ( CORBA::_tc_string->equivalent(tmp_tcp) )
+                {
+                    const char* str = 0;
+                    property.value >>= str;
+
+                    if ( str != NULL )
+                    {
+                        char* delim = 0;
+                        int location_key = RDI_STRTOL(str, &delim);
+
+                        if ( (delim == 0) || (delim == str) || (*delim != '\0') )
+                        {
+                            return -1;
+                        }
+
+                        return location_key;
+                    }
+                }
+            }
+        }
+    }
+    catch (...)
+    {
+    }
+
+    return -1;
+}
+
 
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING

@@ -184,22 +184,22 @@ RDI::logger::logger(const char* prefix, FILE* file, FILE* alt_file, const char* 
   struct timeb timebuffer;
   ftime ( &timebuffer );
 
-  struct tm newtime;
+  struct tm* newtime = NULL;
 
 #if defined ( SOLARIS ) || defined( LINUX )
-  newtime = *localtime_r ( &timebuffer.time, &newtime );
+  newtime = localtime_r ( &timebuffer.time, &newtime );
 #define sprintf_s( snprintf
 #else
-  newtime = *localtime ( &timebuffer.time );
+  newtime = localtime ( &timebuffer.time );
 #endif
 
   char szCurrDateTime[200];
   memset(szCurrDateTime, 0x0, 200);
 
-  if ( ( &newtime ) != NULL )
+  if ( newtime != NULL )
   {
-      sprintf_s( szCurrDateTime, 200, "%02d/%02d/%02d %02d:%02d:%02d:%03d  ", newtime.tm_mday, newtime.tm_mon + 1, newtime.tm_year + 1900, 
-          newtime.tm_hour, newtime.tm_min, newtime.tm_sec, timebuffer.millitm );
+      sprintf_s( szCurrDateTime, 200, "%02d/%02d/%02d %02d:%02d:%02d:%03d  ", newtime->tm_mday, newtime->tm_mon + 1, newtime->tm_year + 1900, 
+          newtime->tm_hour, newtime->tm_min, newtime->tm_sec, timebuffer.millitm );
   }
 
   const char* flb = " [";

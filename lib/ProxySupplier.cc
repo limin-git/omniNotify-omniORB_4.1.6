@@ -718,25 +718,21 @@ RDIProxySupplier::obj_gc(RDI_TimeT curtime, CORBA::ULong deadConProxy, CORBA::UL
     RDI_LocksHeld held = { 0 };
     RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(proxy_lock, held.cproxy, WHATFN);
 
-    //RDIDbgSPxyLog("xxstest RDIProxySupplier::obj_gc: deadConproxy"  <<  deadConProxy << ", proxystate " << _pxstate << ", deadOtherProxy: " << deadOtherProxy << '\n');
     if (!held.cproxy) 
     { 
         return 0; 
     }
-   
 
-    //if (! (_pxstate == RDI_Disconnected || _pxstate == RDI_Connected) ) 
-    //{ 
-    //    RDIDbgSPxyLog("xxstest RDIProxySupplier::obj_gc ERROR: proxystate " << _pxstate << '\n');
-    //    return 0; 
-    //}
+    int otherProxyGCPeirod = deadOtherProxy >=deadConProxy ?  deadOtherProxy : deadConProxy;
 
-    if ( (deadConProxy &&  RDI_TIMET_LT_BY_SECS(_last_use, curtime, deadConProxy)) ||
-        (deadOtherProxy && RDI_TIMET_LT_BY_SECS(_last_use, curtime, deadOtherProxy)) ) 
-
-/*     if ( (deadConProxy && _pxstate == RDI_Connected && RDI_TIMET_LT_BY_SECS(_last_use, curtime, deadConProxy)) ||
-          (deadOtherProxy && _pxstate != RDI_Connected && RDI_TIMET_LT_BY_SECS(_last_use, curtime, deadOtherProxy)) )     
+    if ( (deadConProxy && _pxstate == RDI_Connected && RDI_TIMET_LT_BY_SECS(_last_use, curtime, deadConProxy)) ||
+        (deadOtherProxy && _pxstate != RDI_Connected && RDI_TIMET_LT_BY_SECS(_last_use, curtime, otherProxyGCPeirod) ) )     
+/*
+    if (_pxstate == RDI_Disconnected) { return 0; }
+    if ( (deadConProxy && _pxstate == RDI_Connected && RDI_TIMET_LT_BY_SECS(_last_use, curtime, deadConProxy)) ||
+        (deadOtherProxy && _pxstate != RDI_Connected && RDI_TIMET_LT_BY_SECS(_last_use, curtime, deadOtherProxy)) ) 
 */
+
      {
 #ifndef NDEBUG
         if (_pxstate == RDI_Connected) 
@@ -2709,15 +2705,11 @@ SequenceProxyPushSupplier_i::SequenceProxyPushSupplier_i(
     // _worker->start();
     RDIDbgSPxyLog("PushSupplier Proxy Thread " << _worker->id());
   }
-  
-  RDIDbgSPxyLog("xxstest SequenceProxyPushSupplier_i constructor: " << this << "\n");
-
   WRAPPED_REGISTER_IMPL2(this, &_my_name);
 }
 
 SequenceProxyPushSupplier_i::~SequenceProxyPushSupplier_i()
 {
-  RDIDbgSPxyLog("xxstest SequenceProxyPushSupplier_i destructor: " << this << "\n");
   RDI_OPLOCK_DESTROY_CHECK("SequenceProxyPushSupplier_i");
 }
 
@@ -2859,12 +2851,16 @@ SequenceProxyPushSupplier_i::has_events(unsigned long* wait_s, unsigned long* wa
 void
 SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 {
+    RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - proxy_lock acquiring \n");
+
 	RDI_LocksHeld held = { 0 };
 	RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(proxy_lock, held.sproxy, WHATFN);
 	if (!held.sproxy) 
 	{
 		return; 
 	}
+
+    RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - proxy_lock acquired  \n");
 
 	CORBA::Boolean outcall_worked;
 	invalid = 0;
@@ -2933,6 +2929,8 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 	event = new RDI_StructuredEvent * [actsize];
 	RDI_AssertAllocThrowNo(event, "Memory allocation failed -- RDI_StructuredEvent\n");
 
+    RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - _ntfqueue.remove_pri_head begin  " << actsize << " of " << qsize << " \n");
+
 	for ( i = 0; i < actsize; i++ ) 
 	{
 		event[i] = _ntfqueue.remove_pri_head();
@@ -2954,6 +2952,9 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 
 #endif
 	}
+
+    RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - _ntfqueue.remove_pri_head end  \n");
+
 	_nevents += actsize;
 	// update timeout before releasing OPLOCK -- this means we do the update
 	// before doing the push (seems OK)
@@ -2972,6 +2973,9 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 	int retryCount(0);
 	const char* exceptionType;
 	{
+
+        RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - proxy_lock released  \n");
+
 		// introduce unlock scope
 		RDI_OPLOCK_SCOPE_RELEASE_TRACK(held.sproxy, WHATFN);
 
@@ -2987,11 +2991,14 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 		        // increment the counter
 		        retryCount++;
 
+                RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - push_structured_events begin " << actsize << " of " << qsize << " \n");
+
 
 #ifndef NO_SEQUENCE_PROXY_PUSH_SUPPLIER_PUSH_EVENT
 		        _consumer->push_structured_events(notif);
 #endif
 
+                RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - push_structured_events end \n");
 
 		        outcall_worked = 1;
 #ifndef NO_OBJ_GC
@@ -3369,8 +3376,9 @@ SequenceProxyPushSupplier_i::disconnect_sequence_push_supplier( WRAPPED_IMPLARG_
   if (!held.sproxy) { RDI_THROW_INV_OBJREF; } 
   if (_pxstate == RDI_Disconnected) { RDI_THROW_INV_OBJREF; } // already in process of being disposed
   
-  //xinsong++ temp, let gc collect all proxysupplier
+  //xinsong++ temp, let gc collect all proxysupplier as soon as possible
   _pxstate = RDI_Disconnected;
+  _last_use.time -= ( RDI::get_server_qos()->deadOtherProxyInterval + 1 ) * RDI_1e7;
 
   return;
 
