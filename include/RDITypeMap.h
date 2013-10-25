@@ -47,6 +47,10 @@
   */
 
 class RDI_TypeMap {
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
+    friend class TA_TypeMap;
+#endif
+
 public:
   // Support data structures required for implementing the mapping
 

@@ -9,7 +9,8 @@
 TA_TypeMap::TA_TypeMap()
     : m_channel(NULL),
       m_type_map_1(NULL),
-      m_type_map_2(NULL)
+      m_type_map_2(NULL),
+      _prx_batch_push(RDI_ULongHash, RDI_ULongRank)
 {
 }
 
@@ -202,6 +203,21 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
     if ( false == ta_typemap_updated )
     {
         m_type_map_1->update(held, added, deled, proxy, filter);
+
+        _prx_batch_push.clear();
+
+        RDI_Hash<CosN::EventType, RDI_TypeMap::VNode_t>& _tmap = m_type_map_1->_tmap;
+
+        for ( RDI_HashCursor<CosN::EventType, RDI_TypeMap::VNode_t> curs = _tmap.cursor(); curs.is_valid(); curs++ )
+        {
+            RDI_TypeMap::PNode_t* pnode = curs.val()._prxy;
+            SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( pnode->_prxy );
+
+            if ( proxy != NULL )
+            {
+                _prx_batch_push.insert( proxy->_proxy_id(), proxy );
+            }
+        }
     }
 
     return m_type_map_2->update(held, added, deled, proxy, filter);
@@ -214,8 +230,6 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event)
 {
     if ( false == m_location_key_2_proxy_list_map.empty() || false == m_domain_2_location_key_2_proxy_list_map.empty() )
     {
-        //const RDI_RTVal * val = event->lookup_fdata_rtval( "Region" );
-
         int location_key = extract_location_key_from_event( event );
 
         if ( -1 == location_key )

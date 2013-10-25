@@ -701,7 +701,6 @@ RDI_NotifyConsumer::remove_proxySupplier(RDIProxyPushSupplier* proxy)
     node->_deled = 1;
     if ( ++_ndeleted > 5 ) 
     {
-      RDIDbgSPxyLog("xxstest RDI_NotifyConsumer::remove_proxySupplier: " << proxy <<", _ndeleted= " << _ndeleted << "\n");
       _gcollect();
     }
   } // end scope lock
@@ -744,7 +743,7 @@ RDI_NotifyConsumer::notify()
                 goto notifcon_notify_exit;
             }
             node->_inuse = 1;
-        } // end scope lock
+            } // end scope lock
 
     // NOTE: we update 'node' and may update '_ndeleted' in the
     //       following segment without holding the lock.  While
@@ -779,7 +778,7 @@ RDI_NotifyConsumer::notify()
 RDI_NotifyConsumer::ProxyEntry_t*
 RDI_NotifyConsumer::_next_available(unsigned long* wait_s, unsigned long* wait_t)
 {
-    RDIDbgChanLog("NotifyConsumer::_next_available called\n");
+    //RDIDbgChanLog("NotifyConsumer::_next_available called\n");
     unsigned int numIter = 1;
     if ( (! _entries) ) {
         RDIDbgChanLog("NotifyConsumer::_next_available -- no entries, returning\n");
@@ -804,7 +803,7 @@ RDI_NotifyConsumer::_next_available(unsigned long* wait_s, unsigned long* wait_t
             return _mylast_one;
         }
     }
-    RDIDbgChanLog("NotifyConsumer::_next_available -- did 3 iters with no luck, returning\n");
+    //RDIDbgChanLog("NotifyConsumer::_next_available -- did 3 iters with no luck, returning\n");
     return 0;
 }
 
@@ -843,14 +842,12 @@ RDI_NotifyConsumer::_gcollect()
             if ( (! prev) ) 
             {
                 _entries = node->_next;
-                //RDIDbgSPxyLog("xxstest RDI_NotifyConsumer::_gcollect -- 1: " << node << "\n");
                 delete node;
                 node = _entries;
             } 
             else 
             {
                 prev->_next = node->_next;
-                //RDIDbgSPxyLog("xxstest RDI_NotifyConsumer::_gcollect -- 2: " << node << "\n");
                 delete node;
                 node = prev->_next;
             }

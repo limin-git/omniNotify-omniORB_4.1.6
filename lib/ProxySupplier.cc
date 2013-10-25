@@ -2851,16 +2851,12 @@ SequenceProxyPushSupplier_i::has_events(unsigned long* wait_s, unsigned long* wa
 void
 SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 {
-    RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - proxy_lock acquiring \n");
-
 	RDI_LocksHeld held = { 0 };
 	RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(proxy_lock, held.sproxy, WHATFN);
 	if (!held.sproxy) 
 	{
 		return; 
 	}
-
-    RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - proxy_lock acquired  \n");
 
 	CORBA::Boolean outcall_worked;
 	invalid = 0;
@@ -2929,8 +2925,6 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 	event = new RDI_StructuredEvent * [actsize];
 	RDI_AssertAllocThrowNo(event, "Memory allocation failed -- RDI_StructuredEvent\n");
 
-    RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - _ntfqueue.remove_pri_head begin  " << actsize << " of " << qsize << " \n");
-
 	for ( i = 0; i < actsize; i++ ) 
 	{
 		event[i] = _ntfqueue.remove_pri_head();
@@ -2953,8 +2947,6 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 #endif
 	}
 
-    RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - _ntfqueue.remove_pri_head end  \n");
-
 	_nevents += actsize;
 	// update timeout before releasing OPLOCK -- this means we do the update
 	// before doing the push (seems OK)
@@ -2973,8 +2965,6 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 	int retryCount(0);
 	const char* exceptionType;
 	{
-
-        RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - proxy_lock released  \n");
 
 		// introduce unlock scope
 		RDI_OPLOCK_SCOPE_RELEASE_TRACK(held.sproxy, WHATFN);

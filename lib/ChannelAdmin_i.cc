@@ -1401,6 +1401,8 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
       << "\n");ThreadTimeStamp::instance().set_curtime( "ConsumerAdmin_i::dispatch_event" );
 #endif
 
+  RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", ConsumerAdmin_i::dispatch_event - begin\n");
+
   RDI_HashCursor<CosNA::ProxyID, ProxyPushSupplier_i *>           apushcur;
   RDI_HashCursor<CosNA::ProxyID, ProxyPullSupplier_i *>           apullcur;
   RDI_HashCursor<CosNA::ProxyID, StructuredProxyPushSupplier_i *> spushcur;
@@ -1421,11 +1423,14 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
     _channel->m_ta_type_map.consumer_admin_dispatch_event( event );
+    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>& _prx_batch_push = _channel->m_ta_type_map._prx_batch_push;
 #endif
 
 #ifdef USE_TA_RDI_TYPE_MAPPING_IN_EVENT_CHANNEL
     _channel->m_ta_type_map.consumer_admin_dispatch_event( event );
 #endif
+
+    RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", ConsumerAdmin_i::dispatch_event - consumer_admin_dispatch_event done\n");
 
   const char* dname = event->get_domain_name();
   const char* tname = event->get_type_name();
@@ -1747,6 +1752,8 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
       }
     }
   }
+
+  RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", ConsumerAdmin_i::dispatch_event - end\n");
 
 #ifdef PERFORMANCE_DEBUG_LOG
   RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", ConsumerAdmin_i::dispatch_event - end"
