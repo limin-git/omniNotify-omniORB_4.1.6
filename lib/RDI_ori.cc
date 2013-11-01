@@ -35,7 +35,6 @@
 
 #include <sys/timeb.h>
 #include <time.h>
-#include <sstream>
 
 // --------------------------------------------------------------------------------
 // RDI static routines 
@@ -115,21 +114,12 @@ FILE*            RDI::_RptFile       = 0;
 
 int RDI::OpenDbgFile(const char* pathnm)
 {
-    std::stringstream strm( pathnm );
-    size_t cnt = 0;
-
-    while ( fopen( strm.str().c_str(), "r" ) )
-    {
-        strm.str( "" );
-        strm << pathnm << ++cnt;
-    }
-
   if ( RDI_STR_EQ_I(pathnm, "stdout") ) {
     _DbgFile   = stdout;
   } else if ( RDI_STR_EQ_I(pathnm, "stderr") ) {
     _DbgFile   = stderr;
   } else {
-    if ( ! (_DbgFile = fopen(/*pathnm*/strm.str().c_str(), "w")) ) {
+    if ( ! (_DbgFile = fopen(pathnm, "w")) ) {
       fprintf(stderr, "omniNotify: file open failed for DebugLogFile %s\n", pathnm);
       fprintf(stderr, "            debug logging reverts to stderr\n");
       _DbgFile   = stderr;
@@ -202,12 +192,9 @@ RDI::logger::logger(const char* prefix, FILE* file, FILE* alt_file, const char* 
 
   if ( ( &newtime ) != NULL )
   {
-      sprintf( szCurrDateTime, "%02d/%02d/%02d %02d:%02d:%02d.%03d ", newtime.tm_mday, newtime.tm_mon + 1, newtime.tm_year + 1900, 
+      sprintf( szCurrDateTime, "%02d/%02d/%02d %02d:%02d:%02d.%03d  ", newtime.tm_mday, newtime.tm_mon + 1, newtime.tm_year + 1900, 
           newtime.tm_hour, newtime.tm_min, newtime.tm_sec, timebuffer.millitm );
   }
-
-  char thread_id[20];
-  sprintf( thread_id, "[Thrd: %d] ", TW_ID() );
 
   const char* flb = " [";
   const char* frb = "]";
@@ -216,8 +203,8 @@ RDI::logger::logger(const char* prefix, FILE* file, FILE* alt_file, const char* 
   }
   if (srcfile == (const char*)0) 
   {
-    _prefix_buf = CORBA_STRING_ALLOC(strlen(szCurrDateTime) + strlen(thread_id) + strlen(preprefix) + strlen(prefix) + strlen(flb) + strlen(flags) + strlen(frb) + 2);
-    sprintf(_prefix_buf, "%s%s%s%s%s%s%s: ", szCurrDateTime, thread_id, preprefix, prefix, flb, flags, frb);
+    _prefix_buf = CORBA_STRING_ALLOC(strlen(szCurrDateTime) + strlen(preprefix) + strlen(prefix) + strlen(flb) + strlen(flags) + strlen(frb) + 2);
+    sprintf(_prefix_buf, "%s%s%s%s%s%s: ", szCurrDateTime, preprefix, prefix, flb, flags, frb);
   } 
   else 
   {
@@ -228,8 +215,8 @@ RDI::logger::logger(const char* prefix, FILE* file, FILE* alt_file, const char* 
       sprintf(srcln, "%d", srcline);
     }
     srcfile = __RDI_FNAME_SHORTEN(srcfile);
-    _prefix_buf = CORBA_STRING_ALLOC(strlen(szCurrDateTime) + strlen(thread_id) + strlen(preprefix) + strlen(prefix) + strlen(flb) + strlen(flags) + strlen(frb)  + strlen(srcfile)  + strlen(srcln) + 5);
-    sprintf(_prefix_buf, "%s%s%s%s%s%s%s[%s:%s]: ",szCurrDateTime, thread_id, preprefix, prefix, flb, flags, frb, srcfile, srcln);
+    _prefix_buf = CORBA_STRING_ALLOC(strlen(szCurrDateTime) + strlen(preprefix) + strlen(prefix) + strlen(flb) + strlen(flags) + strlen(frb)  + strlen(srcfile)  + strlen(srcln) + 5);
+    sprintf(_prefix_buf, "%s%s%s%s%s%s[%s:%s]: ",szCurrDateTime, preprefix, prefix, flb, flags, frb, srcfile, srcln);
   }
 }
 
@@ -245,8 +232,6 @@ RDI::logger::~logger()
 void
 RDI::logger::write2FILE(FILE* outf, CORBA::Boolean do_fflush)
 {
-    do_fflush = 1;
-
   if (outf && (str.len() != 0)) {
     fprintf(outf, "%s%s", _prefix_buf, str.buf());
   }
@@ -258,8 +243,6 @@ RDI::logger::write2FILE(FILE* outf, CORBA::Boolean do_fflush)
 void
 RDI::logger::write2FILE_wo_prefix(FILE* outf, CORBA::Boolean do_fflush)
 {
-    do_fflush = 1;
-
   if (outf && (str.len() != 0)) {
     fprintf(outf, "%s", str.buf());
   }

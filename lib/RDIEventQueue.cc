@@ -34,8 +34,6 @@
 #include "RDI.h"
 #include "RDIEventQueue.h"
 
-#include "Switchecs.h"
-
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
 // Notes
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
@@ -226,14 +224,8 @@ RDI_EventQueue::insert(RDI_StructuredEvent* event)
 
   if ( _numblk != 0 )	// Signal threads waiting for new event
     _qempty.broadcast();
-
-
-#ifndef NO_GC_ON_EVENT_QUEUE_INSERT
   if ( run_garbage_collect() && _gcdone ) // Garbage collection
     _qclean.signal();
-#else
-  run_garbage_collect();//only for compile
-#endif
 
   return 0;
 }
@@ -271,10 +263,15 @@ RDI_EventQueue::next_event(RDI_StructuredEvent* eprev, CORBA::Boolean block)
       { // introduce oplock scope
 	TW_SCOPE_LOCK(evqueue_lock, _oplock, "evqueue", WHATFN);
 	_numblk += 1;
+
+    RDIDbgChanLog("Thrd=" << TW_ID() << " wait before, only for test\n");
+
 	while ( ! _finish && ! _evhead ) {
 	  TW_CV_WAIT(_qempty, _oplock, "evqueue", WHATFN);
 	}
-	_numblk -= 1;
+    RDIDbgChanLog("Thrd=" << TW_ID() << " wait end, only for test\n");
+
+    _numblk -= 1;
 	if ( _finish ) {	// We are shutting down
 	  return 0;
 	}
@@ -384,10 +381,7 @@ RDI_EventQueue::garbage_collect()
       cursize = _length;
       _gcdone = 0;		// Garbage collection started
     } // end oplock scope
-
     evncntr = 0;
-
-#ifndef GC_WHOLE_EVENT_QUEUE
     while ( --cursize && _evhead && (_evhead->ref_counter() == 1) &&
 	    (_evhead->get_state() != RDI_StructuredEvent::NEWBORN) ) {
       tmpevnt = _evhead;
@@ -396,42 +390,6 @@ RDI_EventQueue::garbage_collect()
       if ( ++evncntr % 100 == 0 ) 
 	TW_YIELD();
     }
-
-#else
-    RDI_StructuredEvent* pre = _evhead;
-    RDI_StructuredEvent* cur = _evhead;
-    while ( --cursize && cur && (cur->get_state() != RDI_StructuredEvent::NEWBORN) )
-    {
-        if ( cur->ref_counter() == 1 )
-        {
-            tmpevnt = cur;
-
-            if ( cur == _evhead )
-            {
-                _evhead = _evhead->_next;
-                pre = _evhead;
-                cur = _evhead;
-            }
-            else
-            {
-                pre->_next = cur->_next;
-                cur = cur->_next;
-            }
-
-            delete tmpevnt;
-            if ( ++evncntr % 100 == 0 ) 
-            {
-                TW_YIELD();
-            }
-        }
-        else
-        {
-            pre = cur;
-            cur = cur->_next;
-        }
-    }
-#endif
-
     { // introduce oplock scope
       TW_SCOPE_LOCK(evqueue_lock, _oplock, "evqueue", WHATFN);
       if ( evncntr ) {
@@ -491,7 +449,7 @@ void
 RDI_EventQueue::out_stats(RDIstrstream& str)
 {
   TW_SCOPE_LOCK(evqueue_lock, _oplock, "evqueue", WHATFN);
-  str << "--------------\nRDI_EventQueue\n--------------\n";
+  str << "--------------\nRDI_EventQueue " << "\n--------------\n";
   str << "Size " << _length << " [Max " << _maxQueueLength << "] #announced " << 
     _announ << " #dropped " << _nmdrop << " period " << _queueGCPeriod << '\n';
 }

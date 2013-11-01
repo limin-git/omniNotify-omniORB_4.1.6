@@ -21,7 +21,7 @@
 //#define TEST_CONSUMERADMIN_DISPATCH_EVENT                               //only dispatch 6 - test dispatch performance
 
 #define USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL                              //CosNotifyChannelAdmin_i.h:EventChannel_i
-//#define USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING           //EventChannel_i::update_mapping
+#define USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING           //EventChannel_i::update_mapping
 //#define USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT           //ConsumerAdmin_i::dispatch_event
 #define USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_OUT_DEBUG_INFO               //EventChannel_i::out_debug_info
 

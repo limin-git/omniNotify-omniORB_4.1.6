@@ -322,6 +322,12 @@ FAdminHelper::add_filter_i(RDI_LocksHeld&          held,
 			   RDINotifySubscribe_ptr  filter_holder,
 			   CORBA::Boolean          need_schange)
 {
+    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( filter_holder );
+    if ( proxy != NULL )
+    {
+        RDIDbgForceLog( "FAdminHelper::add_filter_i begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "] \n" ); //TODO: remove this log
+    }
+
   FAdminFilterEntry  entry;
   CosNF::FilterID    fltrID;
   Filter_i*          fltr    = Filter_i::Filter2Filter_i(new_filter);
@@ -337,6 +343,12 @@ FAdminHelper::add_filter_i(RDI_LocksHeld&          held,
   }
   CosNF::Filter::_duplicate(new_filter);
   RDIDbgFAdminLog("\tFilter " << new_filter << " [" << fltrID << "] for " << filter_holder << '\n');
+
+  if ( proxy != NULL )
+  {
+      RDIDbgForceLog( "FAdminHelper::add_filter_i end - added a filter [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << fltr->getID() << "] \n" ); //TODO: remove this log
+  }
+
   return fltrID;
 }
 

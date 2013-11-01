@@ -139,28 +139,31 @@ Filter_i::~Filter_i()
 void
 Filter_i::obj_gc_all(RDI_TimeT curtime, CORBA::ULong deadFilter)
 {
-  RDIFilterKeyMapCursor   cursor;
-  FilterPtrSeq            f_list;
-  CosNF_FilterPtrSeq      f_reflist;
-  CORBA::ULong            i, len = 0;
-  { // introduce filter class lock scope
-    TW_SCOPE_LOCK(class_lock, _classlock, "filter_class", WHATFN);
-    f_list.length(_class_keymap->length()); // pay once now, rather than doing incremental buffer growth
-    f_reflist.length(_class_keymap->length()); // ditto
-    for ( cursor = _class_keymap->cursor(); cursor.is_valid(); ++cursor) {
-      Filter_i* f1 = cursor.val();
-      if (f1->_callbacks_i.length() == 0 && f1->_callbacks.length() == 0) {
-	f_list[len]    = f1;
-	// bump refcount of f1 so that its storage cannot be deallocated before we call obj_gc on it
-	f_reflist[len] = WRAPPED_IMPL2OREF(CosNF::Filter, f1);
-	len++;
-      }
+    RDIFilterKeyMapCursor   cursor;
+    FilterPtrSeq            f_list;
+    CosNF_FilterPtrSeq      f_reflist;
+    CORBA::ULong            i, len = 0;
+    { // introduce filter class lock scope
+        TW_SCOPE_LOCK(class_lock, _classlock, "filter_class", WHATFN);
+        f_list.length(_class_keymap->length()); // pay once now, rather than doing incremental buffer growth
+        f_reflist.length(_class_keymap->length()); // ditto
+        for ( cursor = _class_keymap->cursor(); cursor.is_valid(); ++cursor) 
+        {
+            Filter_i* f1 = cursor.val();
+            if (f1->_callbacks_i.length() == 0 && f1->_callbacks.length() == 0) 
+            {
+                f_list[len]    = f1;
+                // bump refcount of f1 so that its storage cannot be deallocated before we call obj_gc on it
+                f_reflist[len] = WRAPPED_IMPL2OREF(CosNF::Filter, f1);
+                len++;
+            }
+        }
+    } // end filter class lock scope
+    for (i = 0; i < len; i++) 
+    {
+        f_list[i]->obj_gc(curtime, deadFilter);
+        CORBA::release(f_reflist[i]);
     }
-  } // end filter class lock scope
-  for (i = 0; i < len; i++) {
-    f_list[i]->obj_gc(curtime, deadFilter);
-    CORBA::release(f_reflist[i]);
-  }
 }
 
 #undef WHATFN
@@ -173,14 +176,21 @@ Filter_i::obj_gc(RDI_TimeT curtime, CORBA::ULong deadFilter)
   RDI_LocksHeld held = { 0 };
   { // introduce bump lock scope
     RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(filter_lock, held.filter, WHATFN);
-    if (!held.filter) { return 0; }
-    if (RDI_TIMET_LT_BY_SECS(_last_use, curtime, deadFilter)) {
+    if (!held.filter) 
+    { 
+        return 0; 
+    }
+    if (RDI_TIMET_LT_BY_SECS(_last_use, curtime, deadFilter)) 
+    {
       res = cleanup_and_dispose(held, 1, filter_lock.dispose_info); // 1 == only on cb zero
     }
   } // end bump scope
-  if (res) {
+  if (res) 
+  {
     RDIDbgFiltLog("obj_gc called on filter " << (void*)this << " with fid " << _fid << " -- destroyed\n");
-  } else {
+  } 
+  else 
+  {
     RDIDbgFiltLog("obj_gc called on filter " << (void*)this << " with fid " << _fid << " -- not destroyed\n");
   }
   return res;
@@ -191,6 +201,10 @@ Filter_i::obj_gc(RDI_TimeT curtime, CORBA::ULong deadFilter)
 void
 Filter_i::destroy( WRAPPED_IMPLARG_VOID )
 {
+#ifdef DISABLE_REMOVE_FILTER
+    return;
+#endif
+
   RDI_LocksHeld held = { 0 };
   { // introduce bump lock scope
     RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(filter_lock, held.filter, WHATFN);
@@ -276,6 +290,16 @@ Filter_i::cleanup_and_dispose(RDI_LocksHeld&            held,
 CosNF::ConstraintInfoSeq* 
 Filter_i::add_constraints(const CosNF::ConstraintExpSeq& clist  WRAPPED_IMPLARG )
 {
+    for ( RDI_HashCursor<CosNF::CallbackID, RDINfyCB> curs = _callbacks_i.cursor(); curs.is_valid(); ++curs )
+    {
+        RDINfyCB &cb = curs.val();
+        if (cb.need_schange)
+        {
+            SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( cb.callback );
+            RDIDbgForceLog( "¡¾CORBA¡¿ Filter_i::add_constraints begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+        }
+    }
+
   RDI_LocksHeld       held = { 0 };
   CORBA::ULong        size = clist.length();
   CORBA::ULong        base = 0;
@@ -348,6 +372,16 @@ Filter_i::add_constraints(const CosNF::ConstraintExpSeq& clist  WRAPPED_IMPLARG 
   } // end bump lock scope
   delete [] impl_cseq;
 
+  for ( RDI_HashCursor<CosNF::CallbackID, RDINfyCB> curs = _callbacks_i.cursor(); curs.is_valid(); ++curs )
+  {
+      RDINfyCB &cb = curs.val();
+      if (cb.need_schange)
+      {
+          SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( cb.callback );
+          RDIDbgForceLog( "Filter_i::add_constraints end - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+      }
+  }
+
   return const_res;
 }
 
@@ -357,6 +391,16 @@ void
 Filter_i::modify_constraints(const CosNF::ConstraintIDSeq&   del_list,
 			     const CosNF::ConstraintInfoSeq& mod_list  WRAPPED_IMPLARG )
 {
+    for ( RDI_HashCursor<CosNF::CallbackID, RDINfyCB> curs = _callbacks_i.cursor(); curs.is_valid(); ++curs )
+    {
+        RDINfyCB &cb = curs.val();
+        if (cb.need_schange)
+        {
+            SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( cb.callback );
+            RDIDbgForceLog( "¡¾CORBA¡¿ Filter_i::modify_constraints begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+        }
+    }
+
   RDI_LocksHeld         held      = { 0 };
   ConstraintImpl**      impl_cseq = new ConstraintImpl* [ mod_list.length() ];
   CosN::EventTypeSeq    add_types;
@@ -437,6 +481,16 @@ Filter_i::modify_constraints(const CosNF::ConstraintIDSeq&   del_list,
     notify_subscribers_i(held, add_types, del_types);
   } // end bump lock scope
   delete [] impl_cseq;
+
+  for ( RDI_HashCursor<CosNF::CallbackID, RDINfyCB> curs = _callbacks_i.cursor(); curs.is_valid(); ++curs )
+  {
+      RDINfyCB &cb = curs.val();
+      if (cb.need_schange)
+      {
+          SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( cb.callback );
+          RDIDbgForceLog( "Filter_i::modify_constraints end - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+      }
+  }
 }
 
 #undef WHATFN
@@ -500,6 +554,16 @@ Filter_i::get_all_constraints( WRAPPED_IMPLARG_VOID )
 void
 Filter_i::remove_all_constraints( WRAPPED_IMPLARG_VOID )
 {
+    for ( RDI_HashCursor<CosNF::CallbackID, RDINfyCB> curs = _callbacks_i.cursor(); curs.is_valid(); ++curs )
+    {
+        RDINfyCB &cb = curs.val();
+        if (cb.need_schange)
+        {
+            SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( cb.callback );
+            RDIDbgForceLog( "¡¾CORBA¡¿ Filter_i::remove_all_constraints begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+        }
+    }
+
   RDI_LocksHeld held = { 0 };
   RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(filter_lock, held.filter, WHATFN);
   if (!held.filter) { RDI_THROW_INV_OBJREF; }
@@ -507,12 +571,32 @@ Filter_i::remove_all_constraints( WRAPPED_IMPLARG_VOID )
   _last_use.set_curtime();
 #endif
   _remove_all_constraints(held);
+
+  for ( RDI_HashCursor<CosNF::CallbackID, RDINfyCB> curs = _callbacks_i.cursor(); curs.is_valid(); ++curs )
+  {
+      RDINfyCB &cb = curs.val();
+      if (cb.need_schange)
+      {
+          SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( cb.callback );
+          RDIDbgForceLog( "Filter_i::remove_all_constraints end - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+      }
+  }
 }
 
 // does the real work; caller should obtain bumped scope lock
 void
 Filter_i::_remove_all_constraints(RDI_LocksHeld& held)
 {
+    for ( RDI_HashCursor<CosNF::CallbackID, RDINfyCB> curs = _callbacks_i.cursor(); curs.is_valid(); ++curs )
+    {
+        RDINfyCB &cb = curs.val();
+        if (cb.need_schange)
+        {
+            SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( cb.callback );
+            RDIDbgForceLog( "Filter_i::_remove_all_constraints begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+        }
+    }
+
   CosNF::ConstraintIDSeq cstridseq;
   CosN::EventTypeSeq    add_types;
   CosN::EventTypeSeq    rem_types;
@@ -533,6 +617,16 @@ Filter_i::_remove_all_constraints(RDI_LocksHeld& held)
 
   // Finally, notify subscriber about the event type changes 
   notify_subscribers_i(held, add_types, rem_types);
+
+  for ( RDI_HashCursor<CosNF::CallbackID, RDINfyCB> curs = _callbacks_i.cursor(); curs.is_valid(); ++curs )
+  {
+      RDINfyCB &cb = curs.val();
+      if (cb.need_schange)
+      {
+          SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( cb.callback );
+          RDIDbgForceLog( "Filter_i::_remove_all_constraints end - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+      }
+  }
 }
 
 // This is the external attach_callback.
@@ -595,6 +689,12 @@ Filter_i::attach_callback_i(RDI_LocksHeld&          held,
 			    RDINotifySubscribe_ptr  callback,
 			    CORBA::Boolean          need_schange)
 {
+    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( callback );
+    if ( proxy != NULL )
+    {
+        RDIDbgForceLog( "Filter_i::attach_callback_i begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+    }
+
   RDINfyCB                              cb = { callback, need_schange };
   RDI_HashCursor<RDI_EventType, void *> curs;
   CosN::EventTypeSeq                    add_types;
@@ -627,8 +727,20 @@ Filter_i::attach_callback_i(RDI_LocksHeld&          held,
   // end filter lock scope
   //   (do not hold filter lock across calls to propagate_schange)
   if (need_schange) {
+
+      if ( proxy != NULL )
+      {
+          RDIDbgForceLog( "Filter_i::attach_callback_i - calling propagate_schange [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+      }
+
     callback->propagate_schange(held, add_types, del_types, this);
   }
+
+  if ( proxy != NULL )
+  {
+      RDIDbgForceLog( "Filter_i::attach_callback_i end - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+  }
+
   return cbkid;
 }
 
@@ -659,6 +771,22 @@ Filter_i::fadmin_removal_i(RDI_LocksHeld&          held,
 			   CosNF::CallbackID       callbackID,
 			   RDINotifySubscribe_ptr  filter_holder)
 {
+
+    CosNA::ChannelID channel_id = 0;
+    CosNA::ProxyID proxy_id = 0;
+    for ( RDI_HashCursor<CosNF::CallbackID, RDINfyCB> curs = _callbacks_i.cursor(); curs.is_valid(); ++curs )
+    {
+        RDINfyCB &cb = curs.val();
+        if (cb.need_schange)
+        {
+            SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( cb.callback );
+            RDIDbgForceLog( "Filter_i::fadmin_removal_i begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+
+            channel_id = proxy->_channel->MyID();
+            proxy_id = proxy->_proxy_id();
+        }
+    }
+
   RDI_HashCursor<RDI_EventType, void *> curs;
   CORBA::ULong cntr = 0;
   CosN::EventTypeSeq addseq;
@@ -690,6 +818,8 @@ Filter_i::fadmin_removal_i(RDI_LocksHeld&          held,
   if (filter_holder) {
     filter_holder->propagate_schange(held, addseq, delseq, this);
   }
+
+  RDIDbgForceLog( "Filter_i::fadmin_removal_i end - [channel=" << channel_id << "], [proxy=" << proxy_id << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
 }
 
 #undef WHATFN
@@ -699,6 +829,16 @@ Filter_i::notify_subscribers_i(RDI_LocksHeld&             held,
 			       const CosN::EventTypeSeq&  add_seq, 
 			       const CosN::EventTypeSeq&  del_seq)
 {
+    for ( RDI_HashCursor<CosNF::CallbackID, RDINfyCB> curs = _callbacks_i.cursor(); curs.is_valid(); ++curs )
+    {
+        RDINfyCB &cb = curs.val();
+        if (cb.need_schange)
+        {
+            SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( cb.callback );
+            RDIDbgForceLog( "Filter_i::notify_subscribers_i begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+        }
+    }
+
   RDI_HashCursor<CosNF::CallbackID, RDINfyCB>                     curs1;
   RDI_HashCursor<CosNF::CallbackID, CosNC::NotifySubscribe_ptr>   curs2;
   CosN::EventTypeSeq new_add_seq;
@@ -765,6 +905,9 @@ Filter_i::notify_subscribers_i(RDI_LocksHeld&             held,
     {
       RDI_OPLOCK_SCOPE_RELEASE_TRACK(held.filter, WHATFN);
       for (i = 0; i < act_i_len; i++) {
+          SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( i_seq[i] );
+          RDIDbgForceLog( "Filter_i::notify_subscribers_i - call propagate_schange [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << this->getID() << "] \n" ); //TODO: remove this log
+
 	i_seq[i]->propagate_schange(held, new_add_seq, new_del_seq, this);
       }
       for (i = 0; i < x_len; i++) {
@@ -772,6 +915,8 @@ Filter_i::notify_subscribers_i(RDI_LocksHeld&             held,
       }
     } // end of release scope
   }
+
+  RDIDbgForceLog( "Filter_i::notify_subscribers_i end - [filter=" << this->getID() << "] \n" ); //TODO: remove this log
 }
 
 ////////////////////////////////////////////////////////////////////

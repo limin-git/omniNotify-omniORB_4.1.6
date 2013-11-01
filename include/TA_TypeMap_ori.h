@@ -36,8 +36,6 @@ private:
     static void get_event_type_str( const CosN::EventType& event_type, std::ostream& strm );
     static void get_event_type_list_str( const CosN::EventTypeSeq& event_type_list, std::ostream& strm );
 
-    void check();
-
 public:
 
     typedef std::set<SequenceProxyPushSupplier_i*> ProxySupplierList;
@@ -50,9 +48,6 @@ public:
     TW_Mutex                                m_lock;
     LocationKey2ProxySupplierListMap        m_location_key_2_proxy_list_map;
     Domain2LocationKey2ProxySupplierListMap m_domain_2_location_key_2_proxy_list_map;
-    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *> _prx_batch_push;
-
-    std::map<RDIProxySupplier*, CosNA::ProxyID> m_proxy_id_map;
 };
 
 inline RDIstrstream& operator<< (RDIstrstream& str, TA_TypeMap& map) { return map.log_output(str); }

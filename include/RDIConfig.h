@@ -85,7 +85,7 @@ public:
 #ifndef NO_FLOAT
   int get_value(RDIstrstream& str, const char* pname, CORBA::Double& value, CORBA::Boolean log_type_errors) const;
 #endif
- 
+
   // Change the value of/create a configuration parameter.
   // In case of an error, -1 is returned
 

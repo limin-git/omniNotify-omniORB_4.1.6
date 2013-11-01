@@ -34,7 +34,6 @@
 
 #include "RDIStringDefs.h"
 
-
 // HASH AND RANK FUNCTIONS
 //   * Hash and Rank function definitions, together with several
 //   * specialized implementations for some primitive data types

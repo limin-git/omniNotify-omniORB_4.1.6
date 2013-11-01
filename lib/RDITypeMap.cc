@@ -31,10 +31,6 @@
  
 #include "RDITypeMap.h"
 
-#include "Switchecs.h"
-
-
-
 RDI_TypeMap::RDI_TypeMap(EventChannel_i* channel, unsigned int hsize) :
   _lock(), _channel(channel), 
   _tmap(RDI_EventType::hash, RDI_EventType::rank, hsize, 20)
@@ -500,7 +496,6 @@ RDI_TypeMap::pxy_obtain_subscription_types(RDIProxyConsumer* pxy, CosNA::ObtainI
 RDIstrstream&
 RDI_TypeMap::log_output(RDIstrstream& str)
 {
-#ifndef NO_TYPEMAP_LOG_OUTPUT
   VNode_t  value;
   ANode_t* anode;
   PNode_t* pnode;
@@ -532,9 +527,5 @@ RDI_TypeMap::log_output(RDIstrstream& str)
       str << '\n';
     }
   }
-#else
-   _tmap.length(); // just for compile
-#endif
-
   return str;
 }

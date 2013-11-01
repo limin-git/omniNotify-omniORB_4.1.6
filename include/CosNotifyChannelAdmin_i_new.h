@@ -87,8 +87,6 @@ class RDIProxySupplier :
   friend class RDI_ChangePool;
   friend class EventChannel_i;
   friend class ConsumerAdmin_i;
-  friend class Filter_i; //TODO: remove this friend
-  friend class FAdminHelper; //TODO: remove this friend
 public:
   RDIProxySupplier(const char*           resty,
 		   const char*           fa_helper_resty,

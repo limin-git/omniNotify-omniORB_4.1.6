@@ -34,6 +34,7 @@
 
 #include "RDIEvent.h"
 #include "CosNotification_i.h"
+#include <list> // TODO: should use queue or dequeue(but need fix link error at least in windows)
 
 // ================================ PriorityQueue ==========================================
 
@@ -47,6 +48,7 @@ struct RDIPriorityQueueEntry {
   CORBA::ULongLong     secval;
 };
 
+// limin: change to FIFO queue by using std::list
 class RDIPriorityQueue {
 public:
   // for both sort keys, default is "lowest first",
@@ -93,6 +95,7 @@ private:
   CORBA::ULong            _num_items;
   CORBA::ULong            _curr_size;
   RDIPriorityQueueEntry*  _entry;
+  std::list<RDI_StructuredEvent*> _entryQueue;
 };
 
 // ================================== NotifQueue ===========================================

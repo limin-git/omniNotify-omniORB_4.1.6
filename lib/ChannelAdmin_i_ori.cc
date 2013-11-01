@@ -527,9 +527,6 @@ ConsumerAdmin_i::obtain_notification_push_supplier(CosNA::ClientType ctype,
   } else if ( ctype == CosNA::SEQUENCE_EVENT ) {
     SequenceProxyPushSupplier_i* prx = 
       new SequenceProxyPushSupplier_i(this,_channel,_prx_serial);
-
-    RDIDbgForceLog( "ConsumerAdmin_i::obtain_notification_push_supplier - new SequenceProxyPushSupplier_i [channel=" << _channel->MyID() << "], [proxy=" << prx->_proxy_id() << "] \n" ); // TODO: remove this log
-
     if ( ! prx ) {
       _channel->decr_consumers();
     } else {
@@ -1417,8 +1414,6 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
     _channel->m_ta_type_map.consumer_admin_dispatch_event( event );
-    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>& _prx_batch_push = _channel->m_ta_type_map._prx_batch_push;
-
 #endif
 
     RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", ConsumerAdmin_i::dispatch_event - consumer_admin_dispatch_event done\n");

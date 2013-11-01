@@ -49,6 +49,9 @@ class EventChannel_i;
 class Filter_i;
 class MappingFilter_i;
 
+#define DISABLE_REMOVE_FILTER
+
+
 /** RDINotifySubscribe
   *
   * The default 'subscription_change' method does not include filter
@@ -455,6 +458,7 @@ typedef struct FAdminFilterEntry_s {
 } FAdminFilterEntry;
 
 class FAdminHelper {
+    friend class RDIProxySupplier; // TODO: remove this friend
 public:
   FAdminHelper(const char *resty);
   ~FAdminHelper();

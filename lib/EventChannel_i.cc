@@ -41,15 +41,11 @@
 #include "CosNfyUtils.h"
 #include "RDIInteractive.h"
 
-#include "Switchecs.h"
-#define PROXY_DISPATCH_BATCH_SIZE 100
+#define DO_COMMAND_DEBUG_SHOW_EVENTS
+#define OUT_DEBUG_INFO_PROXY_EVENTS
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
     #include "TA_TypeMap.cpp"
-#endif
-
-#ifdef USE_TA_RDI_TYPE_MAPPING_IN_EVENT_CHANNEL
-    //#include "TA_RDITypeMap.cpp"
 #endif
 
 
@@ -108,10 +104,6 @@ EventChannel_i::EventChannel_i(EventChannelFactory_i*        cfactory,
   _type_map = new RDI_TypeMap(this, 256);
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
-    m_ta_type_map.initialize( this, _type_map );
-#endif
-
-#ifdef USE_TA_RDI_TYPE_MAPPING_IN_EVENT_CHANNEL
     m_ta_type_map.initialize( this, _type_map );
 #endif
 
@@ -969,10 +961,6 @@ EventChannel_i::update_mapping(RDI_LocksHeld&             held,
     return m_ta_type_map.ta_update( held, added, deled, proxy, filter );
 #endif
 
-#ifdef USE_TA_RDI_TYPE_MAPPING_IN_EVENT_CHANNEL
-    return m_ta_type_map.ta_update( held, added, deled, proxy, filter );
-#endif
-
   CORBA::Boolean res = _type_map->update(held, added, deled, proxy, filter);
   return res;
 }
@@ -1140,7 +1128,8 @@ EventChannel_i::admin_dispatch()
 
 	while ( 1 ) 
 	{
-		// Wait until an event becomes available. Since we are blocked 
+
+        // Wait until an event becomes available. Since we are blocked 
 		// waiting for an event, if we get a NULL event back we should
 		// be in the process of terminating execution.  
 		sevnt = 0;
@@ -1149,7 +1138,10 @@ EventChannel_i::admin_dispatch()
 			RDIDbgChanLog("   - ADispatch thread " << tid << " for channel " << _serial << " exits\n");
 			goto admin_dispatch_exit;
 		}
-		sevnt = _events->next_event(pevnt, 1);
+
+        RDIDbgChanLog("Thrd=" << TW_ID() << ", Channel=" << _serial << " get next event before, only for test\n");
+
+        sevnt = _events->next_event(pevnt, 1);
 		if (_shutmedown) 
 		{
 			RDIDbgChanLog("   - ADispatch thread " << tid << " for channel " << _serial << " exits\n");
@@ -1176,9 +1168,7 @@ EventChannel_i::admin_dispatch()
 					RDIDbgChanLog("   - ADispatch thread " << tid << " for channel " << _serial << " exits\n");
 					goto admin_dispatch_exit;
 				}
-				TW_YIELD();
-
-#ifndef NO_ADMIN_DISPATCH
+				//TW_YIELD();
 				{ // introduce typemap read lock scope
 					// need to acquire typemap lock before acquiring admin lock
 					RDI_TYPEMAP_READ_SCOPE_LOCK_TRACK(typemap_lock, held.typemap, _type_map, WHATFN);
@@ -1261,19 +1251,6 @@ EventChannel_i::admin_dispatch()
 				} // end typemap read lock scope
 
 				continue; // on to next admin
-#else
-                {
-                    // limin++
-
-                    // get next admin from group
-                    if (!(admin = group->iter_next())) 
-                    {
-                        break; // on to next admin group
-                    }
-
-                    fstate = NoFilters;
-                }
-#endif
 
 use_proxy_threads:
 				// matched at admin level and there are proxy threads, so queue a pxdis
@@ -1289,29 +1266,8 @@ use_proxy_threads:
 				RDI_SEVENT_INCR_REF_COUNTER(sevnt, WHATFN);
 				{ // introduce proxy_lock lock scope
 					TW_SCOPE_LOCK(chan_proxy_lock, _proxy_lock, "chan_proxy_lock", WHATFN);
-
-#ifdef PERFORMANCE_DEBUG_LOG
-                    RDIDbgCosCPxyLog("Thrd=" << tid << ", Channel=" << MyID() << ", EventChannel_i::admin_dispatch - begin"
-                        << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>(this)->_events->length()
-                        << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>(this)->_proxy_events.length()
-                        << ", time_wait=" << ThreadTimeStamp::instance().get_elapse_and_set_cur_in_millisecond()
-                        << "\n");
-#endif
-
 					_proxy_events.insert_tail(pxdis);
 					_proxy_empty.broadcast();
-
-#ifdef PERFORMANCE_REPORT_LOG
-                    CountPerformanceMonitor::instance().add_count( "EventChannel_i::admin_dispatch", 1 );
-#endif
-
-#ifdef PERFORMANCE_DEBUG_LOG
-                    RDIDbgCosCPxyLog("Thrd=" << tid << ", Channel=" << MyID() << ", EventChannel_i::admin_dispatch - end"
-                        << ", event_queue=" << reinterpret_cast<EventChannel_i_stub*>(this)->_events->length()
-                        << ", proxy_queue=" << reinterpret_cast<EventChannel_i_stub*>(this)->_proxy_events.length()
-                        << ", time_elapsed=" << ThreadTimeStamp::instance().get_elapse_and_set_cur_in_millisecond()
-                        << "\n");
-#endif
 				} // end proxy_lock lock scope
 
 				// (on to next admin)
@@ -1339,11 +1295,6 @@ EventChannel_i::proxy_dispatch()
 	unsigned int    numev = 0;
 	unsigned long   tid   = TW_ID();
 
-#ifdef BATCH_PROXY_DISPATCH
-    size_t batch_size = 0;
-    std::vector<ProxyDispatch_t> batch_pxdis;
-#endif
-
 	while ( 1 ) 
 	{
 		//TW_YIELD(); 
@@ -1359,27 +1310,9 @@ EventChannel_i::proxy_dispatch()
 				RDIDbgChanLog("   - PDispatch thread " << tid << " for channel " << _serial << " exits\n");
 				goto proxy_dispatch_exit;
 			}
-#ifndef BATCH_PROXY_DISPATCH
 			pxdis = _proxy_events.get_head();
 			_proxy_events.remove_head();
-#else
-            batch_pxdis.clear();
-            batch_size = PROXY_DISPATCH_BATCH_SIZE < _proxy_events.length() ? PROXY_DISPATCH_BATCH_SIZE : _proxy_events.length();
 
-#ifdef PERFORMANCE_DEBUG_LOG
-            RDIDbgCosCPxyLog("Thrd=" << tid << ", Channel=" << MyID() << ", EventChannel_i::proxy_dispatch - begin"
-                << ", event_queue=" << _events->length()
-                << ", proxy_queue=" << _proxy_events.length()
-                << ", batch_size=" << batch_size
-                << ", time_wait=" << ThreadTimeStamp::instance().get_elapse_and_set_cur_in_millisecond()
-                << "\n");
-#endif
-            for ( size_t i = 0; i < batch_size; ++i )
-            {
-                batch_pxdis.push_back( _proxy_events.get_head() );
-                _proxy_events.remove_head();
-            }
-#endif
 			// Before releasing the lock on the proxy queue,  we need to 
 			// grab the lock on the admin to prevent another thread from
 			// dispatching an event to the same admin out of order......
@@ -1388,88 +1321,22 @@ EventChannel_i::proxy_dispatch()
 				RDI_TYPEMAP_READ_SCOPE_LOCK_TRACK(typemap_lock, held.typemap, _type_map, WHATFN);
 
 				{ // introduce admin lock scope 
-#ifndef BATCH_PROXY_DISPATCH
 					RDI_OPLOCK_SCOPE_LOCK_OTHER_TRACK(admin_lock, held.cadmin, pxdis._admin, WHATFN);
-#else
-					RDI_OPLOCK_SCOPE_LOCK_OTHER_TRACK(admin_lock, held.cadmin, batch_pxdis[0]._admin, WHATFN);
-#endif
 					if (!held.cadmin) {
 						RDIDbgForceLog("** Internal error: Unexpected failure to grab admin lock\n");
 					} else {
 						// early release of lock on proxy queue
 						TW_EARLY_RELEASE(chan_proxy_lock);
-#ifndef BATCH_PROXY_DISPATCH
 						pxdis._admin->dispatch_event(pxdis._event, pxdis._state, _type_map);
-#ifdef PERFORMANCE_REPORT_LOG
-                        CountPerformanceMonitor::instance().add_count( "EventChannel_i::proxy_dispatch", 1 );
-#endif
-
-#else
-
-#ifdef PROXY_DISPATCH_THREAD_POOL
-                        ProxyDispatcheEentProcessorPool::instance().initialize_barrier( batch_pxdis[0]._admin, batch_size );
-#ifdef DEBUG_THREAD_POOL_BARRIER
-                        RDIDbgForceLog( "EventChannel_i::proxy_dispatch - initialized barrier for admin:" << batch_pxdis[0]._admin
-                            << ", proxy_number=" << batch_pxdis[0]._admin->NumProxies()
-                            << ", batch_size=" << batch_size
-                            << "\n" );
-#endif
-#endif
-                        for ( size_t i = 0; i < batch_size; ++i )
-                        {
-                            batch_pxdis[i]._admin->dispatch_event(batch_pxdis[i]._event, batch_pxdis[i]._state, _type_map);
-                        }
-
-#ifdef PROXY_DISPATCH_THREAD_POOL
-#ifdef DEBUG_THREAD_POOL_BARRIER
-                        RDIDbgForceLog( "EventChannel_i::proxy_dispatch - waiting barrier begin for admin:" << batch_pxdis[0]._admin
-                            << ", proxy_number=" << batch_pxdis[0]._admin->NumProxies()
-                            << ", batch_size=" << batch_size
-                            << "\n" );
-#endif
-                        ProxyDispatcheEentProcessorPool::instance().wait_barrier( batch_pxdis[0]._admin );
-#ifdef DEBUG_THREAD_POOL_BARRIER
-                        RDIDbgForceLog( "EventChannel_i::proxy_dispatch - waiting barrier end for admin:" << batch_pxdis[0]._admin
-                            << ", proxy_number=" << batch_pxdis[0]._admin->NumProxies()
-                            << ", batch_size=" << batch_size
-                            << "\n" );
-#endif
-#endif
-
-
-#ifdef PERFORMANCE_DEBUG_LOG
-                        RDIDbgCosCPxyLog("Thrd=" << tid << ", Channel=" << MyID() << ", EventChannel_i::proxy_dispatch - end"
-                            << ", event_queue=" << _events->length()
-                            << ", proxy_queue=" << _proxy_events.length()
-                            << ", batch_size=" << batch_size
-                            << ", time_elapsed=" << ThreadTimeStamp::instance().get_elapse_and_set_cur_in_millisecond()
-                            << "\n");
-#endif
-
-#ifdef PERFORMANCE_REPORT_LOG
-                        CountPerformanceMonitor::instance().add_count( "EventChannel_i::proxy_dispatch", batch_size );
-#endif
-#endif
 					}
 				} // end admin lock scope
 			} //end typemap lock scope
 		} // end proxy_lock lock scope
 		// Decrement reference counter -- was incremented when event
 		// was inserted into the proxy queue
-		
-#ifndef BATCH_PROXY_DISPATCH
 		RDI_SEVENT_DECR_REF_COUNTER(pxdis._event, WHATFN);
 		pxdis._event = 0; 
 		pxdis._admin = 0;
-#else
-        for ( size_t i = 0; i < batch_pxdis.size(); ++i )
-        {
-            RDI_SEVENT_DECR_REF_COUNTER(batch_pxdis[i]._event, WHATFN);
-            batch_pxdis[i]._event = 0; 
-            batch_pxdis[i]._admin = 0;
-        }
-        batch_pxdis.clear();
-#endif
 		//xinsong: because proxyReceiver is slowly than consumerSender, so should not sleep every ten 10 times  
 		/*
 		if ( ++numev >= 10 ) 
@@ -1477,11 +1344,7 @@ EventChannel_i::proxy_dispatch()
 			numev = 0;
 			TW_YIELD();
 		}*/
-#ifndef BATCH_PROXY_DISPATCH
-		TW_YIELD(); 
-#else
-        TW_YIELD();
-#endif
+		//TW_YIELD(); 
 	}
 
 proxy_dispatch_exit:
@@ -2271,7 +2134,7 @@ EventChannel_i::_rpt_stats(RDIstrstream& str)
   }
 
   str << "\n======================================================================";
-  str << "\n  omniNotify delta stats report for Channel " << _serial;
+  str << "\n  omniNotify delta stats report for Channel " << _serial  << " " << this;
   str << "\n======================================================================";
   str << "\nqueue sizes: global " << avg_gq_sz <<
     " proxy " << avg_pq_sz << " notif " << avg_nq_sz << '\n';
@@ -2344,7 +2207,7 @@ void
 EventChannel_i::out_heading(RDIstrstream& str)
 {
   str << "======================================================================\n";
-  str << "Event Channel " << _my_name << '\n';
+  str << "Event Channel " << _my_name << " " << this << '\n';
   str << "======================================================================\n";
 }
 
@@ -2378,7 +2241,6 @@ EventChannel_i::out_debug_info(RDIstrstream& str, CORBA::Boolean show_events)
     str << *(_qosprop) << "\n\n";
     str << _admin_qos << '\n';
   } // end qos lock scope
-
   _events->out_debug_info(str, show_events);
 
 #ifdef OUT_DEBUG_INFO_PROXY_EVENTS

@@ -4,6 +4,8 @@
 #include "TA_TypeMap.h"
 #include "RDITypeMap.h"
 #include "RDILocksHeld.h"
+#include <iostream>
+#include <algorithm>
 
 
 TA_TypeMap::TA_TypeMap()
@@ -43,6 +45,7 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
     std::stringstream filter_strm;
     std::stringstream add_proxy_strm;
     std::stringstream remove_proxy_strm;
+    std::stringstream type_map_strm;
 
     add_del_strm<< "\n\t" << "added: ";
     get_event_type_list_str( added, add_del_strm );
@@ -53,6 +56,11 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
     filter_strm << "\n\t" << "filter: ";
     get_filter_str( filter, filter_strm );
 #endif
+
+    if ( proxy != NULL )
+    {
+        m_proxy_id_map[proxy] = proxy->_proxy_id();
+    }
 
     bool ta_typemap_updated = false;
 
@@ -124,8 +132,9 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
                     if ( true == proxy_list.empty() )
                     {
                         m_location_key_2_proxy_list_map.erase( it );
-                        ta_typemap_updated = true;
                     }
+
+                    ta_typemap_updated = true;
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
                     remove_proxy_strm
@@ -164,8 +173,9 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
                         if ( true == proxy_list.empty() )
                         {
                             location_key_2_proxy_list_map.erase( it );
-                            ta_typemap_updated = true;
                         }
+
+                        ta_typemap_updated = true;
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
                         remove_proxy_strm
@@ -188,20 +198,12 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
         }
     }
 
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
-    if ( added.length() || deled.length() )
-    {
-        RDIDbgForceLog( "TA_TypeMap::ta_update - " << "[channel=" << m_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << filter->MyFID() << "]"
-            << add_del_strm.str().c_str()
-            << filter_strm.str().c_str()
-            << add_proxy_strm.str().c_str()
-            << remove_proxy_strm.str().c_str()
-            << " \n" );
-    }
-#endif
-
     if ( false == ta_typemap_updated )
     {
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+        type_map_strm << "\n\t" << "TypeMap: ";
+#endif
+
         m_type_map_1->update(held, added, deled, proxy, filter);
 
         _prx_batch_push.clear();
@@ -211,16 +213,60 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
         for ( RDI_HashCursor<CosN::EventType, RDI_TypeMap::VNode_t> curs = _tmap.cursor(); curs.is_valid(); curs++ )
         {
             RDI_TypeMap::PNode_t* pnode = curs.val()._prxy;
-            SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( pnode->_prxy );
 
-            if ( proxy != NULL )
+            while ( pnode )
             {
-                _prx_batch_push.insert( proxy->_proxy_id(), proxy );
+                try
+                {
+                    RDIDbgForceLog( "dynamic casting [channel=" << m_channel->MyID() << "], [proxy=" << m_proxy_id_map[pnode->_prxy] <<  "] \n" );
+
+                    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( pnode->_prxy );
+
+                    if ( proxy != NULL )
+                    {
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+                        if ( false == _prx_batch_push.exists( proxy->_proxy_id() ) )
+                        {
+                            type_map_strm << proxy->_proxy_id() << ":" << proxy << ", ";
+                        }
+#endif
+                        _prx_batch_push.insert( proxy->_proxy_id(), proxy );
+
+                    }
+
+                    pnode = pnode->_next;
+                }
+                catch ( ... )
+                {
+                    RDIDbgForceLog( "[ERROR] TA_TypeMap::ta_update - caught unknown exception \n" );
+                    throw;
+                }
             }
         }
+
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+        type_map_strm << "length=" << _prx_batch_push.length() << std::endl;
+#endif
     }
 
-    return m_type_map_2->update(held, added, deled, proxy, filter);
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+    // if ( added.length() || deled.length() )
+    {
+        RDIDbgForceLog( "TA_TypeMap::ta_update - " << "[channel=" << m_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << filter->MyFID() << "]" << ", [added=" << added.length() << ", deled=" << deled.length() << "]"
+            << add_del_strm.str().c_str()
+            << filter_strm.str().c_str()
+            << add_proxy_strm.str().c_str()
+            << remove_proxy_strm.str().c_str()
+            << type_map_strm.str().c_str()
+            );
+    }
+#endif
+
+    bool result = m_type_map_2->update(held, added, deled, proxy, filter);
+
+    check();
+
+    return result;
 }
 
 
@@ -483,6 +529,73 @@ int TA_TypeMap::extract_location_key_from_event( RDI_StructuredEvent* event )
     return -1;
 }
 
+
+void TA_TypeMap::check()
+{
+    typedef std::set<RDIProxySupplier*> ProxySupplierList;
+
+    ProxySupplierList list_1;
+    ProxySupplierList list_2;
+    ProxySupplierList list_3;
+    ProxySupplierList list_123;
+    ProxySupplierList list_4;
+
+    for ( LocationKey2ProxySupplierListMap::iterator it = m_location_key_2_proxy_list_map.begin(); it != m_location_key_2_proxy_list_map.end(); ++it )
+    {
+        list_1.insert( it->second.begin(), it->second.end() );
+        list_123.insert( it->second.begin(), it->second.end() );
+    }
+
+    for ( Domain2LocationKey2ProxySupplierListMap ::iterator it = m_domain_2_location_key_2_proxy_list_map.begin(); it != m_domain_2_location_key_2_proxy_list_map.end(); ++it )
+    {
+        LocationKey2ProxySupplierListMap& the_map = it->second;
+
+        for ( LocationKey2ProxySupplierListMap::iterator it2 = the_map.begin(); it2 != the_map.end(); ++it2 )
+        {
+            list_2.insert( it2->second.begin(), it2->second.end() );
+            list_123.insert( it2->second.begin(), it2->second.end() );
+        }
+    }
+
+    {
+        RDI_Hash<CosN::EventType, RDI_TypeMap::VNode_t>& _tmap = m_type_map_1->_tmap;
+
+        for ( RDI_HashCursor<CosN::EventType, RDI_TypeMap::VNode_t> curs = _tmap.cursor(); curs.is_valid(); curs++ )
+        {
+            RDI_TypeMap::PNode_t* pnode = curs.val()._prxy;
+
+            while ( pnode )
+            {
+                list_3.insert( pnode->_prxy );
+                list_123.insert( pnode->_prxy );
+                pnode = pnode->_next;
+            }
+        }
+    }
+
+    {
+        RDI_Hash<CosN::EventType, RDI_TypeMap::VNode_t>& _tmap = m_type_map_2->_tmap;
+
+        for ( RDI_HashCursor<CosN::EventType, RDI_TypeMap::VNode_t> curs = _tmap.cursor(); curs.is_valid(); curs++ )
+        {
+            RDI_TypeMap::PNode_t* pnode = curs.val()._prxy;
+
+            while ( pnode )
+            {
+                list_4.insert( pnode->_prxy );
+                pnode = pnode->_next;
+            }
+        }
+    }
+
+    //std::cout << "TA_TypeMap::check - " << list_1.size() << ", " << list_2.size() << ", " << list_3.size() << ", " << list_4.size() << std::endl;
+
+    RDI_Assert( std::includes( list_4.begin(), list_4.end(), list_1.begin(), list_1.end() ), "TA_TypeMap::check failed." );
+    RDI_Assert( std::includes( list_4.begin(), list_4.end(), list_2.begin(), list_2.end() ), "TA_TypeMap::check failed." );
+    RDI_Assert( std::includes( list_4.begin(), list_4.end(), list_3.begin(), list_3.end() ), "TA_TypeMap::check failed." );
+    RDI_Assert( list_123 == list_4, "TA_TypeMap::check failed." );
+    RDI_Assert( list_4.size() == list_1.size() + list_2.size() + list_3.size(), "TA_TypeMap::check failed." );
+}
 
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING

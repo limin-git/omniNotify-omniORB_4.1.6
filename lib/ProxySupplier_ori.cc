@@ -448,10 +448,6 @@ RDIProxySupplier::_add_event(RDI_StructuredEvent* entry)
 CosNF::FilterID
 RDIProxySupplier::add_filter(CosNF::Filter_ptr filter)
 {
-    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>(this);
-    Filter_i* fltr    = Filter_i::Filter2Filter_i(filter);
-    RDIDbgForceLog( "¡¾CORBA¡¿ RDIProxySupplier::add_filter begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << fltr->getID() << "]  \n" ); //TODO: remove this log
-
   CosNF::FilterID  res;
   RDI_LocksHeld    held = { 0 };
   RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(outer_proxy_lock, held.sproxy, WHATFN);
@@ -485,15 +481,11 @@ RDIProxySupplier::add_filter(CosNF::Filter_ptr filter)
 	  // 'subscription_change()', we have to cancel it at this point..
 	  if ( _rqstypes.length() != 0 ) {
 	    CosN::EventTypeSeq added; added.length(0);
-
-        RDIDbgForceLog( "RDIProxySupplier::add_filter - calling _channel->update_mapping [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << fltr->getID() << "] \n" ); //TODO: remove this log
-
 	    (void) _channel->update_mapping(held, added, _rqstypes, this, 0);
 	    _rqstypes.length(0);
 	  }
 	  res = _fa_helper.add_filter_i(held, filter, (RDINotifySubscribe_ptr) this, 1); // 1 => DO want propagate_schange callbacks
 
-      RDIDbgForceLog( "RDIProxySupplier::add_filter end - added a filter [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << fltr->getID() << "] \n" ); //TODO: remove this log
 	} // end inner sproxy lock scope
       } // end typemap lock scope
     } // end channel lock scope
@@ -506,20 +498,6 @@ RDIProxySupplier::add_filter(CosNF::Filter_ptr filter)
 void
 RDIProxySupplier::remove_filter(CosNF::FilterID fltrID)
 {
-#ifdef DISABLE_REMOVE_FILTER
-    return;
-#endif
-
-    FAdminFilterEntry entry;
-    if ( ! _fa_helper._filters.lookup(fltrID, entry) )
-    {
-        throw CosNF::FilterNotFound();
-    }
-    Filter_i *fltr = entry.filter;
-    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>(this);
-    RDIDbgForceLog( "¡¾CORBA¡¿ RDIProxySupplier::remove_filter begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << fltr->getID() << "] \n" ); //TODO: remove this log
-
-
   RDI_LocksHeld    held = { 0 };
   RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(outer_proxy_lock, held.sproxy, WHATFN);
   if (!held.sproxy) { RDI_THROW_INV_OBJREF; }
@@ -554,8 +532,6 @@ RDIProxySupplier::remove_filter(CosNF::FilterID fltrID)
       } // end typemap lock scope
     } // end channel lock scope
   } // end temporary release scope
-
-  RDIDbgForceLog( "RDIProxySupplier::remove_filter end - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << fltr->getID() << "] \n" ); //TODO: remove this log
 }
 
 #undef WHATFN
@@ -636,9 +612,6 @@ void
 RDIProxySupplier::subscription_change(const CosN::EventTypeSeq& added,
 				      const CosN::EventTypeSeq& deled)
 {
-    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( this );
-    RDIDbgForceLog( "RDIProxySupplier::subscription_change begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "] \n" ); //TODO: remove this log
-
   RDI_LocksHeld held = { 0 };
   RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(outer_proxy_lock, held.sproxy, WHATFN);
   if (!held.sproxy) { RDI_THROW_INV_OBJREF; }
@@ -708,8 +681,6 @@ RDIProxySupplier::subscription_change(const CosN::EventTypeSeq& added,
       } // end typemap lock scope
     } // end channel lock scope
   } // end temporary release scope
-
-  RDIDbgForceLog( "RDIProxySupplier::subscription_change end - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "] \n" ); //TODO: remove this log
 }
 
 AttN::IactSeq*
@@ -767,7 +738,7 @@ RDIProxySupplier::obj_gc(RDI_TimeT curtime, CORBA::ULong deadConProxy, CORBA::UL
 #ifndef NDEBUG
         if (_pxstate == RDI_Connected) 
         {
-            RDIDbgForceLog/*RDIDbgSPxyLog*/("GC destroys connected " << RDI_PRX_TYPE(_prxtype) << " proxy " << _pserial << ":" << dynamic_cast<SequenceProxyPushSupplier_i*>(this) << _pxstate << "[channel=" << _channel->MyID() << "], [proxy=" << _pserial << "]"
+            RDIDbgSPxyLog("GC destroys connected " << RDI_PRX_TYPE(_prxtype) << " proxy " << _pserial
                 << " curtime = " << curtime.fmt_local()
                 << " last_use = " << _last_use.fmt_local()
                 << "(diff = " << RDI_TIMET_DIFF_IN_SECS(_last_use, curtime)
@@ -775,7 +746,7 @@ RDIProxySupplier::obj_gc(RDI_TimeT curtime, CORBA::ULong deadConProxy, CORBA::UL
         } 
         else 
         {
-            RDIDbgForceLog/*RDIDbgSPxyLog*/("GC destroys non-connected " << RDI_PRX_TYPE(_prxtype) << " proxy " << _pserial << ":" << dynamic_cast<SequenceProxyPushSupplier_i*>(this) << _pxstate << "[channel=" << _channel->MyID() << "], [proxy=" << _pserial << "]"
+            RDIDbgSPxyLog("GC destroys non-connected " << RDI_PRX_TYPE(_prxtype) << " proxy " << _pserial
                 << " curtime = " << curtime.fmt_local()
                 << " last_use = " << _last_use.fmt_local()
                 << "(diff = " << RDI_TIMET_DIFF_IN_SECS(_last_use, curtime)
@@ -783,7 +754,6 @@ RDIProxySupplier::obj_gc(RDI_TimeT curtime, CORBA::ULong deadConProxy, CORBA::UL
         }
 #endif
         _disconnect_client_and_dispose(held, 1, proxy_lock.dispose_info);
-
         return 1;
     }
     return 0;
@@ -2742,8 +2712,6 @@ SequenceProxyPushSupplier_i::SequenceProxyPushSupplier_i(
 SequenceProxyPushSupplier_i::~SequenceProxyPushSupplier_i()
 {
   RDI_OPLOCK_DESTROY_CHECK("SequenceProxyPushSupplier_i");
-
-  RDIDbgForceLog( "SequenceProxyPushSupplier_i::~SequenceProxyPushSupplier_i - [channel=" << _channel->MyID() << "], [proxy=" << this->_proxy_id() << "] \n" ); // TODO: remove this log
 }
 
 #undef WHATFN
@@ -2884,12 +2852,16 @@ SequenceProxyPushSupplier_i::has_events(unsigned long* wait_s, unsigned long* wa
 void
 SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 {
+    RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - proxy_lock acquiring \n");
+
 	RDI_LocksHeld held = { 0 };
 	RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(proxy_lock, held.sproxy, WHATFN);
 	if (!held.sproxy) 
 	{
 		return; 
 	}
+
+    RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - proxy_lock acquired  \n");
 
 	CORBA::Boolean outcall_worked;
 	invalid = 0;
@@ -2943,6 +2915,8 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 	event = new RDI_StructuredEvent * [actsize];
 	RDI_AssertAllocThrowNo(event, "Memory allocation failed -- RDI_StructuredEvent\n");
 
+    RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - _ntfqueue.remove_pri_head begin  " << actsize << " of " << qsize << " \n");
+
 	for ( i = 0; i < actsize; i++ ) 
 	{
 		event[i] = _ntfqueue.remove_pri_head();
@@ -2960,6 +2934,8 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 		notif[i] = event[i]->get_cos_event();
 #endif
 	}
+
+    RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - _ntfqueue.remove_pri_head end  \n");
 
 	_nevents += actsize;
 	// update timeout before releasing OPLOCK -- this means we do the update
@@ -2979,6 +2955,7 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 	int retryCount(0);
 	const char* exceptionType;
 	{
+        RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - proxy_lock released  \n");
 
 		// introduce unlock scope
 		RDI_OPLOCK_SCOPE_RELEASE_TRACK(held.sproxy, WHATFN);
@@ -2991,10 +2968,12 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 				// increment the counter
 				retryCount++;
 
+                RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - push_structured_events begin " << actsize << " of " << qsize << " \n");
 
 				_consumer->push_structured_events(notif);
 
-		        outcall_worked = 1;
+                RDIDbgSPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", SequenceProxyPushSupplier_i::push_event - push_structured_events end \n");
+				outcall_worked = 1;
 #ifndef NO_OBJ_GC
 				_last_use.set_curtime();
 #endif
@@ -3360,9 +3339,8 @@ SequenceProxyPushSupplier_i::disconnect_sequence_push_supplier( WRAPPED_IMPLARG_
   if (!held.sproxy) { RDI_THROW_INV_OBJREF; } 
   if (_pxstate == RDI_Disconnected) { RDI_THROW_INV_OBJREF; } // already in process of being disposed
   
-  //xinsong++ temp, let gc collect all proxysupplier as soon as possible
+  //xinsong++ temp, let gc collect all proxysupplier
   _pxstate = RDI_Disconnected;
-  //_last_use.time -= ( RDI::get_server_qos()->deadOtherProxyInterval + 1 ) * RDI_1e7;
 
   return;
 
@@ -3435,7 +3413,7 @@ SequenceProxyPushSupplier_i::_disconnect_client_and_dispose(RDI_LocksHeld&      
         { // introduce channel lock scope
             RDI_OPLOCK_SCOPE_LOCK_OTHER_TRACK(chan_lock, held.channel, _channel, WHATFN);
             if (!held.channel || _channel->shutting_down()) 
-            {
+            { 
                 goto skip_update; 
             }
 
@@ -3477,37 +3455,6 @@ skip_update:
     {
         delete _qosprop; _qosprop = 0;
     }
-
-    {
-        // check type map
-        RDI_Hash<CosN::EventType, RDI_TypeMap::VNode_t>& _tmap = _channel->_type_map->_tmap;
-
-        for ( RDI_HashCursor<CosN::EventType, RDI_TypeMap::VNode_t> curs = _tmap.cursor(); curs.is_valid(); curs++ )
-        {
-            RDI_TypeMap::PNode_t* pnode = curs.val()._prxy;
-
-            while ( pnode )
-            {
-                try
-                {
-                    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( pnode->_prxy );
-
-                    if ( proxy == this )
-                    {
-                        RDI_Assert( false, "[ERROR] this still in type map \n" );
-                    }
-
-                    pnode = pnode->_next;
-                }
-                catch ( ... )
-                {
-                    RDIDbgForceLog( "[ERROR] TA_TypeMap::ta_update - caught unknown exception \n" );
-                    throw;
-                }
-            }
-        }
-    }
-
     _clear_ntfqueue(); // Remove all events
     RDI_OPLOCK_SET_DISPOSE_INFO(dispose_info);
 }

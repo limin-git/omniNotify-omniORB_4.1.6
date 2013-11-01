@@ -39,100 +39,73 @@ RDIPriorityQueue::RDIPriorityQueue(CORBA::ULong init_size,
 				   CORBA::Boolean sec_lowest_first) :
   _pri_lowest_first(pri_lowest_first), _sec_lowest_first(sec_lowest_first), _num_items(0)
 {
-    //   _curr_size = ((init_size < 4) ? 4 : init_size) + 1;
-    //   _entry = new RDIPriorityQueueEntry[_curr_size];
-    //   // index 0 is not used, null it out just for the heck of it
-    //   _entry[0].event = 0;
-    //   _entry[0].prival = 0;
-    //   _entry[0].secval = 0;
+  _curr_size = ((init_size < 4) ? 4 : init_size) + 1;
+  _entry = new RDIPriorityQueueEntry[_curr_size];
+  // index 0 is not used, null it out just for the heck of it
+  _entry[0].event = 0;
+  _entry[0].prival = 0;
+  _entry[0].secval = 0;
 }
 
 RDIPriorityQueue::RDIPriorityQueue(const RDIPriorityQueue& q) :
   _pri_lowest_first(q._pri_lowest_first), _sec_lowest_first(q._sec_lowest_first), _num_items(q._num_items)
 {
-    _entryQueue = q._entryQueue;
-
-    //   _curr_size = q._curr_size;
-    //   _entry = new RDIPriorityQueueEntry[_curr_size];
-    //   // copy elts
-    //   for (CORBA::ULong i = 0; i < _curr_size; i++) {
-    //     _entry[i] = q._entry[i];
-    //   }
+  _curr_size = q._curr_size;
+  _entry = new RDIPriorityQueueEntry[_curr_size];
+  // copy elts
+  for (CORBA::ULong i = 0; i < _curr_size; i++) 
+  {
+    _entry[i] = q._entry[i];
+  }
 }
 
 RDIPriorityQueue::~RDIPriorityQueue()
 {
-    _drain();
-
-    //  _drain(); delete [] _entry;
+  _drain(); 
+  delete [] _entry;
 }
 
 CORBA::ULong
 RDIPriorityQueue::length() const
 {
-    return _entryQueue.size();
-
-    // return _num_items;
+  return _num_items;
 }
 
 CORBA::ULong
 RDIPriorityQueue::curr_size() const
 {
-    return _entryQueue.size();
-
-    //  return _curr_size;
+  return _curr_size;
 }
 
 RDI_StructuredEvent*
 RDIPriorityQueue::get_pri_head()
 {
-    if ( true == _entryQueue.empty() )
-    {
-        return 0;
-    }
-    else
-    {
-        return _entryQueue.front();
-    }
-
-    // if (_num_items < 1) return 0;
-    // return _entry[1].event;
+  if (_num_items < 1) 
+      return 0;
+  return _entry[1].event;
 }
 
 RDI_StructuredEvent*
 RDIPriorityQueue::remove_pri_head()
 {
-    if ( true == _entryQueue.empty() )
-    {
-        return 0;
-    }
-    else
-    {
-        RDI_StructuredEvent* t = _entryQueue.front();
-        _entryQueue.pop_front();
-        return t;
-    }
-
-    // if (_num_items < 1) return 0; 
-    // return _remove(1); 
+  if (_num_items < 1) 
+      return 0; 
+  return _remove(1); 
 }
 
 RDI_StructuredEvent* 
 RDIPriorityQueue::get_sec_head()
 {
-    return get_pri_head();
-
-    // if (_num_items < 1) return 0;
-    // return _entry[_sec_head_index()].event;
+  if (_num_items < 1) 
+      return 0;
+  return _entry[_sec_head_index()].event;
 }
 
 RDI_StructuredEvent* 
 RDIPriorityQueue::remove_sec_head()
 {
-    return remove_pri_head();
-
-    // if (_num_items < 1) return 0;
-    // return _remove(_sec_head_index()); 
+  if (_num_items < 1) return 0;
+  return _remove(_sec_head_index()); 
 }
 
 void
@@ -151,23 +124,9 @@ RDIPriorityQueue::sec_lowest_first(CORBA::Boolean b)
 RDI_StructuredEvent* 
 RDIPriorityQueue::get_event(CORBA::ULong i)
 {
-    if ( _entryQueue.size() < i || i < 1 )
-    {
-        return 0;
-    }
-    else
-    {
-        std::list<RDI_StructuredEvent*>::iterator it = _entryQueue.begin();
-        for ( ; i > 1; --i )
-        {
-            ++it;
-        }
-
-        return *it;
-    }
-
-    // if (i > _num_items) return 0;
-    // return _entry[i].event;
+  if (i > _num_items) 
+      return 0;
+  return _entry[i].event;
 }
 
 CORBA::Boolean
@@ -192,154 +151,169 @@ CORBA::ULong RDIPriorityQueue::_right(CORBA::ULong i)  {return ((2 * i) + 1);}
 void
 RDIPriorityQueue::_drain()
 {
-    _entryQueue.clear();
-
-    //   while (_num_items) {
-    //     _remove(_num_items);
-    //   }
+    while (_num_items) 
+    {
+        _remove(_num_items);
+    }
 }
 
 void
 RDIPriorityQueue::_swap(CORBA::ULong i, CORBA::ULong j)
 {
-    //   if (i == j) return;
-    //   RDIPriorityQueueEntry tmp = _entry[i];
-    //   _entry[i] = _entry[j];
-    //   _entry[j] = tmp;
+    if (i == j) 
+        return;
+    RDIPriorityQueueEntry tmp = _entry[i];
+    _entry[i] = _entry[j];
+    _entry[j] = tmp;
 }
 
 RDI_StructuredEvent* 
-RDIPriorityQueue::_remove(CORBA::ULong idx)
-{
-    if ( _entryQueue.size() < idx || idx < 1 )
+RDIPriorityQueue::_remove(CORBA::ULong idx) 
+{ 
+    if (idx > _num_items) return 0;
+    RDI_StructuredEvent* res = _entry[idx].event;
+    _entry[idx].event = 0;
+    _entry[idx].prival = 0;
+    _entry[idx].secval = 0;
+    _num_items--;
+
+    //xinsong++: if it is the last element
+    if (idx == (_num_items + 1)) 
     {
-        return 0;
+        return res;
     }
-    else
+    
+    for( size_t i=idx;i<=_num_items;i++)
     {
-        std::list<RDI_StructuredEvent*>::iterator it = _entryQueue.begin();
-        for ( ; idx > 1; --idx )
-        {
-            ++it;
+        if (_entry[i+1].event == NULL)
+            break;
+ 
+        _swap(i, i+1);
+    }
+
+    /*
+
+    // move last to idx, re-establish heap order
+    _entry[idx] = _entry[_num_items + 1];
+    CORBA::ULong i = idx;
+    CORBA::ULong s = _num_items + 1;
+    while (1) 
+    {
+        CORBA::ULong l = _left(i);
+        CORBA::ULong r = _right(i);
+        CORBA::ULong best = i;
+        if (_pri_lowest_first) {
+            if ((l < s) && (_entry[l].prival < _entry[best].prival))
+                best = l;
+            if ((r < s) && (_entry[r].prival < _entry[best].prival))
+                best = r;
+        } 
+        else 
+        { // highest first
+            if ((l < s) && (_entry[l].prival > _entry[best].prival))
+                best = l;
+            if ((r < s) && (_entry[r].prival > _entry[best].prival))
+                best = r;
         }
+        if (best == i) 
+        {
+            break;
+        }
+        _swap(i, best);
+        i = best;
+    }//end while
+    */
 
-        RDI_StructuredEvent* t = *it;
-        _entryQueue.erase( it );
-
-        return t;
-    }
-
-    //   if (idx > _num_items) return 0;
-    //   RDI_StructuredEvent* res = _entry[idx].event;
-    //   _entry[idx].event = 0;
-    //   _entry[idx].prival = 0;
-    //   _entry[idx].secval = 0;
-    //   _num_items--;
-    //   if (idx == (_num_items + 1)) {
-    //     return res;
-    //   }
-    //   // move last to idx, re-establish heap order
-    //   _entry[idx] = _entry[_num_items + 1];
-    //   CORBA::ULong i = idx;
-    //   CORBA::ULong s = _num_items + 1;
-    //   while (1) {
-    //     CORBA::ULong l = _left(i);
-    //     CORBA::ULong r = _right(i);
-    //     CORBA::ULong best = i;
-    //     if (_pri_lowest_first) {
-    //       if ((l < s) && (_entry[l].prival < _entry[best].prival))
-    // 	best = l;
-    //       if ((r < s) && (_entry[r].prival < _entry[best].prival))
-    // 	best = r;
-    //     } else { // highest first
-    //       if ((l < s) && (_entry[l].prival > _entry[best].prival))
-    // 	best = l;
-    //       if ((r < s) && (_entry[r].prival > _entry[best].prival))
-    // 	best = r;
-    //     }
-    //     if (best == i) {
-    //       break;
-    //     }
-    //     _swap(i, best);
-    //     i = best;
-    //   }
-    //   return res;
+    return res;
 }
 
 int
 RDIPriorityQueue::insert(RDI_StructuredEvent* ev,
 			 CORBA::ULongLong pri, CORBA::ULongLong sec)
 {
-    _entryQueue.push_back( ev );
+    if ( ((_num_items+1) == _curr_size) && (_resize() == -1) )
+        return 0;
+    _num_items++;
+    _entry[_num_items].event = ev;
+    _entry[_num_items].prival = pri;
+    _entry[_num_items].secval = sec;
+    CORBA::ULong pos = _num_items;
+    // Re-establish heap order by moving "pos" up
+    while (1) 
+    {
+        break;
+        if (pos == 1) 
+        {
+            break;
+        }
+        CORBA::ULong par = _parent(pos);
+        if (_pri_lowest_first) 
+        {
+            if (_entry[pos].prival >= _entry[par].prival) 
+            {
+                break;
+            }
+            else
+            {
+                int i=1;
+            }
+        } 
+        else 
+        { 
+            if (_entry[pos].prival <= _entry[par].prival) 
+            {
+                break;
+            }
+        }
+        _swap(pos, par);
+        pos = par;
+    }
     return 1;
-
-    //   if ( ((_num_items+1) == _curr_size) && (_resize() == -1) )
-    //     return 0;
-    //   _num_items++;
-    //   _entry[_num_items].event = ev;
-    //   _entry[_num_items].prival = pri;
-    //   _entry[_num_items].secval = sec;
-    //   CORBA::ULong pos = _num_items;
-    //   // Re-establish heap order by moving "pos" up
-    //   while (1) {
-    //     if (pos == 1) {
-    //       break;
-    //     }
-    //     CORBA::ULong par = _parent(pos);
-    //     if (_pri_lowest_first) {
-    //       if (_entry[pos].prival >= _entry[par].prival) {
-    // 	break;
-    //       }
-    //     } else { // highest first
-    //       if (_entry[pos].prival <= _entry[par].prival) {
-    // 	break;
-    //       }
-    //     }
-    //     _swap(pos, par);
-    //     pos = par;
-    //   }
-    //   return 1;
 }
 
 int
 RDIPriorityQueue::_resize()
 {
-    return 0;
+    CORBA::ULong new_size = (2 * (_curr_size-1)) + 1;
+    RDIPriorityQueueEntry* tmp_buff = 0;
 
-    //   CORBA::ULong new_size = (2 * (_curr_size-1)) + 1;
-    //   RDIPriorityQueueEntry* tmp_buff = 0;
-    // 
-    //   if ( (tmp_buff = new RDIPriorityQueueEntry[new_size]) == (RDIPriorityQueueEntry*) 0 )  
-    //     return -1;
-    //   for (CORBA::ULong i=0; i <= _num_items; i++) {
-    //     tmp_buff[i] = _entry[i];
-    //   }
-    //   _curr_size = new_size;
-    //   delete [] _entry;
-    //   _entry = tmp_buff;
-    //   return 0;
+    if ( (tmp_buff = new RDIPriorityQueueEntry[new_size]) == (RDIPriorityQueueEntry*) 0 )  
+        return -1;
+    for (CORBA::ULong i=0; i <= _num_items; i++) 
+    {
+        tmp_buff[i] = _entry[i];
+    }
+    _curr_size = new_size;
+    delete [] _entry;
+    _entry = tmp_buff;
+    return 0;
 }
 
 CORBA::ULong
 RDIPriorityQueue::_sec_head_index()
 {
-    return 0;
-
-    //   if (_num_items < 1) return 0;
-    //   // linear search (for now)
-    //   CORBA::ULong best = 1;
-    //   for (CORBA::ULong i = 2; i <= _num_items; i++) {
-    //     if (_sec_lowest_first) {
-    //       if (_entry[i].secval < _entry[best].secval) {
-    // 	best = i;
-    //       }
-    //     } else { // highest first
-    //       if (_entry[i].secval > _entry[best].secval) {
-    // 	best = i;
-    //       }
-    //     }
-    //   }
-    //   return best;
+    if (_num_items < 1) 
+        return 0;
+    // linear search (for now)
+    CORBA::ULong best = 1;
+    for (CORBA::ULong i = 2; i <= _num_items; i++) 
+    {
+        if (_sec_lowest_first) 
+        {
+            if (_entry[i].secval < _entry[best].secval) 
+            {
+                best = i;
+            }
+        } 
+        else 
+        { // highest first
+            if (_entry[i].secval > _entry[best].secval) 
+            {
+                best = i;
+            }
+        }
+    }
+    return best;
 }
 
 // ================================== NotifQueue ===========================================

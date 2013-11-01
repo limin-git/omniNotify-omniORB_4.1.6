@@ -38,8 +38,6 @@
 #include "RDIConfig.h"
 #include "CosNotifyShorthands.h"
 
-#define TA_PROPERTY
-
 ////////////////////////////////////////////////////////////////////////////
 // QoS properties can be set at multiple levels: proxy and admin objects, //
 // event channels, and individual event messages.                         //
@@ -97,11 +95,7 @@ public:
 
   static CORBA::Boolean is_qos_prop(const char* pname);
 
-#ifdef TA_PROPERTY
-  enum { NUM_PROPERTIES = 13 };
-#else
   enum { NUM_PROPERTIES = 11 };
-#endif
 
   RDI_NotifQoS* parent() const { return _parent; }
   CORBA::Boolean all_inherited() { return _all_inherited; }
@@ -116,10 +110,6 @@ public:
   CORBA::Short discardPolicy() const;
   CORBA::Long maxEventsPerConsumer() const;
   CORBA::Long maximumBatchSize() const;
-#ifdef TA_PROPERTY
-  CORBA::Long removeEventsPerConsumerThreshold() const;
-  CORBA::Long removeEventsPerConsumerNumber() const;
-#endif
 
   // 3 variants for TimeT
   RDI_TimeT timeout() const;
@@ -142,10 +132,6 @@ public:
   void maximumBatchSize(CORBA::Long max_batch_size);
   void timeout(RDI_TimeT timeout);
   void pacingInterval(RDI_TimeT pacing_interval);
-#ifdef TA_PROPERTY
-  void removeEventsPerConsumerThreshold(CORBA::Long remove_events_per_consumer_threshold);
-  void removeEventsPerConsumerNumber(CORBA::Long remove_events_per_consumer_number);
-#endif
 
   RDIstrstream& log_output(RDIstrstream& str) const;
 private:
@@ -184,13 +170,6 @@ private:
 
   CORBA::Long     _maximumBatchSize;
   CORBA::Boolean  _maximumBatchSize_set;
-
-#ifdef TA_PROPERTY
-  CORBA::Long     _removeEventsPerConsumerThreshold;
-  CORBA::Boolean  _removeEventsPerConsumerThreshold_set;
-  CORBA::Long     _removeEventsPerConsumerNumber;
-  CORBA::Boolean  _removeEventsPerConsumerNumber_set;
-#endif
 };
 
 ////////////////////////////////////////////////////////////////////////////
