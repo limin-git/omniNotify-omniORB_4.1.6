@@ -46,14 +46,9 @@
   * filters.
   */
 
-class SequenceProxyPushSupplier_i;
-
 class RDI_TypeMap {
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
     friend class TA_TypeMap;
-    friend class SequenceProxyPushSupplier_i;
-#endif
-
+    friend class SequenceProxyPushSupplier_i; // TODO: remove friend
 public:
   // Support data structures required for implementing the mapping
 

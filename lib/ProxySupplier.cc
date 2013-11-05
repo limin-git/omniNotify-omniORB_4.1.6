@@ -448,9 +448,14 @@ RDIProxySupplier::_add_event(RDI_StructuredEvent* entry)
 CosNF::FilterID
 RDIProxySupplier::add_filter(CosNF::Filter_ptr filter)
 {
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
     SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>(this);
     Filter_i* fltr    = Filter_i::Filter2Filter_i(filter);
-    RDIDbgForceLog( "¡¾CORBA¡¿ RDIProxySupplier::add_filter begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << fltr->getID() << "]  \n" ); //TODO: remove this log
+    CosNA::ChannelID channel_id = proxy->_channel->MyID();
+    CosNA::ProxyID proxy_id = proxy->_proxy_id();
+    unsigned long filter_id = fltr->getID();
+    RDIDbgForceLog( "¡¾CORBA¡¿ RDIProxySupplier::add_filter begin - [channel=" << channel_id << "], [proxy=" << proxy_id << "], [filter=" << filter_id << "]  \n" );
+#endif
 
   CosNF::FilterID  res;
   RDI_LocksHeld    held = { 0 };
@@ -485,15 +490,14 @@ RDIProxySupplier::add_filter(CosNF::Filter_ptr filter)
 	  // 'subscription_change()', we have to cancel it at this point..
 	  if ( _rqstypes.length() != 0 ) {
 	    CosN::EventTypeSeq added; added.length(0);
-
-        RDIDbgForceLog( "RDIProxySupplier::add_filter - calling _channel->update_mapping [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << fltr->getID() << "] \n" ); //TODO: remove this log
-
 	    (void) _channel->update_mapping(held, added, _rqstypes, this, 0);
 	    _rqstypes.length(0);
 	  }
 	  res = _fa_helper.add_filter_i(held, filter, (RDINotifySubscribe_ptr) this, 1); // 1 => DO want propagate_schange callbacks
 
-      RDIDbgForceLog( "RDIProxySupplier::add_filter end - added a filter [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << fltr->getID() << "] \n" ); //TODO: remove this log
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+      RDIDbgForceLog( "RDIProxySupplier::add_filter end - [channel=" << channel_id << "], [proxy=" << proxy_id << "], [filter=" << filter_id << "]  \n" );
+#endif
 	} // end inner sproxy lock scope
       } // end typemap lock scope
     } // end channel lock scope
@@ -506,19 +510,19 @@ RDIProxySupplier::add_filter(CosNF::Filter_ptr filter)
 void
 RDIProxySupplier::remove_filter(CosNF::FilterID fltrID)
 {
-#ifdef DISABLE_REMOVE_FILTER
-    return;
-#endif
-
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>(this);
     FAdminFilterEntry entry;
     if ( ! _fa_helper._filters.lookup(fltrID, entry) )
     {
         throw CosNF::FilterNotFound();
     }
     Filter_i *fltr = entry.filter;
-    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>(this);
-    RDIDbgForceLog( "¡¾CORBA¡¿ RDIProxySupplier::remove_filter begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << fltr->getID() << "] \n" ); //TODO: remove this log
-
+    CosNA::ChannelID channel_id = proxy->_channel->MyID();
+    CosNA::ProxyID proxy_id = proxy->_proxy_id();
+    unsigned long filter_id = fltr->getID();
+    RDIDbgForceLog( "¡¾CORBA¡¿ RDIProxySupplier::remove_filter begin - [channel=" << channel_id << "], [proxy=" << proxy_id << "], [filter=" << filter_id << "]  \n" );
+#endif
 
   RDI_LocksHeld    held = { 0 };
   RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(outer_proxy_lock, held.sproxy, WHATFN);
@@ -555,7 +559,9 @@ RDIProxySupplier::remove_filter(CosNF::FilterID fltrID)
     } // end channel lock scope
   } // end temporary release scope
 
-  RDIDbgForceLog( "RDIProxySupplier::remove_filter end - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << fltr->getID() << "] \n" ); //TODO: remove this log
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+  RDIDbgForceLog( "RDIProxySupplier::remove_filter end - [channel=" << channel_id << "], [proxy=" << proxy_id << "], [filter=" << filter_id << "]  \n" );
+#endif
 }
 
 #undef WHATFN
@@ -636,9 +642,6 @@ void
 RDIProxySupplier::subscription_change(const CosN::EventTypeSeq& added,
 				      const CosN::EventTypeSeq& deled)
 {
-    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( this );
-    RDIDbgForceLog( "RDIProxySupplier::subscription_change begin - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "] \n" ); //TODO: remove this log
-
   RDI_LocksHeld held = { 0 };
   RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(outer_proxy_lock, held.sproxy, WHATFN);
   if (!held.sproxy) { RDI_THROW_INV_OBJREF; }
@@ -708,8 +711,6 @@ RDIProxySupplier::subscription_change(const CosN::EventTypeSeq& added,
       } // end typemap lock scope
     } // end channel lock scope
   } // end temporary release scope
-
-  RDIDbgForceLog( "RDIProxySupplier::subscription_change end - [channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "] \n" ); //TODO: remove this log
 }
 
 AttN::IactSeq*
@@ -772,8 +773,8 @@ RDIProxySupplier::obj_gc(RDI_TimeT curtime, CORBA::ULong deadConProxy, CORBA::UL
                 << " last_use = " << _last_use.fmt_local()
                 << "(diff = " << RDI_TIMET_DIFF_IN_SECS(_last_use, curtime)
                 << ") DeadConProxyInterval = " << deadConProxy << '\n');
-        } 
-        else 
+        }
+        else
         {
             RDIDbgForceLog/*RDIDbgSPxyLog*/("GC destroys non-connected " << RDI_PRX_TYPE(_prxtype) << " proxy " << _pserial << ":" << dynamic_cast<SequenceProxyPushSupplier_i*>(this) << _pxstate << "[channel=" << _channel->MyID() << "], [proxy=" << _pserial << "]"
                 << " curtime = " << curtime.fmt_local()
@@ -3360,9 +3361,8 @@ SequenceProxyPushSupplier_i::disconnect_sequence_push_supplier( WRAPPED_IMPLARG_
   if (!held.sproxy) { RDI_THROW_INV_OBJREF; } 
   if (_pxstate == RDI_Disconnected) { RDI_THROW_INV_OBJREF; } // already in process of being disposed
   
-  //xinsong++ temp, let gc collect all proxysupplier as soon as possible
+  //xinsong++ temp, let gc collect all proxysupplier
   _pxstate = RDI_Disconnected;
-  //_last_use.time -= ( RDI::get_server_qos()->deadOtherProxyInterval + 1 ) * RDI_1e7;
 
   return;
 
@@ -3478,6 +3478,7 @@ skip_update:
         delete _qosprop; _qosprop = 0;
     }
 
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
     {
         // check type map
         RDI_Hash<CosN::EventType, RDI_TypeMap::VNode_t>& _tmap = _channel->_type_map->_tmap;
@@ -3488,25 +3489,18 @@ skip_update:
 
             while ( pnode )
             {
-                try
-                {
-                    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( pnode->_prxy );
+                const SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( pnode->_prxy );
 
-                    if ( proxy == this )
-                    {
-                        RDI_Assert( false, "[ERROR] this still in type map \n" );
-                    }
-
-                    pnode = pnode->_next;
-                }
-                catch ( ... )
+                if ( proxy == this )
                 {
-                    RDIDbgForceLog( "[ERROR] TA_TypeMap::ta_update - caught unknown exception \n" );
-                    throw;
+                    RDI_Assert( false, "[FATAL] proxy supplier still in TypeMap \n" );
                 }
+
+                pnode = pnode->_next;
             }
         }
     }
+#endif
 
     _clear_ntfqueue(); // Remove all events
     RDI_OPLOCK_SET_DISPOSE_INFO(dispose_info);

@@ -382,5 +382,8 @@ stop_compiling
     WRAPPED_DISPOSEINFO_VAR info = WRAPPED_IMPL2DISPOSEINFO(implref); \
     WRAPPED_DISPOSE_INFO(info); } while (0)
 
+// transactive macro switches
+#define USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL                              //CosNotifyChannelAdmin_i.h:EventChannel_i
+#define USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
 
 #endif /* __CORBA_WRAPPERS_H__ */

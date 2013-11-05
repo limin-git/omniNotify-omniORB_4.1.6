@@ -35,7 +35,10 @@
 
 #include <sys/timeb.h>
 #include <time.h>
+#include <iomanip>
 #include <sstream>
+
+#define DEBUG_FILE_NO_OVERWRITE
 
 // --------------------------------------------------------------------------------
 // RDI static routines 
@@ -115,21 +118,27 @@ FILE*            RDI::_RptFile       = 0;
 
 int RDI::OpenDbgFile(const char* pathnm)
 {
+#ifdef DEBUG_FILE_NO_OVERWRITE
     std::stringstream strm( pathnm );
     size_t cnt = 0;
 
     while ( fopen( strm.str().c_str(), "r" ) )
     {
         strm.str( "" );
-        strm << pathnm << ++cnt;
+        strm << pathnm << "_" << std::setfill( '0' ) << std::setw( 3 ) << ++cnt;
     }
+#endif
 
   if ( RDI_STR_EQ_I(pathnm, "stdout") ) {
     _DbgFile   = stdout;
   } else if ( RDI_STR_EQ_I(pathnm, "stderr") ) {
     _DbgFile   = stderr;
   } else {
-    if ( ! (_DbgFile = fopen(/*pathnm*/strm.str().c_str(), "w")) ) {
+#ifdef DEBUG_FILE_NO_OVERWRITE
+    if ( ! (_DbgFile = fopen(strm.str().c_str(), "w")) ) {
+#else
+    if ( ! (_DbgFile = fopen(pathnm, "w")) ) {
+#endif
       fprintf(stderr, "omniNotify: file open failed for DebugLogFile %s\n", pathnm);
       fprintf(stderr, "            debug logging reverts to stderr\n");
       _DbgFile   = stderr;
@@ -245,8 +254,6 @@ RDI::logger::~logger()
 void
 RDI::logger::write2FILE(FILE* outf, CORBA::Boolean do_fflush)
 {
-    do_fflush = 1;
-
   if (outf && (str.len() != 0)) {
     fprintf(outf, "%s%s", _prefix_buf, str.buf());
   }
@@ -258,8 +265,6 @@ RDI::logger::write2FILE(FILE* outf, CORBA::Boolean do_fflush)
 void
 RDI::logger::write2FILE_wo_prefix(FILE* outf, CORBA::Boolean do_fflush)
 {
-    do_fflush = 1;
-
   if (outf && (str.len() != 0)) {
     fprintf(outf, "%s", str.buf());
   }

@@ -49,8 +49,9 @@ class EventChannel_i;
 class Filter_i;
 class MappingFilter_i;
 
-#define DISABLE_REMOVE_FILTER
-
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+#include <string>
+#endif
 
 /** RDINotifySubscribe
   *
@@ -291,6 +292,10 @@ private:
   void           _add_ev_type(CosN::EventTypeSeq& tsq, const RDI_EventType& etp);
 
   virtual ~Filter_i();
+
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+  std::string get_log_string( RDINotifySubscribe_ptr callback = NULL, bool is_lock = true );
+#endif
 };
 
 
@@ -458,7 +463,7 @@ typedef struct FAdminFilterEntry_s {
 } FAdminFilterEntry;
 
 class FAdminHelper {
-    friend class RDIProxySupplier; // TODO: remove this friend
+    friend class RDIProxySupplier; // TODO: remove friend
 public:
   FAdminHelper(const char *resty);
   ~FAdminHelper();

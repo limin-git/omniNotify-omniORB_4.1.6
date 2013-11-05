@@ -45,7 +45,11 @@
 #define OUT_DEBUG_INFO_PROXY_EVENTS
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
-    #include "TA_TypeMap.cpp"
+#   ifdef __WIN32__
+#       include "TA_TypeMap.h"
+#   else
+#       include "TA_TypeMap.cpp"
+#   endif
 #endif
 
 
@@ -2258,9 +2262,7 @@ EventChannel_i::out_debug_info(RDIstrstream& str, CORBA::Boolean show_events)
   str << *(_type_map);
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_OUT_DEBUG_INFO
   str << m_ta_type_map;
-#endif
 #endif
 }
 

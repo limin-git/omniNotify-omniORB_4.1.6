@@ -528,7 +528,9 @@ ConsumerAdmin_i::obtain_notification_push_supplier(CosNA::ClientType ctype,
     SequenceProxyPushSupplier_i* prx = 
       new SequenceProxyPushSupplier_i(this,_channel,_prx_serial);
 
-    RDIDbgForceLog( "ConsumerAdmin_i::obtain_notification_push_supplier - new SequenceProxyPushSupplier_i [channel=" << _channel->MyID() << "], [proxy=" << prx->_proxy_id() << "] \n" ); // TODO: remove this log
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+    RDIDbgForceLog( "¡¾CORBA¡¿ ConsumerAdmin_i::obtain_notification_push_supplier new SequenceProxyPushSupplier_i " << prx << " - [channel=" << _channel->MyID() << "], [proxy=" << prx->_proxy_id() << "] \n" );
+#endif
 
     if ( ! prx ) {
       _channel->decr_consumers();
@@ -1394,9 +1396,6 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
 				RDI_FilterState_t     astat, 
 				RDI_TypeMap*          tmap)
 {
-
-  RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", ConsumerAdmin_i::dispatch_event - begin\n");
-
   RDI_HashCursor<CosNA::ProxyID, ProxyPushSupplier_i *>           apushcur;
   RDI_HashCursor<CosNA::ProxyID, ProxyPullSupplier_i *>           apullcur;
   RDI_HashCursor<CosNA::ProxyID, StructuredProxyPushSupplier_i *> spushcur;
@@ -1416,12 +1415,14 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
   }
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
-    _channel->m_ta_type_map.consumer_admin_dispatch_event( event );
-    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>& _prx_batch_push = _channel->m_ta_type_map._prx_batch_push;
+    _channel->m_ta_type_map.consumer_admin_dispatch_event( event, this );
 
+    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>* _prx_batch_push_p = _channel->m_ta_type_map.get_prx_batch_push();
+    if ( NULL == _prx_batch_push_p )
+    {
+        _prx_batch_push_p = &_prx_batch_push;
+    }
 #endif
-
-    RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", ConsumerAdmin_i::dispatch_event - consumer_admin_dispatch_event done\n");
 
   const char* dname = event->get_domain_name();
   const char* tname = event->get_type_name();
@@ -1619,8 +1620,11 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
   }
 
   // Evaluate Filters for consumers using SequenceProxyPushSupplier_i
-
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
+  for ( bpushcur=_prx_batch_push_p->cursor(); bpushcur.is_valid(); ++bpushcur ) {
+#else
   for ( bpushcur=_prx_batch_push.cursor(); bpushcur.is_valid(); ++bpushcur ) {
+#endif
     if ( astat == OrMatch ) {
       bpushcur.val()->add_event(event);
       continue;
@@ -1713,9 +1717,6 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
       }
     }
   }
-
-  RDIDbgCosCPxyLog("Thrd=" << TW_ID() << ", Channel=" << _channel->MyID() << ", ConsumerAdmin_i::dispatch_event - end\n");
-
 }
 
 // ------------------------------------------------------------- //

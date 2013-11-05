@@ -12,7 +12,9 @@ TA_TypeMap::TA_TypeMap()
     : m_channel(NULL),
       m_type_map_1(NULL),
       m_type_map_2(NULL),
-      _prx_batch_push(RDI_ULongHash, RDI_ULongRank)
+      _prx_batch_push(RDI_ULongHash, RDI_ULongRank),
+      _prx_batch_push_2(RDI_ULongHash, RDI_ULongRank),
+      m_is_prx_batch_push_changed( false )
 {
 }
 
@@ -36,16 +38,19 @@ void TA_TypeMap::initialize( EventChannel_i* channel, RDI_TypeMap*& original_typ
 }
 
 
-#undef WHATFN
-#define WHATFN "TA_TypeMap::ta_update"
 bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter )
 {
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+    CosNA::ChannelID channel_id = m_channel->MyID();
+    CosNA::ProxyID proxy_id = proxy->_proxy_id();
+    unsigned long filter_id = filter->getID();
+
     std::stringstream add_del_strm;
     std::stringstream filter_strm;
     std::stringstream add_proxy_strm;
     std::stringstream remove_proxy_strm;
     std::stringstream type_map_strm;
+    bool is_need_output_a_newline = true;
 
     add_del_strm<< "\n\t" << "added: ";
     get_event_type_list_str( added, add_del_strm );
@@ -57,28 +62,27 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
     get_filter_str( filter, filter_strm );
 #endif
 
-    if ( proxy != NULL )
-    {
-        m_proxy_id_map[proxy] = proxy->_proxy_id();
-    }
+    bool is_TA_TypeMap_updated = false;
 
-    bool ta_typemap_updated = false;
+    m_proxy_id_map[proxy] = proxy->_proxy_id();
+    m_proxy_id_map[ dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) ] = proxy->_proxy_id();
 
     if ( added.length() )
     {
         if ( RDI_STR_EQ( added[0].domain_name, "*" ) && RDI_STR_EQ( added[0].type_name, "*" ) )
         {
-            int location_key = extract_location_key_from_filter( filter );
+            int location_key = get_location_key_from_filter( filter );
 
             if ( location_key != -1 )
             {
                 {
-                    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
+                    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "");
                     m_location_key_2_proxy_list_map[location_key].insert( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
-                    ta_typemap_updated = true;
+                    is_TA_TypeMap_updated = true;
                 }
 
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+                is_need_output_a_newline = false;
                 add_proxy_strm
                     << "\n\t" << "added a proxy with filter {[(*::*)]( $Region == '" << location_key << "' )}"
                     << ", location_number=" << m_location_key_2_proxy_list_map.size()
@@ -89,17 +93,18 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
         }
         else if ( RDI_STR_EQ( added[0].type_name, "*" ) )
         {
-            int location_key = extract_location_key_from_filter( filter );
+            int location_key = get_location_key_from_filter( filter );
 
             if ( location_key != -1 )
             {
                 {
-                    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
+                    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "");
                     m_domain_2_location_key_2_proxy_list_map[added[0].domain_name.in()][location_key].insert( dynamic_cast<SequenceProxyPushSupplier_i*>(proxy) );
-                    ta_typemap_updated = true;
+                    is_TA_TypeMap_updated = true;
                 }
 
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+                is_need_output_a_newline = false;
                 add_proxy_strm
                     << "\n\t" << "added a proxy with filter {[(" << added[0].domain_name << "::*)]( $Region == '" << location_key << "' )}"
                     << ", location_number=" << m_domain_2_location_key_2_proxy_list_map[added[0].domain_name.in()].size()
@@ -113,9 +118,9 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
 
     if ( deled.length() )
     {
-        if ( RDI_STR_EQ( deled[0].domain_name, "*" ) && RDI_STR_EQ( deled[0].type_name, "*" ) )
+        if ( false == m_location_key_2_proxy_list_map.empty() && ( RDI_STR_EQ( deled[0].domain_name, "*" ) && RDI_STR_EQ( deled[0].type_name, "*" ) ) )
         {
-            TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
+            TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "");
 
             for ( LocationKey2ProxySupplierListMap::iterator it = m_location_key_2_proxy_list_map.begin(); it != m_location_key_2_proxy_list_map.end(); ++it )
             {
@@ -134,23 +139,23 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
                         m_location_key_2_proxy_list_map.erase( it );
                     }
 
-                    ta_typemap_updated = true;
+                    is_TA_TypeMap_updated = true;
 
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+                    is_need_output_a_newline = false;
                     remove_proxy_strm
                         << "\n\t" << "removed a proxy with filter {[(*::*)]( $Region == '" << location_key << "' )}"
                         << ", location_number=" << m_location_key_2_proxy_list_map.size()
                         << ", cur_loc_proxy_number=" << --cur_loc_proxy_number
                         << "\n";
 #endif
-
                     break; // the proxy has just one filter
                 }
             }
         }
-        else if ( RDI_STR_EQ( deled[0].type_name, "*" ) )
+        else if ( ( false == m_domain_2_location_key_2_proxy_list_map.empty() ) && RDI_STR_EQ( deled[0].type_name, "*" ) )
         {
-            TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
+            TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "");
 
             Domain2LocationKey2ProxySupplierListMap::iterator find_domain_it = m_domain_2_location_key_2_proxy_list_map.find( deled[0].domain_name.in() );
 
@@ -175,9 +180,10 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
                             location_key_2_proxy_list_map.erase( it );
                         }
 
-                        ta_typemap_updated = true;
+                        is_TA_TypeMap_updated = true;
 
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+                        is_need_output_a_newline = false;
                         remove_proxy_strm
                             << "\n\t" << "removed a proxy with filter {[(" << deled[0].domain_name.in() << "::*)]( $Region == '"  << location_key << "' )}"
                             << ", location_number=" << m_location_key_2_proxy_list_map.size()
@@ -185,7 +191,6 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
                             << ", domain_number=" << m_domain_2_location_key_2_proxy_list_map.size() - ( true == location_key_2_proxy_list_map.empty() )
                             << "\n";
 #endif
-
                         break; // the proxy has just one filter
                     }
                 }
@@ -198,92 +203,96 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
         }
     }
 
-    if ( false == ta_typemap_updated )
+    if ( false == is_TA_TypeMap_updated )
     {
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+        is_need_output_a_newline = false;
         type_map_strm << "\n\t" << "TypeMap: ";
 #endif
 
-        m_type_map_1->update(held, added, deled, proxy, filter);
+        m_type_map_1->update( held, added, deled, proxy, filter );
 
-        _prx_batch_push.clear();
-
-        RDI_Hash<CosN::EventType, RDI_TypeMap::VNode_t>& _tmap = m_type_map_1->_tmap;
-
-        for ( RDI_HashCursor<CosN::EventType, RDI_TypeMap::VNode_t> curs = _tmap.cursor(); curs.is_valid(); curs++ )
+        // update proxy list for consumer admin
+        if ( false == m_location_key_2_proxy_list_map.empty() || false == m_domain_2_location_key_2_proxy_list_map.empty() )
         {
-            RDI_TypeMap::PNode_t* pnode = curs.val()._prxy;
+            TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "");
 
-            while ( pnode )
+            _prx_batch_push.clear();
+            m_is_prx_batch_push_changed = true;
+
+            RDI_Hash<CosN::EventType, RDI_TypeMap::VNode_t>& _tmap = m_type_map_1->_tmap;
+
+            for ( RDI_HashCursor<CosN::EventType, RDI_TypeMap::VNode_t> curs = _tmap.cursor(); curs.is_valid(); curs++ )
             {
-                try
+                RDI_TypeMap::PNode_t* pnode = curs.val()._prxy;
+
+                while ( pnode )
                 {
-                    RDIDbgForceLog( "dynamic casting [channel=" << m_channel->MyID() << "], [proxy=" << m_proxy_id_map[pnode->_prxy] <<  "] \n" );
-
-                    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( pnode->_prxy );
-
-                    if ( proxy != NULL )
+                    if ( proxy->_myadmin->_prx_batch_push.exists( m_proxy_id_map[ pnode->_prxy ] ) )
                     {
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
-                        if ( false == _prx_batch_push.exists( proxy->_proxy_id() ) )
-                        {
-                            type_map_strm << proxy->_proxy_id() << ":" << proxy << ", ";
-                        }
-#endif
-                        _prx_batch_push.insert( proxy->_proxy_id(), proxy );
+                        SequenceProxyPushSupplier_i* seq_push_proxy_supplier = dynamic_cast<SequenceProxyPushSupplier_i*>( pnode->_prxy );
 
+                        if ( seq_push_proxy_supplier != NULL )
+                        {
+                            _prx_batch_push.insert( seq_push_proxy_supplier->_proxy_id(), seq_push_proxy_supplier );
+                        }
+                    }
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+                    else
+                    {
+                        RDIDbgForceLog( "[WARNING] a proxy in TypeMap but not in ConsumerAdmin: "
+                            << "[channel=" << channel_id << "], [proxy=" << proxy_id << "] - "
+                            << "[channel=" << channel_id << "], [proxy=" <<  m_proxy_id_map[ pnode->_prxy ] << "] \n" );
                     }
 
+                    if ( false == _prx_batch_push.exists( m_proxy_id_map[ pnode->_prxy ] ) )
+                    {
+                        type_map_strm << proxy->_proxy_id() << ":" << proxy << ", ";
+                    }
+#endif
                     pnode = pnode->_next;
-                }
-                catch ( ... )
-                {
-                    RDIDbgForceLog( "[ERROR] TA_TypeMap::ta_update - caught unknown exception \n" );
-                    throw;
                 }
             }
         }
 
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
-        type_map_strm << "length=" << _prx_batch_push.length() << std::endl;
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+        type_map_strm << "length=" << _prx_batch_push.length() << "\n";
 #endif
     }
 
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
-    // if ( added.length() || deled.length() )
-    {
-        RDIDbgForceLog( "TA_TypeMap::ta_update - " << "[channel=" << m_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], [filter=" << filter->MyFID() << "]" << ", [added=" << added.length() << ", deled=" << deled.length() << "]"
-            << add_del_strm.str().c_str()
-            << filter_strm.str().c_str()
-            << add_proxy_strm.str().c_str()
-            << remove_proxy_strm.str().c_str()
-            << type_map_strm.str().c_str()
-            );
-    }
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+    RDIDbgForceLog( "TA_TypeMap::ta_update - " << "[channel=" << channel_id << "], [proxy=" << proxy_id << "], [filter=" << filter_id << "], [added=" << added.length() << ",deled=" << deled.length() << "]"
+        << add_del_strm.str().c_str()
+        << filter_strm.str().c_str()
+        << add_proxy_strm.str().c_str()
+        << remove_proxy_strm.str().c_str()
+        << type_map_strm.str().c_str()
+        << ( is_need_output_a_newline ? "\n" : "" )
+        );
 #endif
 
-    bool result = m_type_map_2->update(held, added, deled, proxy, filter);
+    bool result = m_type_map_2->update( held, added, deled, proxy, filter );
 
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
     check();
+#endif
 
     return result;
 }
 
 
-#undef WHATFN
-#define WHATFN "TA_TypeMap::consumer_admin_dispatch_event"
-void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event)
+void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event, ConsumerAdmin_i* cadmin)
 {
     if ( false == m_location_key_2_proxy_list_map.empty() || false == m_domain_2_location_key_2_proxy_list_map.empty() )
     {
-        int location_key = extract_location_key_from_event( event );
+        int location_key = get_location_key_from_event( event );
 
         if ( -1 == location_key )
         {
             return;
         }
 
-        TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
+        TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "");
 
         if ( false == m_location_key_2_proxy_list_map.empty() )
         {
@@ -297,14 +306,16 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event)
                 {
                     SequenceProxyPushSupplier_i* proxy = *it;
 
-                    if (  proxy != NULL )
+                    if ( cadmin->_prx_batch_push.exists( m_proxy_id_map[proxy] ) )
                     {
                         proxy->add_event(event);
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
-                        RDIDbgForceLog( "\TA_TypeMap::consumer_admin_dispatch_event - using ta type mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
-#endif
                     }
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+                    else
+                    {
+                        RDIDbgForceLog( "[WARNING] a proxy in TA_TypeMap but not in ConsumerAdmin: [channel=" << m_channel->MyID() << "], [proxy=" <<  m_proxy_id_map[proxy] << "] \n" );
+                    }
+#endif
                 }
             }
         }
@@ -327,14 +338,16 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event)
                     {
                         SequenceProxyPushSupplier_i* proxy = *it;
 
-                        if (  proxy != NULL )
+                        if ( cadmin->_prx_batch_push.exists( m_proxy_id_map[proxy] ) )
                         {
                             proxy->add_event(event);
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT
-                            RDIDbgForceLog( "\TA_TypeMap::consumer_admin_dispatch_event - using ta type mapping - add an event to proxy " << proxy->_proxy_id() << ". \n" );
-#endif
                         }
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
+                        else
+                        {
+                            RDIDbgForceLog( "[WARNING] a proxy in TA_TypeMap but not in ConsumerAdmin: [channel=" << m_channel->MyID() << "], [proxy=" <<  m_proxy_id_map[proxy] << "] \n" );
+                        }
+#endif
                     }
                 }
             }
@@ -343,15 +356,12 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event)
 }
 
 
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_OUT_DEBUG_INFO
-#undef WHATFN
-#define WHATFN "TA_TypeMap::log_output"
 RDIstrstream& TA_TypeMap::log_output(RDIstrstream& str)
 {
     //Ref: RDI_TypeMap::log_output
     str << "----------\nTA_TypeMap\n----------\n";
 
-    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "ta_type_map_lock", WHATFN);
+    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "");
 
     if ( m_location_key_2_proxy_list_map.empty() && m_domain_2_location_key_2_proxy_list_map.empty() )
     {
@@ -413,10 +423,9 @@ RDIstrstream& TA_TypeMap::log_output(RDIstrstream& str)
 
     return str;
 }
-#endif // USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_OUT_DEBUG_INFO
 
 
-int TA_TypeMap::extract_location_key_from_filter( Filter_i* filter ) // ( $Region == '123' )
+int TA_TypeMap::get_location_key_from_filter( Filter_i* filter ) // ( $Region == '123' )
 {
     if ( filter != NULL )
     {
@@ -434,7 +443,7 @@ int TA_TypeMap::extract_location_key_from_filter( Filter_i* filter ) // ( $Regio
                 {
                     if ( RDI_STR_EQ( event_types[j].type_name, "*" ) )
                     {
-                        return extract_location_key_from_filter_constraint_expr( constraint_expression.constraint_expr.in() );;
+                        return get_location_key_from_filter_constraint_expr( constraint_expression.constraint_expr.in() );;
                     }
                 }
             }
@@ -445,7 +454,7 @@ int TA_TypeMap::extract_location_key_from_filter( Filter_i* filter ) // ( $Regio
 }
 
 
-int TA_TypeMap::extract_location_key_from_filter_constraint_expr( const char* constraint_expr )
+int TA_TypeMap::get_location_key_from_filter_constraint_expr( const char* constraint_expr )
 {
     static const char*  REGION_EXPRESSION = "$Region == '";   // Note: TA_CosUtility.cpp:gGenerateConstraintExpression
     static const char*  AND_OPERATION = " ) and ( ";
@@ -486,7 +495,7 @@ int TA_TypeMap::extract_location_key_from_filter_constraint_expr( const char* co
 }
 
 
-int TA_TypeMap::extract_location_key_from_event( RDI_StructuredEvent* event )
+int TA_TypeMap::get_location_key_from_event( RDI_StructuredEvent* event )
 {
     try
     {
@@ -530,8 +539,38 @@ int TA_TypeMap::extract_location_key_from_event( RDI_StructuredEvent* event )
 }
 
 
+RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>* TA_TypeMap::get_prx_batch_push()
+{
+    if ( false == m_location_key_2_proxy_list_map.empty() || false == m_domain_2_location_key_2_proxy_list_map.empty() )
+    {
+        if ( true == m_is_prx_batch_push_changed )
+        {
+            TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "" );
+
+            for ( RDI_HashCursor<CosNA::ProxyID, SequenceProxyPushSupplier_i *> curs = _prx_batch_push.cursor(); curs.is_valid(); ++curs )
+            {
+                _prx_batch_push_2.insert( curs.key(), curs.val() );
+            }
+
+            m_is_prx_batch_push_changed = false;
+        }
+
+        return &_prx_batch_push_2;
+    }
+
+    return NULL;
+}
+
+
 void TA_TypeMap::check()
 {
+    if ( m_location_key_2_proxy_list_map.empty() && m_domain_2_location_key_2_proxy_list_map.empty() )
+    {
+        return;
+    }
+
+    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "");
+
     typedef std::set<RDIProxySupplier*> ProxySupplierList;
 
     ProxySupplierList list_1;
@@ -588,8 +627,6 @@ void TA_TypeMap::check()
         }
     }
 
-    //std::cout << "TA_TypeMap::check - " << list_1.size() << ", " << list_2.size() << ", " << list_3.size() << ", " << list_4.size() << std::endl;
-
     RDI_Assert( std::includes( list_4.begin(), list_4.end(), list_1.begin(), list_1.end() ), "TA_TypeMap::check failed." );
     RDI_Assert( std::includes( list_4.begin(), list_4.end(), list_2.begin(), list_2.end() ), "TA_TypeMap::check failed." );
     RDI_Assert( std::includes( list_4.begin(), list_4.end(), list_3.begin(), list_3.end() ), "TA_TypeMap::check failed." );
@@ -598,7 +635,7 @@ void TA_TypeMap::check()
 }
 
 
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
 void TA_TypeMap::get_filter_str( Filter_i* filter, std::ostream& strm )
 {
     if ( filter != NULL )
@@ -642,6 +679,6 @@ void TA_TypeMap::get_event_type_list_str( const CosN::EventTypeSeq& event_type_l
 
     strm << "]";
 }
-#endif // USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING
+#endif // USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
 
 #endif

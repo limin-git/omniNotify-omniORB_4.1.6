@@ -48,12 +48,6 @@
 #include "RDILocksHeld.h"
 #include "RDISeqDecls.h"
 
-
-#define USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL                              //CosNotifyChannelAdmin_i.h:EventChannel_i
-#define USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_UPDATE_MAPPING           //EventChannel_i::update_mapping
-//#define USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_LOG_DISPATCH_EVENT           //ConsumerAdmin_i::dispatch_event
-#define USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_OUT_DEBUG_INFO               //EventChannel_i::out_debug_info
-
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
     #include "TA_TypeMap.h"
 #endif
@@ -87,8 +81,9 @@ class RDIProxySupplier :
   friend class RDI_ChangePool;
   friend class EventChannel_i;
   friend class ConsumerAdmin_i;
-  friend class Filter_i; //TODO: remove this friend
-  friend class FAdminHelper; //TODO: remove this friend
+  friend class Filter_i;     // TODO: remove friend
+  friend class FAdminHelper; // TODO: remove friend
+  friend class TA_TypeMap;   // TODO: remove friend
 public:
   RDIProxySupplier(const char*           resty,
 		   const char*           fa_helper_resty,
@@ -1148,6 +1143,7 @@ class ConsumerAdmin_i :
 	WRAPPED_SKELETON_SUPER(AttNotification, ConsumerAdmin) 
 {
   friend class EventChannel_i;
+  friend class TA_TypeMap;
 public:
   ConsumerAdmin_i(EventChannel_i* channel, CosNA::InterFilterGroupOperator op, 
 		  const CosNA::AdminID& serial);
@@ -1509,14 +1505,11 @@ private:
   * for creating filter objects. 
   */
 
-  class SequenceProxyPushSupplier_i; //limin++
-
 class EventChannel_i : 
 	WRAPPED_SKELETON_SUPER(AttNotification, EventChannel) 
 {
-    friend class SequenceProxyPushSupplier_i; //limin++
-
   friend class EventChannelFactory_i;
+  friend class SequenceProxyPushSupplier_i; // TODO: remove friend
 public:
   EventChannel_i(EventChannelFactory_i*        cfactory,
 		 FilterFactory_i*              ffactory,
