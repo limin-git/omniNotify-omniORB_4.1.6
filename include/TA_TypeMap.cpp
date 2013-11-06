@@ -635,7 +635,6 @@ void TA_TypeMap::check()
 }
 
 
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
 void TA_TypeMap::get_filter_str( Filter_i* filter, std::ostream& strm )
 {
     if ( filter != NULL )
@@ -679,6 +678,5 @@ void TA_TypeMap::get_event_type_list_str( const CosN::EventTypeSeq& event_type_l
 
     strm << "]";
 }
-#endif // USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
 
 #endif

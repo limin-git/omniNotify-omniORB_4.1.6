@@ -3481,6 +3481,8 @@ skip_update:
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
     {
         // check type map
+        // the RDI_TypeMap may inconsistent when CORBA call calling like this: Filter_i::add_constraints, RDIProxySupplier::remove_filter
+
         RDI_Hash<CosN::EventType, RDI_TypeMap::VNode_t>& _tmap = _channel->_type_map->_tmap;
 
         for ( RDI_HashCursor<CosN::EventType, RDI_TypeMap::VNode_t> curs = _tmap.cursor(); curs.is_valid(); curs++ )
@@ -3493,7 +3495,8 @@ skip_update:
 
                 if ( proxy == this )
                 {
-                    RDI_Assert( false, "[FATAL] proxy supplier still in TypeMap \n" );
+                    //RDI_Assert( false, "[FATAL] proxy supplier still in TypeMap \n" );
+                    RDIDbgForceLog( "[WARNING] proxy supplier still in TypeMap \n" );
                 }
 
                 pnode = pnode->_next;
