@@ -3478,33 +3478,6 @@ skip_update:
         delete _qosprop; _qosprop = 0;
     }
 
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-    {
-        // check type map
-        // the RDI_TypeMap may inconsistent when CORBA call calling like this: Filter_i::add_constraints, RDIProxySupplier::remove_filter
-
-        RDI_Hash<CosN::EventType, RDI_TypeMap::VNode_t>& _tmap = _channel->_type_map->_tmap;
-
-        for ( RDI_HashCursor<CosN::EventType, RDI_TypeMap::VNode_t> curs = _tmap.cursor(); curs.is_valid(); curs++ )
-        {
-            RDI_TypeMap::PNode_t* pnode = curs.val()._prxy;
-
-            while ( pnode )
-            {
-                const SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( pnode->_prxy );
-
-                if ( proxy == this )
-                {
-                    //RDI_Assert( false, "[FATAL] proxy supplier still in TypeMap \n" );
-                    RDIDbgForceLog( "[WARNING] proxy supplier still in TypeMap \n" );
-                }
-
-                pnode = pnode->_next;
-            }
-        }
-    }
-#endif
-
     _clear_ntfqueue(); // Remove all events
     RDI_OPLOCK_SET_DISPOSE_INFO(dispose_info);
 }

@@ -109,7 +109,7 @@ RDIPriorityQueue::remove_pri_head()
     else
     {
         RDI_StructuredEvent* t = _entryQueue.front();
-        _entryQueue.pop_front();
+        _entryQueue.pop();
         return t;
     }
 
@@ -157,13 +157,24 @@ RDIPriorityQueue::get_event(CORBA::ULong i)
     }
     else
     {
-        std::list<RDI_StructuredEvent*>::iterator it = _entryQueue.begin();
+        EntryQueue entryQueue = _entryQueue;
+        RDI_StructuredEvent* entry = NULL;
+
         for ( ; i > 1; --i )
         {
-            ++it;
+            entry = entryQueue.front();
+            entryQueue.pop();
         }
 
-        return *it;
+        return entry;
+
+        //std::list<RDI_StructuredEvent*>::iterator it = _entryQueue.begin();
+        //for ( ; i > 1; --i )
+        //{
+        //    ++it;
+        //}
+
+        //return *it;
     }
 
     // if (i > _num_items) return 0;
@@ -192,7 +203,10 @@ CORBA::ULong RDIPriorityQueue::_right(CORBA::ULong i)  {return ((2 * i) + 1);}
 void
 RDIPriorityQueue::_drain()
 {
-    _entryQueue.clear();
+    // _entryQueue.clear();
+
+    EntryQueue empty;
+    std::swap( _entryQueue, empty );
 
     //   while (_num_items) {
     //     _remove(_num_items);
@@ -217,16 +231,36 @@ RDIPriorityQueue::_remove(CORBA::ULong idx)
     }
     else
     {
-        std::list<RDI_StructuredEvent*>::iterator it = _entryQueue.begin();
-        for ( ; idx > 1; --idx )
+        EntryQueue entryQueue;
+        RDI_StructuredEvent* result = NULL;
+
+        for ( size_t i = 1; i <= _entryQueue.size(); ++i )
         {
-            ++it;
+            RDI_StructuredEvent* entry = _entryQueue.front();
+            _entryQueue.pop();
+
+            if ( i == idx )
+            {
+                result = entry;
+                continue;
+            }
+
+            entryQueue.push( entry );
         }
 
-        RDI_StructuredEvent* t = *it;
-        _entryQueue.erase( it );
+        std::swap( _entryQueue, entryQueue );
+        return result;
 
-        return t;
+        //std::list<RDI_StructuredEvent*>::iterator it = _entryQueue.begin();
+        //for ( ; idx > 1; --idx )
+        //{
+        //    ++it;
+        //}
+
+        //RDI_StructuredEvent* t = *it;
+        //_entryQueue.erase( it );
+
+        //return t;
     }
 
     //   if (idx > _num_items) return 0;
@@ -270,7 +304,7 @@ int
 RDIPriorityQueue::insert(RDI_StructuredEvent* ev,
 			 CORBA::ULongLong pri, CORBA::ULongLong sec)
 {
-    _entryQueue.push_back( ev );
+    _entryQueue.push( ev );
     return 1;
 
     //   if ( ((_num_items+1) == _curr_size) && (_resize() == -1) )

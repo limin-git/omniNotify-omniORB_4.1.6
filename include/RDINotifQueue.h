@@ -34,7 +34,8 @@
 
 #include "RDIEvent.h"
 #include "CosNotification_i.h"
-#include <list> // TODO: should use queue or dequeue(but need fix link error at least in windows)
+#include <list>
+#include <queue>
 
 // ================================ PriorityQueue ==========================================
 
@@ -95,7 +96,8 @@ private:
   CORBA::ULong            _num_items;
   CORBA::ULong            _curr_size;
   RDIPriorityQueueEntry*  _entry;
-  std::list<RDI_StructuredEvent*> _entryQueue;
+  typedef std::queue<RDI_StructuredEvent*> EntryQueue;
+  EntryQueue _entryQueue;
 };
 
 // ================================== NotifQueue ===========================================
