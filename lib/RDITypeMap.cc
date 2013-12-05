@@ -519,7 +519,7 @@ RDI_TypeMap::log_output(RDIstrstream& str)
 	anode = anode->_next;
       }
       while ( pnode ) {
-	str << "\n\tP " << dynamic_cast<SequenceProxyPushSupplier_i*>( pnode->_prxy ) << " : ";
+	str << "\n\tP " << /*dynamic_cast<SequenceProxyPushSupplier_i*>*/( pnode->_prxy ) << " : ";
 	for ( fnode = pnode->_fltr; fnode; fnode = fnode->_next )
 	  str << fnode->_fltr << " ";
 	pnode = pnode->_next;
