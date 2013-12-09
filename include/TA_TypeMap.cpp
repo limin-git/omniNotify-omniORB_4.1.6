@@ -12,8 +12,8 @@ TA_TypeMap::TA_TypeMap()
     : m_channel(NULL),
       m_type_map_1(NULL),
       m_type_map_2(NULL),
-      _prx_batch_push(RDI_ULongHash, RDI_ULongRank),
-      _prx_batch_push_2(RDI_ULongHash, RDI_ULongRank),
+      m_prx_batch_push(RDI_ULongHash, RDI_ULongRank),
+      m_prx_batch_push_2(RDI_ULongHash, RDI_ULongRank),
       m_is_prx_batch_push_changed( false )
 {
 }
@@ -69,6 +69,8 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
 
     bool is_TA_TypeMap_changed = false;
 
+    ProxySupplierInfo proxy_info(proxy, dynamic_cast<SequenceProxyPushSupplier_i*>(proxy), proxy->_proxy_id() );
+
     {
         m_proxy_id_map[proxy] = proxy->_proxy_id();
 
@@ -85,7 +87,7 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
 
             if ( location_key != -1 )
             {
-                m_location_key_2_proxy_list_map[location_key].insert( proxy );
+                m_location_key_2_proxy_list_map[location_key].insert( proxy_info );
                 is_TA_TypeMap_changed = true;
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
@@ -103,7 +105,7 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
 
             if ( location_key != -1 )
             {
-                m_domain_2_location_key_2_proxy_list_map[added[0].domain_name.in()][location_key].insert( proxy );
+                m_domain_2_location_key_2_proxy_list_map[added[0].domain_name.in()][location_key].insert( proxy_info );
                 is_TA_TypeMap_changed = true;
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
@@ -122,7 +124,7 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
     {
         if ( false == m_location_key_2_proxy_list_map.empty() && ( RDI_STR_EQ( deled[0].domain_name, "*" ) && RDI_STR_EQ( deled[0].type_name, "*" ) ) )
         {
-            int location_key = remove_proxy( m_location_key_2_proxy_list_map, proxy ) ;
+            int location_key = remove_proxy( m_location_key_2_proxy_list_map, proxy_info ) ;
 
             if ( location_key != -1 )
             {
@@ -139,7 +141,7 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
         }
         else if ( ( false == m_domain_2_location_key_2_proxy_list_map.empty() ) && RDI_STR_EQ( deled[0].type_name, "*" ) )
         {
-            int location_key = remove_proxy( m_domain_2_location_key_2_proxy_list_map, proxy, deled[0].domain_name.in() );
+            int location_key = remove_proxy( m_domain_2_location_key_2_proxy_list_map, proxy_info, deled[0].domain_name.in() );
 
             if ( location_key != -1 )
             {
@@ -168,11 +170,11 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
         // update proxy list for consumer admin
         if ( false == m_location_key_2_proxy_list_map.empty() || false == m_domain_2_location_key_2_proxy_list_map.empty() )
         {
-            update_prx_batch_push( proxy );
+            update_prx_batch_push( proxy_info );
         }
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-        type_map_strm << "length=" << _prx_batch_push.length() << "\n";
+        type_map_strm << "length=" << m_prx_batch_push.length() << "\n";
 #endif
     }
 
@@ -190,7 +192,7 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
     bool result = m_type_map_2->update( held, added, deled, proxy, filter );
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-    consistency_check();
+    // consistency_check();
 #endif
 
     return result;
@@ -223,18 +225,16 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event, Consu
 
                 for ( ProxySupplierList::iterator it = proxy_list.begin(); it != proxy_list.end(); ++it )
                 {
-                    RDIProxySupplier* proxy = *it;
-
-                    if ( cadmin->_prx_batch_push.exists( m_proxy_id_map[proxy] ) )
+                    if ( cadmin->_prx_batch_push.exists( it->proxy_id ) )
                     {
-                        dynamic_cast<SequenceProxyPushSupplier_i*>(proxy)->add_event(event);
+                        it->seq_proxy->add_event(event);
                     }
                     else
                     {
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-                        RDIDbgForceLog( "[WARNING] a proxy in TA_TypeMap but not in ConsumerAdmin: [channel=" << m_channel->MyID() << "], [proxy=" <<  m_proxy_id_map[proxy] << "] \n" );
+                        RDIDbgForceLog( "[WARNING] a proxy in TA_TypeMap but not in ConsumerAdmin: [channel=" << m_channel->MyID() << "], [proxy=" <<  it->proxy_id << "] \n" );
 #endif
-                        inconsistent_proxy_list_1.insert( proxy );
+                        inconsistent_proxy_list_1.insert( *it );
                     }
                 }
             }
@@ -255,18 +255,16 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event, Consu
 
                     for ( ProxySupplierList::iterator it = proxy_list.begin(); it != proxy_list.end(); ++it )
                     {
-                        RDIProxySupplier* proxy = *it;
-
-                        if ( cadmin->_prx_batch_push.exists( m_proxy_id_map[proxy] ) )
+                        if ( cadmin->_prx_batch_push.exists( it->proxy_id ) )
                         {
-                            dynamic_cast<SequenceProxyPushSupplier_i*>(proxy)->add_event(event);
+                            it->seq_proxy->add_event(event);
                         }
                         else
                         {
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-                            RDIDbgForceLog( "[WARNING] a proxy in TA_TypeMap but not in ConsumerAdmin: [channel=" << m_channel->MyID() << "], [proxy=" <<  m_proxy_id_map[proxy] << "] \n" );
+                            RDIDbgForceLog( "[WARNING] a proxy in TA_TypeMap but not in ConsumerAdmin: [channel=" << m_channel->MyID() << "], [proxy=" <<  it->proxy_id << "] \n" );
 #endif
-                            inconsistent_proxy_list_2.insert( proxy );
+                            inconsistent_proxy_list_2.insert( *it );
                         }
                     }
                 }
@@ -286,14 +284,14 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event, Consu
 }
 
 
-void TA_TypeMap::update_prx_batch_push( RDIProxySupplier* proxy )
+void TA_TypeMap::update_prx_batch_push( const ProxySupplierInfo& proxy_info )
 {
-    _prx_batch_push.clear();
+    m_prx_batch_push.clear();
     m_is_prx_batch_push_changed = true;
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
     CosNA::ChannelID channel_id = m_channel->MyID();
-    CosNA::ProxyID proxy_id = proxy->_proxy_id();
+    CosNA::ProxyID proxy_id = proxy_info.proxy_id;
 #endif
 
     RDI_Hash<CosN::EventType, RDI_TypeMap::VNode_t>& _tmap = m_type_map_1->_tmap;
@@ -304,13 +302,13 @@ void TA_TypeMap::update_prx_batch_push( RDIProxySupplier* proxy )
 
         while ( pnode )
         {
-            if ( proxy->_myadmin->_prx_batch_push.exists( m_proxy_id_map[ pnode->_prxy ] ) )
+            if ( proxy_info.proxy->_myadmin->_prx_batch_push.exists( m_proxy_id_map[ pnode->_prxy ] ) )
             {
                 SequenceProxyPushSupplier_i* seq_push_proxy_supplier = dynamic_cast<SequenceProxyPushSupplier_i*>( pnode->_prxy );
 
                 if ( seq_push_proxy_supplier != NULL )
                 {
-                    _prx_batch_push.insert( seq_push_proxy_supplier->_proxy_id(), seq_push_proxy_supplier );
+                    m_prx_batch_push.insert( seq_push_proxy_supplier->_proxy_id(), seq_push_proxy_supplier );
                 }
             }
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
@@ -327,7 +325,7 @@ void TA_TypeMap::update_prx_batch_push( RDIProxySupplier* proxy )
 }
 
 
-RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>* TA_TypeMap::get_prx_batch_push()
+RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>* TA_TypeMap::get_prx_batch_push( ConsumerAdmin_i* cadmin )
 {
     if ( false == m_location_key_2_proxy_list_map.empty() || false == m_domain_2_location_key_2_proxy_list_map.empty() )
     {
@@ -335,15 +333,30 @@ RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>* TA_TypeMap::get_prx_bat
         {
             TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "" );
 
-            for ( RDI_HashCursor<CosNA::ProxyID, SequenceProxyPushSupplier_i *> curs = _prx_batch_push.cursor(); curs.is_valid(); ++curs )
+            for ( RDI_HashCursor<CosNA::ProxyID, SequenceProxyPushSupplier_i *> curs = m_prx_batch_push.cursor(); curs.is_valid(); ++curs )
             {
-                _prx_batch_push_2.insert( curs.key(), curs.val() );
+                m_prx_batch_push_2.insert( curs.key(), curs.val() );
             }
 
             m_is_prx_batch_push_changed = false;
         }
 
-        return &_prx_batch_push_2;
+        std::vector<CosNA::ProxyID> invalid_ids;
+        for ( RDI_HashCursor<CosNA::ProxyID, SequenceProxyPushSupplier_i *> curs = m_prx_batch_push.cursor(); curs.is_valid(); ++curs )
+        {
+            if ( ! cadmin->_prx_batch_push.exists( curs.key() ) )
+            {
+                RDIDbgForceLog( "[WARNING] a proxy in m_prx_batch_push but not in ConsumerAdmin: [channel=" << m_channel->MyID() << "], [proxy=" << curs.key() << "] \n" );
+                invalid_ids.push_back( curs.key() );
+            }
+        }
+
+        for ( size_t i = 0; i < invalid_ids.size(); ++i )
+        {
+            m_prx_batch_push_2.remove( invalid_ids[i] );
+        }
+
+        return &m_prx_batch_push_2;
     }
 
     return NULL;
@@ -378,7 +391,7 @@ RDIstrstream& TA_TypeMap::log_output(RDIstrstream& str)
 
             for ( ProxySupplierList::iterator proxy_it = proxy_list.begin(); proxy_it != proxy_list.end(); ++proxy_it )
             {
-                str.setw(9); str << *proxy_it;
+                str.setw(9); str << proxy_it->seq_proxy;
             }
         }
 
@@ -408,7 +421,7 @@ RDIstrstream& TA_TypeMap::log_output(RDIstrstream& str)
 
             for ( ProxySupplierList::iterator proxy_it = proxy_list.begin(); proxy_it != proxy_list.end(); ++proxy_it )
             {
-                str.setw(9); str << *proxy_it;
+                str.setw(9); str << proxy_it->seq_proxy;
             }
         }
 
@@ -419,13 +432,13 @@ RDIstrstream& TA_TypeMap::log_output(RDIstrstream& str)
 }
 
 
-int TA_TypeMap::remove_proxy( LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map, RDIProxySupplier* proxy )
+int TA_TypeMap::remove_proxy( LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map, const ProxySupplierInfo& proxy_info )
 {
     for ( LocationKey2ProxySupplierListMap::iterator it = location_key_2_proxy_list_map.begin(); it != location_key_2_proxy_list_map.end(); ++it )
     {
         unsigned long location_key = it->first;
         ProxySupplierList& proxy_list = it->second;
-        ProxySupplierList::iterator findIt = proxy_list.find( proxy );
+        ProxySupplierList::iterator findIt = proxy_list.find( proxy_info );
 
         if ( findIt != proxy_list.end() )
         {
@@ -444,7 +457,7 @@ int TA_TypeMap::remove_proxy( LocationKey2ProxySupplierListMap& location_key_2_p
 }
 
 
-int TA_TypeMap::remove_proxy( Domain2LocationKey2ProxySupplierListMap& domain_2_location_key_2_proxy_list_map, RDIProxySupplier* proxy, const char* domain_name )
+int TA_TypeMap::remove_proxy( Domain2LocationKey2ProxySupplierListMap& domain_2_location_key_2_proxy_list_map, const ProxySupplierInfo& proxy_info, const char* domain_name )
 {
     Domain2LocationKey2ProxySupplierListMap::iterator find_domain_it = domain_2_location_key_2_proxy_list_map.find( domain_name );
 
@@ -456,7 +469,7 @@ int TA_TypeMap::remove_proxy( Domain2LocationKey2ProxySupplierListMap& domain_2_
         {
             unsigned long location_key = it->first;
             ProxySupplierList& proxy_list = it->second;
-            ProxySupplierList::iterator find_proxy_it = proxy_list.find( proxy );
+            ProxySupplierList::iterator find_proxy_it = proxy_list.find( proxy_info );
 
             if ( find_proxy_it != proxy_list.end() )
             {
@@ -665,8 +678,6 @@ void TA_TypeMap::consistency_check()
         return;
     }
 
-    typedef std::set<RDIProxySupplier*> ProxySupplierList;
-
     ProxySupplierList list_1;
     ProxySupplierList list_2;
     ProxySupplierList list_3;
@@ -699,8 +710,8 @@ void TA_TypeMap::consistency_check()
 
             while ( pnode )
             {
-                list_3.insert( pnode->_prxy );
-                list_123.insert( pnode->_prxy );
+                list_3.insert( ProxySupplierInfo(pnode->_prxy) );
+                list_123.insert( ProxySupplierInfo(pnode->_prxy) );
                 pnode = pnode->_next;
             }
         }
@@ -715,7 +726,7 @@ void TA_TypeMap::consistency_check()
 
             while ( pnode )
             {
-                list_4.insert( pnode->_prxy );
+                list_4.insert( ProxySupplierInfo(pnode->_prxy) );
                 pnode = pnode->_next;
             }
         }
@@ -732,19 +743,19 @@ void TA_TypeMap::consistency_check()
         error_msg << "\n    m_location_key_2_proxy_list_map(list_1): ";
         for ( ProxySupplierList::iterator it = list_1.begin(); it != list_1.end(); ++it )
         {
-            error_msg << "[" << *it << "," << m_proxy_id_map[*it] << "], ";
+            error_msg << "[" << it->proxy << "," << m_proxy_id_map[it->proxy] << "], ";
         }
 
         error_msg << "\n    m_type_map_2->_tmap(list_4):             ";
         for ( ProxySupplierList::iterator it = list_4.begin(); it != list_4.end(); ++it )
         {
-            error_msg << "[" << *it << "," << m_proxy_id_map[*it] << "], ";
+            error_msg << "[" << it->proxy << "," << m_proxy_id_map[it->proxy] << "], ";
         }
 
         error_msg << "\n    in list_1, but not in list4:             ";
         for ( ProxySupplierList::iterator it = list_error.begin(); it != list_error.end(); ++it )
         {
-            error_msg << "[" << *it << "," << m_proxy_id_map[*it] << "], ";
+            error_msg << "[" << it->proxy << "," << m_proxy_id_map[it->proxy] << "], ";
         }
 
         error_msg << "\n";
@@ -755,8 +766,6 @@ void TA_TypeMap::consistency_check()
 
     RDI_Assert( std::includes( list_4.begin(), list_4.end(), list_2.begin(), list_2.end() ), "TA_TypeMap::check failed - 1." );
     RDI_Assert( std::includes( list_4.begin(), list_4.end(), list_3.begin(), list_3.end() ), "TA_TypeMap::check failed - 2." );
-    RDI_Assert( list_123 == list_4, "TA_TypeMap::check failed - 3." );
-    RDI_Assert( list_4.size() == list_1.size() + list_2.size() + list_3.size(), "TA_TypeMap::check failed - 4." );
 }
 
 #endif

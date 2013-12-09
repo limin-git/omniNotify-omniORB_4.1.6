@@ -22,7 +22,31 @@ class TA_TypeMap
 {
 public:
 
-    typedef std::set<RDIProxySupplier*> ProxySupplierList;
+    struct ProxySupplierInfo
+    {
+        ProxySupplierInfo( RDIProxySupplier* proxy_, SequenceProxyPushSupplier_i* seq_proxy_ = NULL, CosNA::ProxyID proxy_id_ = 0 )
+            : proxy( proxy_ ),
+            seq_proxy( seq_proxy_ ),
+            proxy_id( proxy_id_ )
+        {
+        }
+
+        bool operator <( const ProxySupplierInfo& rhs ) const
+        {
+            return proxy < rhs.proxy;
+        }
+
+        bool operator ==( const ProxySupplierInfo& rhs ) const
+        {
+            return proxy == rhs.proxy;
+        }
+
+        RDIProxySupplier* proxy;
+        SequenceProxyPushSupplier_i* seq_proxy;
+        CosNA::ProxyID proxy_id;
+    };
+
+    typedef std::set<ProxySupplierInfo> ProxySupplierList;
     typedef std::map<unsigned long, ProxySupplierList> LocationKey2ProxySupplierListMap;
     typedef std::map<std::string, LocationKey2ProxySupplierListMap> Domain2LocationKey2ProxySupplierListMap;
 
@@ -37,14 +61,14 @@ public:
     ~TA_TypeMap();
     void initialize( EventChannel_i* channel, RDI_TypeMap*& original_type_map );
     void consumer_admin_dispatch_event(RDI_StructuredEvent*  event, ConsumerAdmin_i* cadmin);
-    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>* get_prx_batch_push();
+    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>* get_prx_batch_push( ConsumerAdmin_i* cadmin );
 
 private:
 
-    void update_prx_batch_push( RDIProxySupplier* proxy );
+    void update_prx_batch_push( const ProxySupplierInfo& proxy_info );
 
-    static int remove_proxy( LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map, RDIProxySupplier* proxy );
-    static int remove_proxy( Domain2LocationKey2ProxySupplierListMap& domain_2_location_key_2_proxy_list_map, RDIProxySupplier* proxy, const char* domain_name );
+    static int remove_proxy( LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map, const ProxySupplierInfo& proxy_info );
+    static int remove_proxy( Domain2LocationKey2ProxySupplierListMap& domain_2_location_key_2_proxy_list_map, const ProxySupplierInfo& proxy_info, const char* domain_name );
     static void remove_proxy( LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map, const ProxySupplierList& proxy_list );
     static void remove_proxy( Domain2LocationKey2ProxySupplierListMap& domain_2_location_key_2_proxy_list_map, const ProxySupplierList& proxy_list, const char* domain_name );
 
@@ -68,8 +92,8 @@ public:
     RDI_TypeMap*                                                m_type_map_2; // DO propagate subscription change
     LocationKey2ProxySupplierListMap                            m_location_key_2_proxy_list_map;
     Domain2LocationKey2ProxySupplierListMap                     m_domain_2_location_key_2_proxy_list_map;
-    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>     _prx_batch_push;
-    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>     _prx_batch_push_2;
+    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>     m_prx_batch_push;
+    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>     m_prx_batch_push_2;
     volatile bool                                               m_is_prx_batch_push_changed;
     std::map<RDIProxySupplier*, CosNA::ProxyID>                 m_proxy_id_map;
 };
