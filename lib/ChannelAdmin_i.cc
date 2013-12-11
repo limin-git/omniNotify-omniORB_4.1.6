@@ -490,12 +490,6 @@ ConsumerAdmin_i::obtain_notification_push_supplier(CosNA::ClientType ctype,
     if ( ! (prx = new ProxyPushSupplier_i(this, _channel, _prx_serial)) ) {
       _channel->decr_consumers();
     } else {
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-        RDIProxySupplier* proxy = prx;
-        RDIDbgForceLog( "¡¾CORBA¡¿ ConsumerAdmin_i::obtain_notification_push_supplier new ProxyPushSupplier_i " << prx << " , " << proxy << " - [channel=" << _channel->MyID() << "], [proxy=" << prx->_proxy_id() << "] \n" );
-#endif
-
       proxy_id = _prx_serial++;
       if ( _prx_any_push.insert(proxy_id, prx) != 0 ) {
 	prx->disconnect_client_and_dispose(held, 0);
@@ -512,12 +506,6 @@ ConsumerAdmin_i::obtain_notification_push_supplier(CosNA::ClientType ctype,
   } else if ( ctype == CosNA::STRUCTURED_EVENT ) {
     StructuredProxyPushSupplier_i* prx = 
       new StructuredProxyPushSupplier_i(this,_channel,_prx_serial);
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-    RDIProxySupplier* proxy = prx;
-    RDIDbgForceLog( "¡¾CORBA¡¿ ConsumerAdmin_i::obtain_notification_push_supplier new StructuredProxyPushSupplier_i " << prx << " , " << proxy << " - [channel=" << _channel->MyID() << "], [proxy=" << prx->_proxy_id() << "] \n" );
-#endif
-
     if ( ! prx ) {
       RDIDbgCAdmLog("\tfailed to create proxy\n");
       _channel->decr_consumers();
@@ -539,12 +527,6 @@ ConsumerAdmin_i::obtain_notification_push_supplier(CosNA::ClientType ctype,
   } else if ( ctype == CosNA::SEQUENCE_EVENT ) {
     SequenceProxyPushSupplier_i* prx = 
       new SequenceProxyPushSupplier_i(this,_channel,_prx_serial);
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-    RDIProxySupplier* proxy = prx;
-    RDIDbgForceLog( "¡¾CORBA¡¿ ConsumerAdmin_i::obtain_notification_push_supplier new SequenceProxyPushSupplier_i " << prx << " , " << proxy << " - [channel=" << _channel->MyID() << "], [proxy=" << prx->_proxy_id() << "] \n" );
-#endif
-
     if ( ! prx ) {
       _channel->decr_consumers();
     } else {

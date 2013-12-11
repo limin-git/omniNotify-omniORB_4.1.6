@@ -48,59 +48,6 @@ WRAPPED_DECL_UNBOUNDED_SEQUENCE_TYPE(CosNC::NotifySubscribe_ptr,  CosNotifySubsc
 
 ////////////////////////////////////////////////////////////////////
 
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-std::string Filter_i::get_log_string( RDINotifySubscribe_ptr callback, bool is_lock )
-{
-    SequenceProxyPushSupplier_i* proxy = NULL;
-
-    if ( callback != NULL )
-    {
-        proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( callback );
-    }
-    else
-    {
-        if ( true == is_lock )
-        {
-            RDI_LocksHeld       held = { 0 };
-            RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(filter_lock, held.filter, WHATFN);
-
-            for ( RDI_HashCursor<CosNF::CallbackID, RDINfyCB> curs = _callbacks_i.cursor(); curs.is_valid(); ++curs )
-            {
-                RDINfyCB &cb = curs.val();
-                if (cb.need_schange)
-                {
-                    proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( cb.callback );
-                }
-            }
-        }
-        else
-        {
-            for ( RDI_HashCursor<CosNF::CallbackID, RDINfyCB> curs = _callbacks_i.cursor(); curs.is_valid(); ++curs )
-            {
-                RDINfyCB &cb = curs.val();
-                if (cb.need_schange)
-                {
-                    proxy = dynamic_cast<SequenceProxyPushSupplier_i*>( cb.callback );
-                }
-            }
-        }
-    }
-
-    std::stringstream strm;
-
-    if ( proxy != NULL )
-    {
-        strm << "[channel=" << proxy->_channel->MyID() << "], [proxy=" << proxy->_proxy_id() << "], ";
-    }
-
-    strm << "[filter=" << this->getID() << "] \n";
-
-    return strm.str();
-}
-#endif
-
-
 ConstraintImpl* ConstraintImpl::create(const CosNF::ConstraintExp& constraint)
 {
   ConstraintImpl* cimpl = new ConstraintImpl();
@@ -339,10 +286,6 @@ Filter_i::cleanup_and_dispose(RDI_LocksHeld&            held,
 CosNF::ConstraintInfoSeq* 
 Filter_i::add_constraints(const CosNF::ConstraintExpSeq& clist  WRAPPED_IMPLARG )
 {
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-    RDIDbgForceLog( "¡¾CORBA¡¿ Filter_i::add_constraints beg - " << get_log_string().c_str() );
-#endif
-
   RDI_LocksHeld       held = { 0 };
   CORBA::ULong        size = clist.length();
   CORBA::ULong        base = 0;
@@ -414,11 +357,6 @@ Filter_i::add_constraints(const CosNF::ConstraintExpSeq& clist  WRAPPED_IMPLARG 
     }
   } // end bump lock scope
   delete [] impl_cseq;
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-  RDIDbgForceLog( "Filter_i::add_constraints end - " << get_log_string().c_str() );
-#endif
-
   return const_res;
 }
 
@@ -428,10 +366,6 @@ void
 Filter_i::modify_constraints(const CosNF::ConstraintIDSeq&   del_list,
 			     const CosNF::ConstraintInfoSeq& mod_list  WRAPPED_IMPLARG )
 {
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-    RDIDbgForceLog( "¡¾CORBA¡¿ Filter_i::modify_constraints begin - " << get_log_string().c_str() );
-#endif
-
   RDI_LocksHeld         held      = { 0 };
   ConstraintImpl**      impl_cseq = new ConstraintImpl* [ mod_list.length() ];
   CosN::EventTypeSeq    add_types;
@@ -512,10 +446,6 @@ Filter_i::modify_constraints(const CosNF::ConstraintIDSeq&   del_list,
     notify_subscribers_i(held, add_types, del_types);
   } // end bump lock scope
   delete [] impl_cseq;
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-  RDIDbgForceLog( "Filter_i::modify_constraints end - " << get_log_string().c_str() );
-#endif
 }
 
 #undef WHATFN
@@ -579,10 +509,6 @@ Filter_i::get_all_constraints( WRAPPED_IMPLARG_VOID )
 void
 Filter_i::remove_all_constraints( WRAPPED_IMPLARG_VOID )
 {
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-    RDIDbgForceLog( "¡¾CORBA¡¿ Filter_i::remove_all_constraints begin - " << get_log_string().c_str() );
-#endif
-
   RDI_LocksHeld held = { 0 };
   RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(filter_lock, held.filter, WHATFN);
   if (!held.filter) { RDI_THROW_INV_OBJREF; }
@@ -590,20 +516,12 @@ Filter_i::remove_all_constraints( WRAPPED_IMPLARG_VOID )
   _last_use.set_curtime();
 #endif
   _remove_all_constraints(held);
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-  RDIDbgForceLog( "Filter_i::remove_all_constraints end - " << get_log_string(NULL, false).c_str() );
-#endif
 }
 
 // does the real work; caller should obtain bumped scope lock
 void
 Filter_i::_remove_all_constraints(RDI_LocksHeld& held)
 {
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-    RDIDbgForceLog( "Filter_i::_remove_all_constraints begin - " << get_log_string(NULL, false).c_str() );
-#endif
-
   CosNF::ConstraintIDSeq cstridseq;
   CosN::EventTypeSeq    add_types;
   CosN::EventTypeSeq    rem_types;
@@ -624,10 +542,6 @@ Filter_i::_remove_all_constraints(RDI_LocksHeld& held)
 
   // Finally, notify subscriber about the event type changes 
   notify_subscribers_i(held, add_types, rem_types);
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-  RDIDbgForceLog( "Filter_i::_remove_all_constraints end - " << get_log_string(NULL, false).c_str() );
-#endif
 }
 
 // This is the external attach_callback.
@@ -690,10 +604,6 @@ Filter_i::attach_callback_i(RDI_LocksHeld&          held,
 			    RDINotifySubscribe_ptr  callback,
 			    CORBA::Boolean          need_schange)
 {
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-    RDIDbgForceLog( "Filter_i::attach_callback_i beg - " << get_log_string( callback ).c_str() );
-#endif
-
   RDINfyCB                              cb = { callback, need_schange };
   RDI_HashCursor<RDI_EventType, void *> curs;
   CosN::EventTypeSeq                    add_types;
@@ -728,10 +638,6 @@ Filter_i::attach_callback_i(RDI_LocksHeld&          held,
   if (need_schange) {
     callback->propagate_schange(held, add_types, del_types, this);
   }
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-  RDIDbgForceLog( "Filter_i::attach_callback_i end - " << get_log_string( callback ).c_str() );
-#endif
 
   return cbkid;
 }
@@ -803,10 +709,6 @@ Filter_i::notify_subscribers_i(RDI_LocksHeld&             held,
 			       const CosN::EventTypeSeq&  add_seq, 
 			       const CosN::EventTypeSeq&  del_seq)
 {
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-    RDIDbgForceLog( "Filter_i::notify_subscribers_i begin - " << get_log_string(NULL, false).c_str() );
-#endif
-
   RDI_HashCursor<CosNF::CallbackID, RDINfyCB>                     curs1;
   RDI_HashCursor<CosNF::CallbackID, CosNC::NotifySubscribe_ptr>   curs2;
   CosN::EventTypeSeq new_add_seq;
@@ -880,10 +782,6 @@ Filter_i::notify_subscribers_i(RDI_LocksHeld&             held,
       }
     } // end of release scope
   }
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-  RDIDbgForceLog( "Filter_i::notify_subscribers_i end - " << get_log_string(NULL, false).c_str() );
-#endif
 }
 
 ////////////////////////////////////////////////////////////////////

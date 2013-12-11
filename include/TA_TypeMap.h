@@ -26,8 +26,8 @@ public:
     {
         ProxySupplierInfo( RDIProxySupplier* proxy_, SequenceProxyPushSupplier_i* seq_proxy_ = NULL, CosNA::ProxyID proxy_id_ = 0 )
             : proxy( proxy_ ),
-            seq_proxy( seq_proxy_ ),
-            proxy_id( proxy_id_ )
+              seq_proxy( seq_proxy_ ),
+              proxy_id( proxy_id_ )
         {
         }
 
@@ -36,14 +36,9 @@ public:
             return proxy < rhs.proxy;
         }
 
-        bool operator ==( const ProxySupplierInfo& rhs ) const
-        {
-            return proxy == rhs.proxy;
-        }
-
+        CosNA::ProxyID proxy_id;
         RDIProxySupplier* proxy;
         SequenceProxyPushSupplier_i* seq_proxy;
-        CosNA::ProxyID proxy_id;
     };
 
     typedef std::set<ProxySupplierInfo> ProxySupplierList;
@@ -76,18 +71,9 @@ private:
     static int get_location_key_from_filter_constraint_expr( const char* constraint_expr );  // ( $Region == '123' )
     static int get_location_key_from_event( RDI_StructuredEvent* event );
 
-    static void get_filter_str( Filter_i* filter, std::ostream& strm );
-    static void get_event_type_str( const CosN::EventType& event_type, std::ostream& strm );
-    static void get_event_type_list_str( const CosN::EventTypeSeq& event_type_list, std::ostream& strm );
-
-private:
-
-    void consistency_check();
-
 public:
 
     TW_Mutex                                                    m_lock;
-    EventChannel_i*                                             m_channel;
     RDI_TypeMap*                                                m_type_map_1; // original type map, DO NOT propagate subscription change
     RDI_TypeMap*                                                m_type_map_2; // DO propagate subscription change
     LocationKey2ProxySupplierListMap                            m_location_key_2_proxy_list_map;

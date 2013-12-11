@@ -448,15 +448,6 @@ RDIProxySupplier::_add_event(RDI_StructuredEvent* entry)
 CosNF::FilterID
 RDIProxySupplier::add_filter(CosNF::Filter_ptr filter)
 {
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>(this);
-    Filter_i* fltr    = Filter_i::Filter2Filter_i(filter);
-    CosNA::ChannelID channel_id = proxy->_channel->MyID();
-    CosNA::ProxyID proxy_id = proxy->_proxy_id();
-    unsigned long filter_id = fltr->getID();
-    RDIDbgForceLog( "¡¾CORBA¡¿ RDIProxySupplier::add_filter begin - [channel=" << channel_id << "], [proxy=" << proxy_id << "], [filter=" << filter_id << "]  \n" );
-#endif
-
   CosNF::FilterID  res;
   RDI_LocksHeld    held = { 0 };
   RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(outer_proxy_lock, held.sproxy, WHATFN);
@@ -494,10 +485,6 @@ RDIProxySupplier::add_filter(CosNF::Filter_ptr filter)
 	    _rqstypes.length(0);
 	  }
 	  res = _fa_helper.add_filter_i(held, filter, (RDINotifySubscribe_ptr) this, 1); // 1 => DO want propagate_schange callbacks
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-      RDIDbgForceLog( "RDIProxySupplier::add_filter end - [channel=" << channel_id << "], [proxy=" << proxy_id << "], [filter=" << filter_id << "]  \n" );
-#endif
 	} // end inner sproxy lock scope
       } // end typemap lock scope
     } // end channel lock scope
@@ -510,20 +497,6 @@ RDIProxySupplier::add_filter(CosNF::Filter_ptr filter)
 void
 RDIProxySupplier::remove_filter(CosNF::FilterID fltrID)
 {
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-    SequenceProxyPushSupplier_i* proxy = dynamic_cast<SequenceProxyPushSupplier_i*>(this);
-    FAdminFilterEntry entry;
-    if ( ! _fa_helper._filters.lookup(fltrID, entry) )
-    {
-        throw CosNF::FilterNotFound();
-    }
-    Filter_i *fltr = entry.filter;
-    CosNA::ChannelID channel_id = proxy->_channel->MyID();
-    CosNA::ProxyID proxy_id = proxy->_proxy_id();
-    unsigned long filter_id = fltr->getID();
-    RDIDbgForceLog( "¡¾CORBA¡¿ RDIProxySupplier::remove_filter begin - [channel=" << channel_id << "], [proxy=" << proxy_id << "], [filter=" << filter_id << "]  \n" );
-#endif
-
   RDI_LocksHeld    held = { 0 };
   RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(outer_proxy_lock, held.sproxy, WHATFN);
   if (!held.sproxy) { RDI_THROW_INV_OBJREF; }
@@ -558,10 +531,6 @@ RDIProxySupplier::remove_filter(CosNF::FilterID fltrID)
       } // end typemap lock scope
     } // end channel lock scope
   } // end temporary release scope
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-  RDIDbgForceLog( "RDIProxySupplier::remove_filter end - [channel=" << channel_id << "], [proxy=" << proxy_id << "], [filter=" << filter_id << "]  \n" );
-#endif
 }
 
 #undef WHATFN

@@ -384,6 +384,5 @@ stop_compiling
 
 // transactive macro switches
 #define USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL                              //CosNotifyChannelAdmin_i.h:EventChannel_i
-#define USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
 
 #endif /* __CORBA_WRAPPERS_H__ */

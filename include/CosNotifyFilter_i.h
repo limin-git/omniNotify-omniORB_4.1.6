@@ -49,10 +49,6 @@ class EventChannel_i;
 class Filter_i;
 class MappingFilter_i;
 
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-#include <string>
-#endif
-
 /** RDINotifySubscribe
   *
   * The default 'subscription_change' method does not include filter
@@ -292,10 +288,6 @@ private:
   void           _add_ev_type(CosN::EventTypeSeq& tsq, const RDI_EventType& etp);
 
   virtual ~Filter_i();
-
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL_DEBUG
-  std::string get_log_string( RDINotifySubscribe_ptr callback = NULL, bool is_lock = true );
-#endif
 };
 
 
