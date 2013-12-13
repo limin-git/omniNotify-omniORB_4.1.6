@@ -78,8 +78,8 @@ public:
     RDI_TypeMap*                                                m_type_map_2; // DO propagate subscription change
     LocationKey2ProxySupplierListMap                            m_location_key_2_proxy_list_map;
     Domain2LocationKey2ProxySupplierListMap                     m_domain_2_location_key_2_proxy_list_map;
-    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>     m_prx_batch_push;
-    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>     m_prx_batch_push_2;
+    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i*>      m_prx_batch_push;
+    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i*>      m_prx_batch_push_2;
     volatile bool                                               m_is_prx_batch_push_changed;
     std::map<RDIProxySupplier*, CosNA::ProxyID>                 m_proxy_id_map;
 };

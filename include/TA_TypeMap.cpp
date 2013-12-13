@@ -209,7 +209,7 @@ void TA_TypeMap::update_prx_batch_push( const ProxySupplierInfo& proxy_info )
 }
 
 
-RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>* TA_TypeMap::get_prx_batch_push( ConsumerAdmin_i* cadmin )
+RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i*>* TA_TypeMap::get_prx_batch_push( ConsumerAdmin_i* cadmin )
 {
     if ( true == m_location_key_2_proxy_list_map.empty() && true == m_domain_2_location_key_2_proxy_list_map.empty() )
     {
@@ -222,7 +222,7 @@ RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>* TA_TypeMap::get_prx_bat
 
         m_prx_batch_push_2.clear();
 
-        for ( RDI_HashCursor<CosNA::ProxyID, SequenceProxyPushSupplier_i *> curs = m_prx_batch_push.cursor(); curs.is_valid(); ++curs )
+        for ( RDI_HashCursor<CosNA::ProxyID, SequenceProxyPushSupplier_i*> curs = m_prx_batch_push.cursor(); curs.is_valid(); ++curs )
         {
             m_prx_batch_push_2.insert( curs.key(), curs.val() );
         }
