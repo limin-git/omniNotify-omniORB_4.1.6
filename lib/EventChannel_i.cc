@@ -107,10 +107,6 @@ EventChannel_i::EventChannel_i(EventChannelFactory_i*        cfactory,
   // Create the type mapping object to be used for matching
   _type_map = new RDI_TypeMap(this, 256);
 
-#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
-    m_ta_type_map.initialize( this, _type_map );
-#endif
-
   RDI_AssertAllocThrowNo(_type_map, "Memory allocation failure - RDI_TypeMap\n");
 
   // Create the manager for the queue of announced events
@@ -200,6 +196,10 @@ EventChannel_i::EventChannel_i(EventChannelFactory_i*        cfactory,
 #endif
   WRAPPED_REGISTER_IMPL2(this, &_my_name);
   _my_oref = WRAPPED_IMPL2OREF(AttN::EventChannel, this);
+
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
+  m_ta_type_map.initialize( this, _def_consumer_admin, _type_map );
+#endif
 }
 
 EventChannel_i::~EventChannel_i()

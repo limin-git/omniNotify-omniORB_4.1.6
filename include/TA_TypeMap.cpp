@@ -26,13 +26,15 @@ TA_TypeMap::~TA_TypeMap()
 }
 
 
-void TA_TypeMap::initialize( EventChannel_i* channel, RDI_TypeMap*& original_type_map )
+void TA_TypeMap::initialize( EventChannel_i* channel, ConsumerAdmin_i* cadmin, RDI_TypeMap*& original_type_map )
 {
     delete original_type_map;
     original_type_map = new RDI_TypeMap(NULL, 256); // DO NOT propagate subscription change
 
     m_type_map_1 = original_type_map;
     m_type_map_2 = new RDI_TypeMap(channel, 256); // DO propagate subscription change
+
+    m_cadmin = cadmin;
 }
 
 
@@ -42,28 +44,25 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
 
     bool is_changed = false;
 
-    ProxySupplierInfo proxy_info( proxy, dynamic_cast<SequenceProxyPushSupplier_i*>(proxy), proxy->_proxy_id() );
-    m_proxy_id_map[proxy] = proxy->_proxy_id();
+    ProxyInfo prx_info( proxy, dynamic_cast<SequenceProxyPushSupplier_i*>(proxy), proxy->_proxy_id() );
+    m_prx_2_id_map[proxy] = proxy->_proxy_id();
 
-    if ( added.length() )
+    if ( added.length() && RDI_STR_EQ( added[0].type_name, "*" )  )
     {
-        if ( RDI_STR_EQ( added[0].type_name, "*" ) )
+        int location_key = get_location_key_from_filter( filter );
+
+        if ( location_key != -1 )
         {
-            int location_key = get_location_key_from_filter( filter );
-
-            if ( location_key != -1 )
+            if ( RDI_STR_EQ( added[0].domain_name, "*" ) )
             {
-                if ( RDI_STR_EQ( added[0].domain_name, "*" ) )
-                {
-                    m_location_key_2_proxy_list_map[location_key].insert( proxy_info );
-                }
-                else
-                {
-                    m_domain_2_location_key_2_proxy_list_map[added[0].domain_name.in()][location_key].insert( proxy_info );
-                }
-
-                is_changed = true;
+                m_lk2ps_map[location_key].insert( prx_info );
             }
+            else
+            {
+                m_d2lk2ps_map[added[0].domain_name.in()][location_key].insert( prx_info );
+            }
+
+            is_changed = true;
         }
     }
 
@@ -71,18 +70,18 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
     {
         int location_key = -1;
 
-        if ( false == m_location_key_2_proxy_list_map.empty() && ( RDI_STR_EQ( deled[0].domain_name, "*" ) && RDI_STR_EQ( deled[0].type_name, "*" ) ) )
+        if ( false == m_lk2ps_map.empty() && ( RDI_STR_EQ( deled[0].domain_name, "*" ) && RDI_STR_EQ( deled[0].type_name, "*" ) ) )
         {
-            location_key = remove_proxy( m_location_key_2_proxy_list_map, proxy_info ) ;
+            location_key = remove_proxy( m_lk2ps_map, prx_info ) ;
         }
-        else if ( ( false == m_domain_2_location_key_2_proxy_list_map.empty() ) && RDI_STR_EQ( deled[0].type_name, "*" ) )
+        else if ( ( false == m_d2lk2ps_map.empty() ) && RDI_STR_EQ( deled[0].type_name, "*" ) )
         {
-            location_key = remove_proxy( m_domain_2_location_key_2_proxy_list_map, proxy_info, deled[0].domain_name.in() );
+            location_key = remove_proxy( m_d2lk2ps_map, prx_info, deled[0].domain_name.in() );
         }
 
         if ( location_key != -1 )
         {
-            m_proxy_id_map.erase( proxy );
+            m_prx_2_id_map.erase( proxy );
             is_changed = true;
         }
     }
@@ -91,9 +90,9 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
     {
         m_type_map_1->update( held, added, deled, proxy, filter );
 
-        if ( false == m_location_key_2_proxy_list_map.empty() || false == m_domain_2_location_key_2_proxy_list_map.empty() )
+        if ( false == m_lk2ps_map.empty() || false == m_d2lk2ps_map.empty() )
         {
-            update_prx_batch_push( proxy_info );
+            update_prx_batch_push( prx_info );
         }
     }
 
@@ -101,9 +100,9 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
 }
 
 
-void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event, ConsumerAdmin_i* cadmin)
+void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event)
 {
-    if ( true == m_location_key_2_proxy_list_map.empty() && true == m_domain_2_location_key_2_proxy_list_map.empty() )
+    if ( true == m_lk2ps_map.empty() && true == m_d2lk2ps_map.empty() )
     {
         return;
     }
@@ -117,83 +116,81 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event, Consu
 
     TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "");
 
-    ProxySupplierList inconsistent_proxy_list_1;
-    ProxySupplierList inconsistent_proxy_list_2;
+    ProxySupplierList inconsistent_prx_list_1;
+    ProxySupplierList inconsistent_prx_list_2;
 
-    if ( false == m_location_key_2_proxy_list_map.empty() )
+    if ( false == m_lk2ps_map.empty() )
     {
-        LocationKey2ProxySupplierListMap::iterator find_location_it = m_location_key_2_proxy_list_map.find( location_key );
+        LocationKey2ProxySupplierListMap::iterator find_location_it = m_lk2ps_map.find( location_key );
 
-        if ( find_location_it != m_location_key_2_proxy_list_map.end() )
+        if ( find_location_it != m_lk2ps_map.end() )
         {
-            ProxySupplierList& proxy_list = find_location_it->second;
+            ProxySupplierList& prx_list = find_location_it->second;
 
-            for ( ProxySupplierList::iterator it = proxy_list.begin(); it != proxy_list.end(); ++it )
+            for ( ProxySupplierList::iterator it = prx_list.begin(); it != prx_list.end(); ++it )
             {
-                if ( cadmin->_prx_batch_push.exists( it->proxy_id ) )
+                if ( m_cadmin->_prx_batch_push.exists( it->prx_id ) )
                 {
-                    it->seq_proxy->add_event(event);
+                    it->seq_prx->add_event(event);
                 }
                 else
                 {
-                    inconsistent_proxy_list_1.insert( *it );
+                    inconsistent_prx_list_1.insert( *it );
                 }
             }
         }
     }
 
-    if ( false == m_domain_2_location_key_2_proxy_list_map.empty() )
+    if ( false == m_d2lk2ps_map.empty() )
     {
-        Domain2LocationKey2ProxySupplierListMap::iterator find_domain_it = m_domain_2_location_key_2_proxy_list_map.find( event->get_domain_name() );
+        Domain2LocationKey2ProxySupplierListMap::iterator find_domain_it = m_d2lk2ps_map.find( event->get_domain_name() );
 
-        if ( find_domain_it != m_domain_2_location_key_2_proxy_list_map.end() )
+        if ( find_domain_it != m_d2lk2ps_map.end() )
         {
-            LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map = find_domain_it->second;
-            LocationKey2ProxySupplierListMap::iterator find_location_it = location_key_2_proxy_list_map.find( location_key );
+            LocationKey2ProxySupplierListMap& lk2ps_map = find_domain_it->second;
+            LocationKey2ProxySupplierListMap::iterator find_location_it = lk2ps_map.find( location_key );
 
-            if ( find_location_it != location_key_2_proxy_list_map.end() )
+            if ( find_location_it != lk2ps_map.end() )
             {
-                ProxySupplierList& proxy_list = find_location_it->second;
+                ProxySupplierList& prx_list = find_location_it->second;
 
-                for ( ProxySupplierList::iterator it = proxy_list.begin(); it != proxy_list.end(); ++it )
+                for ( ProxySupplierList::iterator it = prx_list.begin(); it != prx_list.end(); ++it )
                 {
-                    if ( cadmin->_prx_batch_push.exists( it->proxy_id ) )
+                    if ( m_cadmin->_prx_batch_push.exists( it->prx_id ) )
                     {
-                        it->seq_proxy->add_event(event);
+                        it->seq_prx->add_event(event);
                     }
                     else
                     {
-                        inconsistent_proxy_list_2.insert( *it );
+                        inconsistent_prx_list_2.insert( *it );
                     }
                 }
             }
         }
     }
 
-    if ( false == inconsistent_proxy_list_1.empty() )
+    if ( false == inconsistent_prx_list_1.empty() )
     {
-        remove_proxy( m_location_key_2_proxy_list_map, inconsistent_proxy_list_1 );
+        remove_proxy( m_lk2ps_map, inconsistent_prx_list_1 );
     }
 
-    if ( false == inconsistent_proxy_list_2.empty() )
+    if ( false == inconsistent_prx_list_2.empty() )
     {
-        remove_proxy( m_domain_2_location_key_2_proxy_list_map, inconsistent_proxy_list_2, event->get_domain_name() );
+        remove_proxy( m_d2lk2ps_map, inconsistent_prx_list_2, event->get_domain_name() );
     }
 }
 
 
-void TA_TypeMap::update_prx_batch_push( const ProxySupplierInfo& proxy_info )
+void TA_TypeMap::update_prx_batch_push( const ProxyInfo& prx_info )
 {
     m_prx_batch_push.clear();
     m_is_prx_batch_push_changed = true;
 
     for ( RDI_HashCursor<CosN::EventType, RDI_TypeMap::VNode_t> curs = m_type_map_1->_tmap.cursor(); curs.is_valid(); curs++ )
     {
-        RDI_TypeMap::PNode_t* pnode = curs.val()._prxy;
-
-        while ( pnode )
+        for ( RDI_TypeMap::PNode_t* pnode = curs.val()._prxy; pnode; pnode = pnode->_next )
         {
-            if ( proxy_info.proxy->_myadmin->_prx_batch_push.exists( m_proxy_id_map[ pnode->_prxy ] ) )
+            if ( m_cadmin->_prx_batch_push.exists( m_prx_2_id_map[ pnode->_prxy ] ) )
             {
                 SequenceProxyPushSupplier_i* seq_push_proxy_supplier = dynamic_cast<SequenceProxyPushSupplier_i*>( pnode->_prxy );
 
@@ -202,16 +199,14 @@ void TA_TypeMap::update_prx_batch_push( const ProxySupplierInfo& proxy_info )
                     m_prx_batch_push.insert( seq_push_proxy_supplier->_proxy_id(), seq_push_proxy_supplier );
                 }
             }
-
-            pnode = pnode->_next;
         }
     }
 }
 
 
-RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i*>* TA_TypeMap::get_prx_batch_push( ConsumerAdmin_i* cadmin )
+RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i*>* TA_TypeMap::get_prx_batch_push()
 {
-    if ( true == m_location_key_2_proxy_list_map.empty() && true == m_domain_2_location_key_2_proxy_list_map.empty() )
+    if ( true == m_lk2ps_map.empty() && true == m_d2lk2ps_map.empty() )
     {
         return NULL;
     }
@@ -235,7 +230,7 @@ RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i*>* TA_TypeMap::get_prx_batc
 
         for ( RDI_HashCursor<CosNA::ProxyID, SequenceProxyPushSupplier_i*> curs = m_prx_batch_push_2.cursor(); curs.is_valid(); ++curs )
         {
-            if ( ! cadmin->_prx_batch_push.exists( curs.key() ) )
+            if ( ! m_cadmin->_prx_batch_push.exists( curs.key() ) )
             {
                 invalid_ids.push_back( curs.key() );
             }
@@ -251,21 +246,21 @@ RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i*>* TA_TypeMap::get_prx_batc
 }
 
 
-int TA_TypeMap::remove_proxy( LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map, const ProxySupplierInfo& proxy_info )
+int TA_TypeMap::remove_proxy( LocationKey2ProxySupplierListMap& lk2ps_map, const ProxyInfo& prx_info )
 {
-    for ( LocationKey2ProxySupplierListMap::iterator it = location_key_2_proxy_list_map.begin(); it != location_key_2_proxy_list_map.end(); ++it )
+    for ( LocationKey2ProxySupplierListMap::iterator it = lk2ps_map.begin(); it != lk2ps_map.end(); ++it )
     {
         unsigned long location_key = it->first;
-        ProxySupplierList& proxy_list = it->second;
-        ProxySupplierList::iterator findIt = proxy_list.find( proxy_info );
+        ProxySupplierList& prx_list = it->second;
+        ProxySupplierList::iterator findIt = prx_list.find( prx_info );
 
-        if ( findIt != proxy_list.end() )
+        if ( findIt != prx_list.end() )
         {
-            proxy_list.erase( findIt );
+            prx_list.erase( findIt );
 
-            if ( true == proxy_list.empty() )
+            if ( true == prx_list.empty() )
             {
-                location_key_2_proxy_list_map.erase( it );
+                lk2ps_map.erase( it );
             }
 
             return location_key; // the proxy has just one filter
@@ -276,31 +271,31 @@ int TA_TypeMap::remove_proxy( LocationKey2ProxySupplierListMap& location_key_2_p
 }
 
 
-int TA_TypeMap::remove_proxy( Domain2LocationKey2ProxySupplierListMap& domain_2_location_key_2_proxy_list_map, const ProxySupplierInfo& proxy_info, const char* domain_name )
+int TA_TypeMap::remove_proxy( Domain2LocationKey2ProxySupplierListMap& d2lk2ps_map, const ProxyInfo& prx_info, const char* domain_name )
 {
-    Domain2LocationKey2ProxySupplierListMap::iterator find_domain_it = domain_2_location_key_2_proxy_list_map.find( domain_name );
+    Domain2LocationKey2ProxySupplierListMap::iterator find_domain_it = d2lk2ps_map.find( domain_name );
 
-    if ( find_domain_it != domain_2_location_key_2_proxy_list_map.end() )
+    if ( find_domain_it != d2lk2ps_map.end() )
     {
-        LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map = find_domain_it->second;
+        LocationKey2ProxySupplierListMap& lk2ps_map = find_domain_it->second;
 
-        for ( LocationKey2ProxySupplierListMap::iterator it = location_key_2_proxy_list_map.begin(); it != location_key_2_proxy_list_map.end(); ++it )
+        for ( LocationKey2ProxySupplierListMap::iterator it = lk2ps_map.begin(); it != lk2ps_map.end(); ++it )
         {
             unsigned long location_key = it->first;
-            ProxySupplierList& proxy_list = it->second;
-            ProxySupplierList::iterator find_proxy_it = proxy_list.find( proxy_info );
+            ProxySupplierList& prx_list = it->second;
+            ProxySupplierList::iterator find_proxy_it = prx_list.find( prx_info );
 
-            if ( find_proxy_it != proxy_list.end() )
+            if ( find_proxy_it != prx_list.end() )
             {
-                proxy_list.erase( find_proxy_it );
+                prx_list.erase( find_proxy_it );
 
-                if ( true == proxy_list.empty() )
+                if ( true == prx_list.empty() )
                 {
-                    location_key_2_proxy_list_map.erase( it );
+                    lk2ps_map.erase( it );
 
-                    if ( true == location_key_2_proxy_list_map.empty() )
+                    if ( true == lk2ps_map.empty() )
                     {
-                        domain_2_location_key_2_proxy_list_map.erase( find_domain_it );
+                        d2lk2ps_map.erase( find_domain_it );
                     }
                 }
 
@@ -313,20 +308,20 @@ int TA_TypeMap::remove_proxy( Domain2LocationKey2ProxySupplierListMap& domain_2_
 }
 
 
-void TA_TypeMap::remove_proxy( LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map, const ProxySupplierList& proxy_list )
+void TA_TypeMap::remove_proxy( LocationKey2ProxySupplierListMap& lk2ps_map, const ProxySupplierList& prx_list )
 {
-    for ( ProxySupplierList::const_iterator it = proxy_list.begin(); it != proxy_list.end(); ++it )
+    for ( ProxySupplierList::const_iterator it = prx_list.begin(); it != prx_list.end(); ++it )
     {
-        remove_proxy( location_key_2_proxy_list_map, *it );
+        remove_proxy( lk2ps_map, *it );
     }
 }
 
 
-void TA_TypeMap::remove_proxy( Domain2LocationKey2ProxySupplierListMap& domain_2_location_key_2_proxy_list_map, const ProxySupplierList& proxy_list, const char* domain_name )
+void TA_TypeMap::remove_proxy( Domain2LocationKey2ProxySupplierListMap& d2lk2ps_map, const ProxySupplierList& prx_list, const char* domain_name )
 {
-    for ( ProxySupplierList::const_iterator it = proxy_list.begin(); it != proxy_list.end(); ++it )
+    for ( ProxySupplierList::const_iterator it = prx_list.begin(); it != prx_list.end(); ++it )
     {
-        remove_proxy( domain_2_location_key_2_proxy_list_map, *it, domain_name );
+        remove_proxy( d2lk2ps_map, *it, domain_name );
     }
 }
 
@@ -458,58 +453,58 @@ RDIstrstream& TA_TypeMap::log_output(RDIstrstream& str)
 
     TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "");
 
-    if ( m_location_key_2_proxy_list_map.empty() && m_domain_2_location_key_2_proxy_list_map.empty() )
+    if ( m_lk2ps_map.empty() && m_d2lk2ps_map.empty() )
     {
         str << "\t(no entries)\n";
         return str;
     }
 
-    if ( false == m_location_key_2_proxy_list_map.empty() )
+    if ( false == m_lk2ps_map.empty() )
     {
         str << "*::* ( $Region == 'L' )";
 
-        for ( LocationKey2ProxySupplierListMap::iterator it = m_location_key_2_proxy_list_map.begin(); it != m_location_key_2_proxy_list_map.end(); ++it )
+        for ( LocationKey2ProxySupplierListMap::iterator it = m_lk2ps_map.begin(); it != m_lk2ps_map.end(); ++it )
         {
             unsigned long location_key = it->first;
-            ProxySupplierList& proxy_list = it->second;
+            ProxySupplierList& prx_list = it->second;
 
             str << "\n\tL ";
             str.setw(3); str << location_key;
             str << ": ";
 
-            for ( ProxySupplierList::iterator proxy_it = proxy_list.begin(); proxy_it != proxy_list.end(); ++proxy_it )
+            for ( ProxySupplierList::iterator proxy_it = prx_list.begin(); proxy_it != prx_list.end(); ++proxy_it )
             {
-                str.setw(9); str << proxy_it->seq_proxy;
+                str.setw(9); str << proxy_it->seq_prx;
             }
         }
 
         str << "\n";
     }
 
-    for ( Domain2LocationKey2ProxySupplierListMap::iterator it = m_domain_2_location_key_2_proxy_list_map.begin(); it != m_domain_2_location_key_2_proxy_list_map.end(); ++it )
+    for ( Domain2LocationKey2ProxySupplierListMap::iterator it = m_d2lk2ps_map.begin(); it != m_d2lk2ps_map.end(); ++it )
     {
         const std::string& domain_name = it->first;
-        LocationKey2ProxySupplierListMap& location_key_2_proxy_list_map = it->second;
+        LocationKey2ProxySupplierListMap& lk2ps_map = it->second;
 
         str << domain_name.c_str() << "::* ( $Region == 'L' )";
 
-        if ( location_key_2_proxy_list_map.empty() )
+        if ( lk2ps_map.empty() )
         {
             str << "\n\t(no entries)";
         }
 
-        for ( LocationKey2ProxySupplierListMap::iterator it = location_key_2_proxy_list_map.begin(); it != location_key_2_proxy_list_map.end(); ++it )
+        for ( LocationKey2ProxySupplierListMap::iterator it = lk2ps_map.begin(); it != lk2ps_map.end(); ++it )
         {
             unsigned long location_key = it->first;
-            ProxySupplierList& proxy_list = it->second;
+            ProxySupplierList& prx_list = it->second;
 
             str << "\n\tL ";
             str.setw(3); str << location_key;
             str << ": ";
 
-            for ( ProxySupplierList::iterator proxy_it = proxy_list.begin(); proxy_it != proxy_list.end(); ++proxy_it )
+            for ( ProxySupplierList::iterator proxy_it = prx_list.begin(); proxy_it != prx_list.end(); ++proxy_it )
             {
-                str.setw(9); str << proxy_it->seq_proxy;
+                str.setw(9); str << proxy_it->seq_prx;
             }
         }
 

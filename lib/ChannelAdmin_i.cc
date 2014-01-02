@@ -1410,12 +1410,12 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
   }
 
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
-    _channel->m_ta_type_map.consumer_admin_dispatch_event( event, this );
+    _channel->m_ta_type_map.consumer_admin_dispatch_event( event );
 
-    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>* _prx_batch_push_p = _channel->m_ta_type_map.get_prx_batch_push( this );
-    if ( NULL == _prx_batch_push_p )
+    RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i *>* _prx_batch_push_ptr = _channel->m_ta_type_map.get_prx_batch_push();
+    if ( NULL == _prx_batch_push_ptr )
     {
-        _prx_batch_push_p = &_prx_batch_push;
+        _prx_batch_push_ptr = &_prx_batch_push;
     }
 #endif
 
@@ -1616,7 +1616,7 @@ ConsumerAdmin_i::dispatch_event(RDI_StructuredEvent*  event,
 
   // Evaluate Filters for consumers using SequenceProxyPushSupplier_i
 #ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
-  for ( bpushcur=_prx_batch_push_p->cursor(); bpushcur.is_valid(); ++bpushcur ) {
+  for ( bpushcur=_prx_batch_push_ptr->cursor(); bpushcur.is_valid(); ++bpushcur ) {
 #else
   for ( bpushcur=_prx_batch_push.cursor(); bpushcur.is_valid(); ++bpushcur ) {
 #endif
