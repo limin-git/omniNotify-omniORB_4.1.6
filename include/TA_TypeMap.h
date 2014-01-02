@@ -42,8 +42,8 @@ public:
     };
 
     typedef std::set<ProxyInfo> ProxySupplierList;
-    typedef std::map<unsigned long, ProxySupplierList> LocationKey2ProxySupplierListMap;
-    typedef std::map<std::string, LocationKey2ProxySupplierListMap> Domain2LocationKey2ProxySupplierListMap;
+    typedef std::map<unsigned long, ProxySupplierList> LocationKey2ProxyListMap;
+    typedef std::map<std::string, LocationKey2ProxyListMap> Domain2LocationKey2ProxyListMap;
 
 public:
 
@@ -62,10 +62,10 @@ private:
 
     void update_prx_batch_push( const ProxyInfo& prx_info );
 
-    static int  remove_proxy( LocationKey2ProxySupplierListMap& lk2ps_map, const ProxyInfo& prx_info );
-    static int  remove_proxy( Domain2LocationKey2ProxySupplierListMap& d2lk2ps_map, const ProxyInfo& prx_info, const char* domain_name );
-    static void remove_proxy( LocationKey2ProxySupplierListMap& lk2ps_map, const ProxySupplierList& prx_list );
-    static void remove_proxy( Domain2LocationKey2ProxySupplierListMap& d2lk2ps_map, const ProxySupplierList& prx_list, const char* domain_name );
+    static int  remove_proxy( LocationKey2ProxyListMap& lk2prx_map, const ProxyInfo& prx_info );
+    static int  remove_proxy( Domain2LocationKey2ProxyListMap& d2lk2prx_map, const ProxyInfo& prx_info, const char* domain_name );
+    static void remove_proxy( LocationKey2ProxyListMap& lk2prx_map, const ProxySupplierList& prx_list );
+    static void remove_proxy( Domain2LocationKey2ProxyListMap& d2lk2prx_map, const ProxySupplierList& prx_list, const char* domain_name );
 
     static int get_location_key_from_filter( Filter_i* filter );
     static int get_location_key_from_filter_constraint_expr( const char* constraint_expr );  // ( $Region == '123' )
@@ -77,8 +77,8 @@ public:
     ConsumerAdmin_i*                                            m_cadmin;
     RDI_TypeMap*                                                m_type_map_1; // original type map, DO NOT propagate subscription change
     RDI_TypeMap*                                                m_type_map_2; // DO propagate subscription change
-    LocationKey2ProxySupplierListMap                            m_lk2ps_map;
-    Domain2LocationKey2ProxySupplierListMap                     m_d2lk2ps_map;
+    LocationKey2ProxyListMap                                    m_lk2prx_map;
+    Domain2LocationKey2ProxyListMap                             m_d2lk2prx_map;
     RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i*>      m_prx_batch_push;
     RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i*>      m_prx_batch_push_2;
     volatile bool                                               m_is_prx_batch_push_changed;
