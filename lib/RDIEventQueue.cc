@@ -263,15 +263,10 @@ RDI_EventQueue::next_event(RDI_StructuredEvent* eprev, CORBA::Boolean block)
       { // introduce oplock scope
 	TW_SCOPE_LOCK(evqueue_lock, _oplock, "evqueue", WHATFN);
 	_numblk += 1;
-
-    RDIDbgChanLog("Thrd=" << TW_ID() << " wait before, only for test\n");
-
 	while ( ! _finish && ! _evhead ) {
 	  TW_CV_WAIT(_qempty, _oplock, "evqueue", WHATFN);
 	}
-    RDIDbgChanLog("Thrd=" << TW_ID() << " wait end, only for test\n");
-
-    _numblk -= 1;
+	_numblk -= 1;
 	if ( _finish ) {	// We are shutting down
 	  return 0;
 	}
@@ -449,7 +444,7 @@ void
 RDI_EventQueue::out_stats(RDIstrstream& str)
 {
   TW_SCOPE_LOCK(evqueue_lock, _oplock, "evqueue", WHATFN);
-  str << "--------------\nRDI_EventQueue " << "\n--------------\n";
+  str << "--------------\nRDI_EventQueue\n--------------\n";
   str << "Size " << _length << " [Max " << _maxQueueLength << "] #announced " << 
     _announ << " #dropped " << _nmdrop << " period " << _queueGCPeriod << '\n';
 }

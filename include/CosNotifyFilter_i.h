@@ -455,7 +455,6 @@ typedef struct FAdminFilterEntry_s {
 } FAdminFilterEntry;
 
 class FAdminHelper {
-    friend class RDIProxySupplier; // TODO: remove friend
 public:
   FAdminHelper(const char *resty);
   ~FAdminHelper();

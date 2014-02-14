@@ -485,6 +485,7 @@ RDIProxySupplier::add_filter(CosNF::Filter_ptr filter)
 	    _rqstypes.length(0);
 	  }
 	  res = _fa_helper.add_filter_i(held, filter, (RDINotifySubscribe_ptr) this, 1); // 1 => DO want propagate_schange callbacks
+
 	} // end inner sproxy lock scope
       } // end typemap lock scope
     } // end channel lock scope
@@ -737,15 +738,15 @@ RDIProxySupplier::obj_gc(RDI_TimeT curtime, CORBA::ULong deadConProxy, CORBA::UL
 #ifndef NDEBUG
         if (_pxstate == RDI_Connected) 
         {
-            RDIDbgForceLog/*RDIDbgSPxyLog*/("GC destroys connected " << RDI_PRX_TYPE(_prxtype) << " proxy " << _pserial << ":" << dynamic_cast<SequenceProxyPushSupplier_i*>(this) << _pxstate << "[channel=" << _channel->MyID() << "], [proxy=" << _pserial << "]"
+            RDIDbgSPxyLog("GC destroys connected " << RDI_PRX_TYPE(_prxtype) << " proxy " << _pserial
                 << " curtime = " << curtime.fmt_local()
                 << " last_use = " << _last_use.fmt_local()
                 << "(diff = " << RDI_TIMET_DIFF_IN_SECS(_last_use, curtime)
                 << ") DeadConProxyInterval = " << deadConProxy << '\n');
-        }
-        else
+        } 
+        else 
         {
-            RDIDbgForceLog/*RDIDbgSPxyLog*/("GC destroys non-connected " << RDI_PRX_TYPE(_prxtype) << " proxy " << _pserial << ":" << dynamic_cast<SequenceProxyPushSupplier_i*>(this) << _pxstate << "[channel=" << _channel->MyID() << "], [proxy=" << _pserial << "]"
+            RDIDbgSPxyLog("GC destroys non-connected " << RDI_PRX_TYPE(_prxtype) << " proxy " << _pserial
                 << " curtime = " << curtime.fmt_local()
                 << " last_use = " << _last_use.fmt_local()
                 << "(diff = " << RDI_TIMET_DIFF_IN_SECS(_last_use, curtime)
@@ -753,7 +754,6 @@ RDIProxySupplier::obj_gc(RDI_TimeT curtime, CORBA::ULong deadConProxy, CORBA::UL
         }
 #endif
         _disconnect_client_and_dispose(held, 1, proxy_lock.dispose_info);
-
         return 1;
     }
     return 0;
@@ -2712,8 +2712,6 @@ SequenceProxyPushSupplier_i::SequenceProxyPushSupplier_i(
 SequenceProxyPushSupplier_i::~SequenceProxyPushSupplier_i()
 {
   RDI_OPLOCK_DESTROY_CHECK("SequenceProxyPushSupplier_i");
-
-  RDIDbgForceLog( "SequenceProxyPushSupplier_i::~SequenceProxyPushSupplier_i - [channel=" << _channel->MyID() << "], [proxy=" << this->_proxy_id() << "] \n" ); // TODO: remove this log
 }
 
 #undef WHATFN
@@ -2930,7 +2928,6 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 		notif[i] = event[i]->get_cos_event();
 #endif
 	}
-
 	_nevents += actsize;
 	// update timeout before releasing OPLOCK -- this means we do the update
 	// before doing the push (seems OK)
@@ -2949,7 +2946,6 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 	int retryCount(0);
 	const char* exceptionType;
 	{
-
 		// introduce unlock scope
 		RDI_OPLOCK_SCOPE_RELEASE_TRACK(held.sproxy, WHATFN);
 
@@ -2961,10 +2957,8 @@ SequenceProxyPushSupplier_i::push_event(CORBA::Boolean& invalid)
 				// increment the counter
 				retryCount++;
 
-
 				_consumer->push_structured_events(notif);
-
-		        outcall_worked = 1;
+				outcall_worked = 1;
 #ifndef NO_OBJ_GC
 				_last_use.set_curtime();
 #endif
@@ -3305,12 +3299,8 @@ void
 SequenceProxyPushSupplier_i::add_event(RDI_StructuredEvent* entry)
 {
   RDI_OPLOCK_SCOPE_LOCK(proxy_lock, WHATFN, RDI_THROW_INV_OBJREF);
-  if (_add_event(entry)) 
-  {
-      RDIDbgCosSPxyLog("RDIProxySupplier::_add_event to ntfqueue, channel ID=" << this->_channel->MyID() << ", proxy ID="<< this->_proxy_id() << ", event pointer=" 
-          << entry << ", proxy event queue size=" << _channel->get_proxy_events_size() << ", ntfqueue size=" << _ntfqueue.length() << ", thread ID=" << TW_ID() << "\n");
-
-      if ( _worker ) { 
+  if (_add_event(entry)) {
+    if ( _worker ) { 
       RDI_OPLOCK_SIGNAL;
     }
     RDI_NotifyConsumer* cpc = _channel->push_consumer();
@@ -3404,7 +3394,7 @@ SequenceProxyPushSupplier_i::_disconnect_client_and_dispose(RDI_LocksHeld&      
         { // introduce channel lock scope
             RDI_OPLOCK_SCOPE_LOCK_OTHER_TRACK(chan_lock, held.channel, _channel, WHATFN);
             if (!held.channel || _channel->shutting_down()) 
-            {
+            { 
                 goto skip_update; 
             }
 
@@ -3446,7 +3436,6 @@ skip_update:
     {
         delete _qosprop; _qosprop = 0;
     }
-
     _clear_ntfqueue(); // Remove all events
     RDI_OPLOCK_SET_DISPOSE_INFO(dispose_info);
 }

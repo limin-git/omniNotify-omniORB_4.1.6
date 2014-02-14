@@ -81,9 +81,6 @@ class RDIProxySupplier :
   friend class RDI_ChangePool;
   friend class EventChannel_i;
   friend class ConsumerAdmin_i;
-  friend class Filter_i;     // TODO: remove friend
-  friend class FAdminHelper; // TODO: remove friend
-  friend class TA_TypeMap;   // TODO: remove friend
 public:
   RDIProxySupplier(const char*           resty,
 		   const char*           fa_helper_resty,
@@ -1509,7 +1506,6 @@ class EventChannel_i :
 	WRAPPED_SKELETON_SUPER(AttNotification, EventChannel) 
 {
   friend class EventChannelFactory_i;
-  friend class SequenceProxyPushSupplier_i; // TODO: remove friend
 public:
   EventChannel_i(EventChannelFactory_i*        cfactory,
 		 FilterFactory_i*              ffactory,
@@ -1696,10 +1692,6 @@ public:
   RDIOplockEntry** macro_get_oplockptr_ptr() { return &_oplockptr; }
   RDI_TypeMap*     macro_get_typemap_ptr()   { return _type_map; }
 
-  size_t get_proxy_events_size()
-  {
-      return _proxy_events.length();
-  }
 private:
   RDIOplockEntry*        _oplockptr;
 #ifndef NO_OBJ_GC

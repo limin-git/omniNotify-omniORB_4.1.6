@@ -1132,8 +1132,7 @@ EventChannel_i::admin_dispatch()
 
 	while ( 1 ) 
 	{
-
-        // Wait until an event becomes available. Since we are blocked 
+		// Wait until an event becomes available. Since we are blocked 
 		// waiting for an event, if we get a NULL event back we should
 		// be in the process of terminating execution.  
 		sevnt = 0;
@@ -1142,10 +1141,7 @@ EventChannel_i::admin_dispatch()
 			RDIDbgChanLog("   - ADispatch thread " << tid << " for channel " << _serial << " exits\n");
 			goto admin_dispatch_exit;
 		}
-
-        RDIDbgChanLog("Thrd=" << TW_ID() << ", Channel=" << _serial << " get next event before, only for test\n");
-
-        sevnt = _events->next_event(pevnt, 1);
+		sevnt = _events->next_event(pevnt, 1);
 		if (_shutmedown) 
 		{
 			RDIDbgChanLog("   - ADispatch thread " << tid << " for channel " << _serial << " exits\n");
@@ -2138,7 +2134,7 @@ EventChannel_i::_rpt_stats(RDIstrstream& str)
   }
 
   str << "\n======================================================================";
-  str << "\n  omniNotify delta stats report for Channel " << _serial  << " " << this;
+  str << "\n  omniNotify delta stats report for Channel " << _serial;
   str << "\n======================================================================";
   str << "\nqueue sizes: global " << avg_gq_sz <<
     " proxy " << avg_pq_sz << " notif " << avg_nq_sz << '\n';
@@ -2211,7 +2207,7 @@ void
 EventChannel_i::out_heading(RDIstrstream& str)
 {
   str << "======================================================================\n";
-  str << "Event Channel " << _my_name << " " << this << '\n';
+  str << "Event Channel " << _my_name << '\n';
   str << "======================================================================\n";
 }
 

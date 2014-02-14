@@ -48,7 +48,6 @@
 
 class RDI_TypeMap {
     friend class TA_TypeMap;
-    friend class SequenceProxyPushSupplier_i; // TODO: remove friend
 public:
   // Support data structures required for implementing the mapping
 

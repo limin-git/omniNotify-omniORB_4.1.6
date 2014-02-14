@@ -34,7 +34,6 @@
 
 #include "RDIEvent.h"
 #include "CosNotification_i.h"
-#include <list>
 #include <queue>
 
 // ================================ PriorityQueue ==========================================
@@ -49,7 +48,6 @@ struct RDIPriorityQueueEntry {
   CORBA::ULongLong     secval;
 };
 
-// limin: change to FIFO queue by using std::list
 class RDIPriorityQueue {
 public:
   // for both sort keys, default is "lowest first",
