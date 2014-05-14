@@ -2,7 +2,7 @@
 
 ECHO making COSNotify4d.def
 
-CALL "C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\Tools\vsvars32.bat"
+CALL "D:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\Tools\vsvars32.bat"
 
 CD C:\_perforce\COTS\omniORB\omniORB_4.1.6\src\services\omniNotify\lib
 

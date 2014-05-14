@@ -4,6 +4,8 @@
 #include <omniORB4/CORBA.h>
 #include "omniorb_poa_wrappers.h"
 #include <sstream>
+#include <map>
+#include <string>
 
 
 class ObjectAddress

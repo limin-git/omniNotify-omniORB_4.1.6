@@ -35,10 +35,10 @@
 
 #include <sys/timeb.h>
 #include <time.h>
-#include <iomanip>
-#include <sstream>
+//#include <iomanip>
+//#include <sstream>
 
-#define DEBUG_FILE_NO_OVERWRITE
+//#define DEBUG_FILE_NO_OVERWRITE
 
 // --------------------------------------------------------------------------------
 // RDI static routines 
@@ -206,14 +206,9 @@ RDI::logger::logger(const char* prefix, FILE* file, FILE* alt_file, const char* 
   struct tm newtime;
   newtime = *localtime ( &timebuffer.time );
 
-  char szCurrDateTime[200];
-  memset(szCurrDateTime, 0x0, 200);
-
-  if ( ( &newtime ) != NULL )
-  {
-      sprintf( szCurrDateTime, "%02d/%02d/%02d %02d:%02d:%02d.%03d ", newtime.tm_mday, newtime.tm_mon + 1, newtime.tm_year + 1900, 
-          newtime.tm_hour, newtime.tm_min, newtime.tm_sec, timebuffer.millitm );
-  }
+  char szCurrDateTime[30];
+  sprintf( szCurrDateTime, "%02d/%02d/%02d %02d:%02d:%02d:%03d ", newtime.tm_mday, newtime.tm_mon + 1, newtime.tm_year + 1900, 
+    newtime.tm_hour, newtime.tm_min, newtime.tm_sec, timebuffer.millitm );
 
   char thread_id[20];
   sprintf( thread_id, "[Thrd: %d] ", TW_ID() );

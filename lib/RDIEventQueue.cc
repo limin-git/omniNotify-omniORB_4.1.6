@@ -377,6 +377,9 @@ RDI_EventQueue::garbage_collect()
       _gcdone = 0;		// Garbage collection started
     } // end oplock scope
     evncntr = 0;
+
+#define GC_WHOLE_EVENT_QUEUE
+#ifndef GC_WHOLE_EVENT_QUEUE
     while ( --cursize && _evhead && (_evhead->ref_counter() == 1) &&
 	    (_evhead->get_state() != RDI_StructuredEvent::NEWBORN) ) {
       tmpevnt = _evhead;
@@ -385,6 +388,41 @@ RDI_EventQueue::garbage_collect()
       if ( ++evncntr % 100 == 0 ) 
 	TW_YIELD();
     }
+#else
+    RDI_StructuredEvent* pre = _evhead;
+    RDI_StructuredEvent* cur = _evhead;
+    while ( --cursize && cur && (cur->get_state() != RDI_StructuredEvent::NEWBORN) )
+    {
+        if ( cur->ref_counter() == 1 )
+        {
+            tmpevnt = cur;
+
+            if ( cur == _evhead )
+            {
+                _evhead = _evhead->_next;
+                pre = _evhead;
+                cur = _evhead;
+            }
+            else
+            {
+                pre->_next = cur->_next;
+                cur = cur->_next;
+            }
+
+            delete tmpevnt;
+            if ( ++evncntr % 100 == 0 ) 
+            {
+                TW_YIELD();
+            }
+        }
+        else
+        {
+            pre = cur;
+            cur = cur->_next;
+        }
+    }
+#endif
+
     { // introduce oplock scope
       TW_SCOPE_LOCK(evqueue_lock, _oplock, "evqueue", WHATFN);
       if ( evncntr ) {

@@ -40,55 +40,62 @@ void TA_TypeMap::initialize( EventChannel_i* channel, ConsumerAdmin_i* cadmin, R
 
 bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter )
 {
-    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "");
-
     bool is_changed = false;
-
     ProxyInfo prx_info( proxy, dynamic_cast<SequenceProxyPushSupplier_i*>(proxy), proxy->_proxy_id() );
-    m_prx_2_id_map[proxy] = proxy->_proxy_id();
 
-    if ( added.length() && RDI_STR_EQ( added[0].type_name, "*" )  )
     {
-        int location_key = get_location_key_from_filter( filter );
+        TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", ""); // DO NOT cover 'RDI_TypeMap::update'
 
-        if ( location_key != -1 )
+        m_prx_2_id_map[proxy] = proxy->_proxy_id();
+
+        if ( added.length() && RDI_STR_EQ( added[0].type_name, "*" )  )
         {
-            if ( RDI_STR_EQ( added[0].domain_name, "*" ) )
+            int location_key = get_location_key_from_filter( filter );
+
+            if ( location_key != -1 )
             {
-                m_lk2prx_map[location_key].insert( prx_info );
+                if ( RDI_STR_EQ( added[0].domain_name, "*" ) )
+                {
+                    m_lk2prx_map[location_key].insert( prx_info );
+                }
+                else
+                {
+                    m_d2lk2prx_map[added[0].domain_name.in()][location_key].insert( prx_info );
+                }
+
+                is_changed = true;
             }
-            else
+        }
+
+        if ( deled.length() )
+        {
+            int location_key = -1;
+
+            if ( false == m_lk2prx_map.empty() && ( RDI_STR_EQ( deled[0].domain_name, "*" ) && RDI_STR_EQ( deled[0].type_name, "*" ) ) )
             {
-                m_d2lk2prx_map[added[0].domain_name.in()][location_key].insert( prx_info );
+                location_key = remove_proxy( m_lk2prx_map, prx_info ) ;
+            }
+            else if ( ( false == m_d2lk2prx_map.empty() ) && RDI_STR_EQ( deled[0].type_name, "*" ) )
+            {
+                location_key = remove_proxy( m_d2lk2prx_map, prx_info, deled[0].domain_name.in() );
             }
 
-            is_changed = true;
-        }
-    }
-
-    if ( deled.length() )
-    {
-        int location_key = -1;
-
-        if ( false == m_lk2prx_map.empty() && ( RDI_STR_EQ( deled[0].domain_name, "*" ) && RDI_STR_EQ( deled[0].type_name, "*" ) ) )
-        {
-            location_key = remove_proxy( m_lk2prx_map, prx_info ) ;
-        }
-        else if ( ( false == m_d2lk2prx_map.empty() ) && RDI_STR_EQ( deled[0].type_name, "*" ) )
-        {
-            location_key = remove_proxy( m_d2lk2prx_map, prx_info, deled[0].domain_name.in() );
-        }
-
-        if ( location_key != -1 )
-        {
-            m_prx_2_id_map.erase( proxy );
-            is_changed = true;
+            if ( location_key != -1 )
+            {
+                m_prx_2_id_map.erase( proxy );
+                is_changed = true;
+            }
         }
     }
 
     if ( false == is_changed )
     {
         m_type_map_1->update( held, added, deled, proxy, filter );
+    }
+
+    if ( false == is_changed )
+    {
+        TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", ""); // DO NOT cover 'RDI_TypeMap::update'
 
         if ( false == m_lk2prx_map.empty() || false == m_d2lk2prx_map.empty() )
         {
@@ -102,6 +109,8 @@ bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added
 
 void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event)
 {
+    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "");
+
     if ( true == m_lk2prx_map.empty() && true == m_d2lk2prx_map.empty() )
     {
         return;
@@ -113,8 +122,6 @@ void TA_TypeMap::consumer_admin_dispatch_event(RDI_StructuredEvent* event)
     {
         return;
     }
-
-    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "");
 
     ProxySupplierList inconsistent_prx_list_1;
     ProxySupplierList inconsistent_prx_list_2;
@@ -206,6 +213,8 @@ void TA_TypeMap::update_prx_batch_push( const ProxyInfo& prx_info )
 
 RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i*>* TA_TypeMap::get_prx_batch_push()
 {
+    TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "" );
+
     if ( true == m_lk2prx_map.empty() && true == m_d2lk2prx_map.empty() )
     {
         return NULL;
@@ -213,8 +222,6 @@ RDI_Hash<CosNA::ProxyID, SequenceProxyPushSupplier_i*>* TA_TypeMap::get_prx_batc
 
     if ( true == m_is_prx_batch_push_changed )
     {
-        TW_SCOPE_LOCK(ta_type_map_lock, m_lock, "", "" );
-
         m_prx_batch_push_2.clear();
 
         for ( RDI_HashCursor<CosNA::ProxyID, SequenceProxyPushSupplier_i*> curs = m_prx_batch_push.cursor(); curs.is_valid(); ++curs )

@@ -890,7 +890,7 @@ EventChannel_i::_new_structured_event(RDI_StructuredEvent* sevnt)
     return -1;
   }
   incr_num_announcements();
-  RDI_NQ_SIZE_CHECK;
+  // RDI_NQ_SIZE_CHECK; // LIMINTODO: why?
   return 0;
 }
 

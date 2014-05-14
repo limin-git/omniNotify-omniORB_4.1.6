@@ -33,7 +33,7 @@ public:
 
         bool operator <( const ProxyInfo& rhs ) const
         {
-            return proxy < rhs.proxy;
+            return ( proxy < rhs.proxy );
         }
 
         CosNA::ProxyID prx_id;
