@@ -38,6 +38,18 @@ void TA_TypeMap::initialize( EventChannel_i* channel, ConsumerAdmin_i* cadmin, R
 }
 
 
+CosN::EventTypeSeq* TA_TypeMap::obtain_subscription_types()
+{
+    return m_type_map_2->obtain_subscription_types();
+}
+
+
+CosN::EventTypeSeq* TA_TypeMap::pxy_obtain_subscription_types(RDIProxyConsumer* pxy, CosNA::ObtainInfoMode mode)
+{
+    return m_type_map_2->pxy_obtain_subscription_types( pxy, mode );
+}
+
+
 bool TA_TypeMap::ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter )
 {
     bool is_changed = false;

@@ -599,7 +599,13 @@ EventChannel_i::obtain_subscription_types( WRAPPED_IMPLARG_VOID )
 #ifndef NO_OBJ_GC
   _last_use.set_curtime();
 #endif
+
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
+  CosN::EventTypeSeq* res = m_ta_type_map.obtain_subscription_types(); 
+#else
   CosN::EventTypeSeq* res = _type_map->obtain_subscription_types(); 
+#endif
+  
   return res;
 }
 
@@ -1094,7 +1100,12 @@ EventChannel_i::pxy_obtain_subscription_types(RDIProxyConsumer* pxy, CosNA::Obta
   RDI_OPLOCK_SCOPE_LOCK(channel_lock, WHATFN, RDI_THROW_INV_OBJREF);
   // if channel is shutting down, proxies can be treated as 'invalid'
   if (_shutmedown) { RDI_THROW_INV_OBJREF; }
+
+#ifdef USE_TA_TYPE_MAPPING_IN_EVENT_CHANNEL
+  CosN::EventTypeSeq* res = m_ta_type_map.pxy_obtain_subscription_types(pxy, mode );
+#else
   CosN::EventTypeSeq* res = _type_map->pxy_obtain_subscription_types(pxy, mode);
+#endif
   return res;
 }
 

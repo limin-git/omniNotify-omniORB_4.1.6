@@ -16,6 +16,7 @@ class Filter_i;
 class EventChannel_i;
 class RDIstrstream;
 class ConsumerAdmin_i;
+class RDIProxyConsumer;
 
 
 class TA_TypeMap
@@ -33,7 +34,7 @@ public:
 
         bool operator <( const ProxyInfo& rhs ) const
         {
-            return ( proxy < rhs.proxy );
+            return proxy < rhs.proxy;
         }
 
         CosNA::ProxyID prx_id;
@@ -46,6 +47,10 @@ public:
     typedef std::map<std::string, LocationKey2ProxyListMap> Domain2LocationKey2ProxyListMap;
 
 public:
+
+    // RDITypeMap functions
+    CosN::EventTypeSeq* obtain_subscription_types();
+    CosN::EventTypeSeq* pxy_obtain_subscription_types(RDIProxyConsumer* pxy, CosNA::ObtainInfoMode mode);
 
     bool ta_update( RDI_LocksHeld& held, const CosN::EventTypeSeq& added, const CosN::EventTypeSeq& deled, RDIProxySupplier* proxy, Filter_i* filter );
     RDIstrstream& log_output(RDIstrstream& str);
