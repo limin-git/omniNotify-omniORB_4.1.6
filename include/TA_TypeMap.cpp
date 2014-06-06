@@ -352,16 +352,11 @@ int TA_TypeMap::get_location_key_from_filter( Filter_i* filter ) // ( $Region ==
         return -1;
     }
 
-    CosNF::ConstraintInfoSeq* all_constraints = filter->get_all_constraints();
-
-    if ( NULL == all_constraints )
-    {
-        return -1;
-    }
+    CosNF::ConstraintInfoSeq_var all_constraints = filter->get_all_constraints();
 
     for ( size_t i = 0; i < all_constraints->length(); ++i )
     {
-        CosNF::ConstraintInfo& constraint_info = (*all_constraints)[i];
+        CosNF::ConstraintInfo& constraint_info = all_constraints[i];
         CosNF::ConstraintExp& constraint_expression = constraint_info.constraint_expression;
         CosNotification::EventTypeSeq& event_types = constraint_expression.event_types;
 

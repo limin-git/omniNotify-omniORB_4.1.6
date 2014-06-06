@@ -201,6 +201,9 @@ Filter_i::obj_gc(RDI_TimeT curtime, CORBA::ULong deadFilter)
 void
 Filter_i::destroy( WRAPPED_IMPLARG_VOID )
 {
+    //xinsong++ temp, let gc collect all proxysupplier
+    return; // LIMINTODO: test
+    
   RDI_LocksHeld held = { 0 };
   { // introduce bump lock scope
     RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(filter_lock, held.filter, WHATFN);
@@ -357,6 +360,7 @@ Filter_i::add_constraints(const CosNF::ConstraintExpSeq& clist  WRAPPED_IMPLARG 
     }
   } // end bump lock scope
   delete [] impl_cseq;
+
   return const_res;
 }
 
@@ -638,7 +642,6 @@ Filter_i::attach_callback_i(RDI_LocksHeld&          held,
   if (need_schange) {
     callback->propagate_schange(held, add_types, del_types, this);
   }
-
   return cbkid;
 }
 

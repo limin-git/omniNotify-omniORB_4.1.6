@@ -498,6 +498,9 @@ RDIProxySupplier::add_filter(CosNF::Filter_ptr filter)
 void
 RDIProxySupplier::remove_filter(CosNF::FilterID fltrID)
 {
+    //xinsong++ temp, let gc collect all proxysupplier
+    return; // LIMINTODO: test
+
   RDI_LocksHeld    held = { 0 };
   RDI_OPLOCK_BUMP_SCOPE_LOCK_TRACK(outer_proxy_lock, held.sproxy, WHATFN);
   if (!held.sproxy) { RDI_THROW_INV_OBJREF; }
