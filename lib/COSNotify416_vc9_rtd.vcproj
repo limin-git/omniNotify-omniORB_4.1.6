@@ -865,6 +865,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\ObjectAddress.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\omniNotify.h"
 				>
 			</File>
@@ -1029,6 +1033,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\TA_TypeMap.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\thread_wrappers.h"
 				>
 			</File>
@@ -1092,18 +1100,6 @@
 					>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="my"
-			>
-			<File
-				RelativePath="..\include\ObjectAddress.h"
-				>
-			</File>
-			<File
-				RelativePath="..\include\TA_TypeMap.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name=".rc"
